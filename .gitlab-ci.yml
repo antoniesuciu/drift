@@ -26,4 +26,5 @@ foundation:
     - uv run --locked --offline --extra ib mypy
     - uv run --locked --offline --extra ib pytest
     - uv run --locked --offline --extra ib quantlab smoke
+    - uv run --locked --offline --extra ib quantlab data-demo --output data/ci-demo
     - uv pip check

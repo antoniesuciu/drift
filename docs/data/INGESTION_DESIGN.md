@@ -2,6 +2,8 @@
 
 Design only, 2026-10-29. No ingestion code, data files, credentials or infrastructure are created by M2a. [HISTORICAL_DATA_SPEC.md](HISTORICAL_DATA_SPEC.md) owns dataset/session/time/roll policy; [PROVIDER_COMPARISON.md](PROVIDER_COMPARISON.md) owns procurement evidence. Implements REQ-DATA-001–004, relevant REQ-RESEARCH-001/SEC-002 and the data stage of the existing [architecture](../ARCHITECTURE.md).
 
+**Subsequent M2b.1 evidence:** the [offline implementation report](M2B1_IMPLEMENTATION.md) maps these gates to native synthetic DBN/catalog/replay tests and documents working commands, strict partition rejection and resource limits. The design below remains the broader M2b target. Acquisition/admission is disabled; gates 013/014 and real-provider/calendar/rights evidence remain pending. M2b.2 has not started.
+
 ## 1. Scope and stages
 
 Build one local, bounded-memory pipeline, using the existing `quantlab` package and pinned NautilusTrader **1.231.0**. Default implementation target is the conditionally recommended **Databento DBN** source. Implement an alternative FirstRate CSV reader only if procurement selects it; document the same normalization boundary rather than building all providers or a plugin framework. IBKR has no acquisition role for the specified old archive and no broker wrapper is needed in M2b.

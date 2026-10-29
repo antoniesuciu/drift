@@ -1,6 +1,6 @@
 # Development roadmap
 
-**M0, M1 and M2a are complete. Next task: M2b — pending, not started.** M2 overall remains incomplete; M2c and M3–M10 remain pending. Milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone/task at a time.
+**M0, M1, M2a and M2b.1 are complete. Next task: M2b.2 — pending, not started.** M2 overall remains incomplete; M2c and M3–M10 remain pending. Milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone/task at a time.
 
 The user's final M0–M10 numbering is authoritative over older archived drafts. Testing, causality and foundational risk controls precede paper trading. Negative results can complete research milestones; promotion is a separate decision.
 
@@ -28,7 +28,9 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 
 ## M2 — Historical market data
 
-**M2a complete, 2026-10-29 — research/specification only.** [Dataset specification](data/HISTORICAL_DATA_SPEC.md), [provider comparison](data/PROVIDER_COMPARISON.md) and [M2b design/gates](data/INGESTION_DESIGN.md) define the 2020–2025 archive, development-only 2022 pilot, timestamp/calendar/roll rules, conditional Databento recommendation and unresolved cost/retention/coverage gates. No market data, dependencies, ingestion code or broker connections were introduced. M2b/M2c and real-data admission remain unstarted.
+**M2a complete, 2026-10-29 — research/specification only.** [Dataset specification](data/HISTORICAL_DATA_SPEC.md), [provider comparison](data/PROVIDER_COMPARISON.md) and [M2b design/gates](data/INGESTION_DESIGN.md) define the 2020–2025 archive, development-only 2022 pilot, timestamp/calendar/roll rules, conditional Databento recommendation and unresolved cost/retention/coverage gates. No market data, dependencies, ingestion code or broker connections were introduced by M2a. At that signoff, M2b/M2c and real-data admission were unstarted.
+
+**M2b.1 complete locally, 2026-10-29 — synthetic offline implementation.** [Evidence and all 14 gate statuses](data/M2B1_IMPLEMENTATION.md): native DBN decoding, validated metadata/time/calendar/roll, exact Parquet/provenance round-trip and deterministic order-free replay. **120 tests pass**, including unchanged M1 tests; format/lint/types/lock/dependency checks pass. Offline portions of 001–012 are verified; real-service/calendar/metadata evidence and 013/014 remain pending. No acquisition or broker connection. M2b.2, M2c and full M2 remain incomplete.
 
 - **Objective:** Create a usable, auditable historical/feature dataset.
 - **Scope:** M2a exact MES history requirements and IBKR coverage feasibility; M2b authorized acquisition and raw/curated storage; M2c validation, contract rolls and causal feature views. Split work by these tasks.
@@ -120,4 +122,4 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 
 ## Next implementation task (not started)
 
-M2b starts with the versioned request/manifest boundary and synthetic fixture-driven native-Bar/DBN normalization round-trip in the [ingestion design](data/INGESTION_DESIGN.md). Then implement validation/staging/catalog/coverage and admit explicitly approved pilot artifacts. Exact quote, license/retention and acquisition permissions remain gates, not assumptions. Do not begin M2b automatically.
+M2b.2 first resolves approved exact pricing, retention/rights, bounded acquisition and authoritative calendars/contract metadata; then narrowly enables real-data admission and validates the two 2022 pilot slices. Existing offline tests and immutable storage remain mandatory. Gate 013 requires actual pilot evidence; 014 requires authorized archive/coverage/resource evidence. Do not begin M2b.2 automatically.

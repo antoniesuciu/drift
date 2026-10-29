@@ -2,7 +2,7 @@
 
 One modular Python platform for reproducible quantitative research, with future **rule-based, machine-learning and LLM research agents** sharing portfolio accounting and deterministic risk controls. The package is `quantlab`.
 
-**M0, M1 and M2a complete; M2b has not started.** The package provides an offline, synthetic NautilusTrader replay and foundational time validation. M2a adds the historical-data specification only; no trading strategy, historical ingestion, brokerage connection or financial performance is implemented or demonstrated.
+**M0, M1, M2a and M2b.1 complete; M2b.2 has not started.** The package includes a validated offline synthetic historical-data pipeline and native NautilusTrader replay. Real vendor admission, trading strategies, broker connections and financial performance remain unimplemented/unverified.
 
 The first experiment is a falsifiable MES intraday time-series momentum adaptation with an approximately 30-minute holding window. ML is an early research capability after reliable data and a rule baseline; LLM agents are later, advisory components with no brokerage authority.
 
@@ -27,10 +27,11 @@ The first experiment is a falsifiable MES intraday time-series momentum adaptati
 | [MES dataset](docs/data/HISTORICAL_DATA_SPEC.md) | Frozen study/pilot, endpoints, calendars and roll policy |
 | [Data provider comparison](docs/data/PROVIDER_COMPARISON.md) | Conditional source recommendation, pricing and rights gates |
 | [M2b ingestion design](docs/data/INGESTION_DESIGN.md) | Implementation boundaries, storage and acceptance criteria |
+| [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md) | Offline commands, formats, verification and status of all 14 gates |
 
 ## Technical direction
 
-M1 uses Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. IBKR remains the eventual paper broker; the optional `ib` extra is installed for offline import verification only. Parquet/DuckDB ingestion and ML/LLM research remain later work. M2a evaluated IBKR-first archive feasibility; the documented expired-history gap supports a conditional Databento recommendation, still subject to quote/rights review and approved spend. No cloud infrastructure or orchestration framework is selected.
+The runtime remains Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. PyArrow/tzdata now directly support the implemented offline native Parquet pipeline; DuckDB and ML/LLM work remain deferred. IBKR remains the eventual paper broker; the optional `ib` extra is installed for import verification only. M2a's conditional Databento recommendation still requires real quote/rights/coverage evidence. No cloud infrastructure or orchestration framework is selected.
 
 ## Repository and hosting
 
@@ -50,26 +51,28 @@ uv run --locked --offline --extra ib ruff check .
 uv run --locked --offline --extra ib mypy
 uv run --locked --offline --extra ib pytest
 uv run --locked --offline --extra ib quantlab smoke
+uv run --locked --offline --extra ib quantlab data-demo --output data/offline-demo
 uv pip check
 ```
 
 The first sync provisions the environment from PyPI and requires network or a populated uv cache. Checks/tests/replay run offline after installation; pytest blocks Python socket access. Keep `uv.lock` committed and use `--locked` so metadata drift fails instead of silently updating dependencies. To apply formatting, run `uv run --locked --offline --extra ib ruff format .`. Build distributions with `uv build` (or `uv build --offline` after its pinned build backend is cached). `python -m quantlab smoke` is also supported inside the environment.
 
-The smoke command reports three synthetic one-minute MES bars, USD 1.25 tick value, observed event/availability times and zero orders/positions. It is an engine integration check, not a strategy or financial backtest result. Dates, prices and simulated account balance are fixtures. An upstream pandas deprecation warning is documented; tests do not hide it.
+The original smoke command reports three synthetic MES bars and zero orders/positions. `data-demo` generates local synthetic DBN definitions/bars, validates and stores them in a native Parquet catalog with provenance/coverage, then replays **2,160 bars with zero orders/positions**. It prints the dataset path/hash for subsequent `data-replay --dataset PATH`; `data-ingest --request JSON --output ROOT` accepts only local synthetic requests. See [formats and limits](docs/data/M2B1_IMPLEMENTATION.md). These are integration checks, not strategy/performance results. Dates/prices/balances are fixtures; the upstream pandas warning remains visible.
 
 `.gitlab-ci.yml` configures the same checks plus GitLab's standard secret-detection template. Provisioning uses an official uv/Python image; no local Docker setup is required. Its scripts were exercised locally; no GitLab pipeline execution is claimed because no GitLab remote/runner has been configured or pushed.
 
 ```text
 src/quantlab/
   __init__.py      package version
-  __main__.py      offline smoke CLI only
+  __main__.py      offline smoke and data pipeline CLI
   time.py          validated bar completion/availability
   smoke.py         real Nautilus engine + synthetic read-only observer
+  data/            local DBN adapter, validation, calendar/roll, native catalog and replay
   py.typed
 tests/            timing, configuration, engine, CLI and offline safety
 ```
 
-Future agents, portfolio/risk and broker modules are deliberately absent until their milestone needs working behavior. The versioned proposal schema remains documented for M3. M2a recommends conditionally quoted Databento historical data for a 2020–2025 MES archive, with a small 2022 engineering pilot and FirstRate individual-contract data as an alternative. IBKR's expired-contract limit cannot cover that archive. No data was acquired or spend authorized; the [provider decision](docs/data/PROVIDER_COMPARISON.md) records remaining quote/retention/coverage gates. M2b implementation is next, only on a new task; it has not begun.
+Future agent, portfolio/risk and broker modules remain absent. M2b.1 verifies Databento DBN mappings on generated fixtures only; no real data was acquired or spend authorized. The [provider decision](docs/data/PROVIDER_COMPARISON.md) still governs the conditional 2020–2025 archive and 2022 pilot. M2B-013/014 remain pending pricing/rights/real coverage and scale evidence. M2b.2 is next only on a new authorized task; M2 overall is not complete.
 
 ## Safety and data
 

@@ -49,6 +49,9 @@ credentials.yml
 *.parquet
 *.arrow
 *.feather
+*.dbn
+*.dbn.zst
+*.dbn.zstd
 *.duckdb
 *.duckdb.*
 *.db
@@ -112,3 +115,5 @@ Thumbs.db
 !tests/fixtures/**/*.sqlite3
 !tests/fixtures/**/*.pkl
 !tests/fixtures/**/*.joblib
+!tests/fixtures/**/*.dbn
+!tests/fixtures/**/*.dbn.zst
