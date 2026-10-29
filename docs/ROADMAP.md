@@ -44,18 +44,18 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 
 ## M3 — Rule-based trading agents
 
-- **Objective:** Prove the first causal rule-based strategy and minimal shared historical execution path.
-- **Scope:** EXP-001 MES ITSM, deterministic proposals, single-agent sizing/portfolio/risk, cost-aware event-driven baseline replay. Other statistical strategies remain candidates.
-- **Deliverables:** Baseline rule agent, experiment runner/config, historical portfolio/risk checks, timing/cost/PnL report and trial ledger.
-- **Dependencies:** M1/M2, verified contract specifications and preregistered EXP-001 timing/fill/cost settings.
-- **Automated tests:** Positive/negative/zero/disagreeing returns; missing bars, roll/early-close skips, late decision/no future fills, one entry per session; long/short/partial-fill PnL; stale/duplicate/oversized proposals rejected.
-- **Acceptance criteria:** Fixed inputs reproduce proposals/metrics within declared tolerance; all risk/cost/timing cases pass; failures and null results retained. Positive returns are not required.
-- **Exclusions:** Broker connectivity, tuning on final holdout, implementing every rule family, production multi-agent coordination.
+- **Objective:** Prove the initial causal ITSM baseline and shared historical execution path, then add a testable candlestick rule capability.
+- **Scope/order:** **M3a first:** EXP-001 MES ITSM, deterministic proposals, one-agent sizing/portfolio/risk and cost-aware native replay. **M3b only after M3a signoff:** [Candlestick Pattern Agents](CANDLESTICK_AGENTS.md) under RULE, with all 10 detection forms, configurable instruments and 1m/5m/15m/30m/1h candles, optional confirmations and entry/exit/stop/target rules. Evaluate variants independently; other statistical strategies remain candidates.
+- **Deliverables:** M3a baseline agent, runner/config, timing/cost/PnL report and trial ledger. M3b reusable completed-candle detectors/shape records, rule-policy/shared-proposal integration, causal feature-consumption contract and at least one preregistered candlestick historical report with full costs and all attempted variants recorded.
+- **Dependencies:** M1/M2, verified admitted instrument/calendar/data/cost specifications and preregistered EXP-001 timing/fill/cost settings. M3b requires recorded M3a completion; this requirements update neither starts M3 nor enlarges current M2 implementation.
+- **Automated tests:** M3a retains positive/negative/zero/disagreeing returns, missing bars, roll/early-close skips, timing, one-entry/session, PnL and proposal/risk checks. M3b adds the CANDLE-001–008/010 detector-side cases: all patterns/timeframes, hand-calculated aggregation, instrument isolation, confirmation warmup/conflicts, future-data invariance, shared proposal identity and entry/exit/protection/cost edge cases.
+- **Acceptance criteria:** M3a fixed inputs reproduce proposals/metrics within declared tolerance and all risk/cost/timing cases pass before M3b. M3b passes CANDLE-001–008 and reusable detector-side CANDLE-010 evidence; retain failures/null results. M4 tests fitted ML reuse; M5/M6 own CANDLE-009 out-of-sample verdict and paper promotion for each proposed variant. Positive returns are not required for research completion.
+- **Exclusions:** Broker connectivity, tuning on final holdout, starting candlestick implementation before the ITSM baseline, implementing every other rule family, simultaneous-agent coordination or paper promotion from an in-sample result.
 
 ## M4 — ML research and agents
 
 - **Objective:** Evaluate ML as an early independent or hybrid research capability.
-- **Scope:** Chronological labels/features, simple scikit-learn baseline; justified LightGBM/XGBoost/random-forest comparison; one independent predictor or rule+ML filter with shared proposal semantics.
+- **Scope:** Chronological labels/features, simple scikit-learn baseline; justified LightGBM/XGBoost/random-forest comparison; one independent predictor or rule+ML filter with shared proposal semantics. Candlestick observations may be reused through the same versioned detector/cutoff contract; they are inputs to evaluate, not assumed predictive features.
 - **Deliverables:** Fold/trial manifests, reproducible feature/model artifacts, leakage report, benchmark/calibration/drift and full-cost comparison.
 - **Dependencies:** M2 dataset, M3 rule/no-trade controls and frozen split protocol before fitting. Initial validation belongs here; M5 independently assesses promotion.
 - **Automated tests:** Training-only transformations, label-overlap purging/embargo where needed, causal inference, versioned artifacts, reproducible seeds/tolerances, shared schema and failed-model abstention.
@@ -67,7 +67,7 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 - **Objective:** Assess evidence and limitations of frozen rule/ML candidates independently of construction.
 - **Scope:** Walk-forward and untouched holdout, dependence-aware uncertainty, all-trial accounting, regime/roll/cost/fill sensitivity and promotion criteria.
 - **Deliverables:** Frozen validation protocol, reproducible folds/reports, baseline/control comparisons and explicit go/modify/reject verdict with limitations.
-- **Dependencies:** M3/M4 outputs and a declared candidate/configuration before holdout access. ML need not outperform for a valid rejection report.
+- **Dependencies:** M3/M4 outputs and a declared candidate/configuration before holdout access. Each candlestick variant proposed for paper needs its own cost-aware out-of-sample verdict; one pattern's results do not validate other settings. ML need not outperform for a valid rejection report.
 - **Automated tests:** Disjoint causal folds, no label/feature leakage, cost-sensitivity arithmetic, metric/attribution reconciliation, holdout access recorded and no accidental tuning reuse.
 - **Acceptance criteria:** Every candidate has an auditable verdict under preregistered criteria; statistical evidence and risk/cost uncertainty are stated. Failed research may end the trading investigation; do not force promotion.
 - **Exclusions:** Picking thresholds after seeing holdout, unmotivated CPCV/DSR machinery, live-profitability claims or broker execution.

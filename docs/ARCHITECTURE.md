@@ -13,6 +13,9 @@ flowchart TD
     Text[Point-in-time text - M8] --> LLM[LLM advisory agents]
     Data --> Rules[Rule-based agents]
     Data --> ML[ML agents and filters]
+    Data --> Patterns[Reusable candlestick detection - M3b]
+    Patterns --> Rules
+    Patterns --> ML
     Rules --> Proposals[Versioned proposals]
     ML --> Proposals
     LLM --> Proposals
@@ -47,6 +50,12 @@ Portfolio policy converts eligible directional proposals to candidate position c
 
 Execution events carry intent/order IDs, broker acknowledgements, fills, cancel/reject events and fees into the single-writer portfolio ledger. Partial fills and cancel/fill races update reservations. Unknown submission outcomes halt new risk until reconciliation; retry does not imply a second order. Multi-agent research starts with synchronous ordered evaluation, not distributed consensus.
 
+## Candlestick recognition and policy boundary
+
+Planned M3b data flow: validated completed/available candles and causal aggregation → reusable deterministic pattern observations → configured rule confirmations/entry/exit policy → existing RULE proposals → shared portfolio/risk/execution. Later ML consumes the same observations as causal features. The detector owns shape calculations, input cutoffs and provenance; it owns no positions, sizing, order lifecycle or training. Rule policy owns directional interpretation and proposed entry/exit/stop/target constraints referenced by the common proposal; portfolio/risk validates and authorizes actual intents.
+
+Keep recognition, trading policy and feature consumption separable with small components/functions using existing validated data and Nautilus facilities. No new service, agent family, TA dependency or executable module is introduced by this design. Higher-timeframe buckets are unavailable until complete and all required constituents are available; missing/partial buckets, future pivots and stitched expiry prices cannot become earlier features. [Candlestick specification](CANDLESTICK_AGENTS.md) owns precise definitions, configuration, proposal mapping and measurable gates; this diagram does not claim those components already exist.
+
 ## Time, instruments and storage
 
 - Internal timestamps are timezone-aware UTC; US cash-window definitions use `America/New_York` and a versioned calendar. CME trading sessions are not identical to US cash sessions. Preserve event time, bar start/end, availability, acquisition time and vendor timezone semantics.
@@ -63,4 +72,4 @@ Before M6, choose a minimal durable journal/recovery mechanism based on verified
 
 ## Staged construction
 
-M1 proves a coherent released Python/NautilusTrader/API/docs tuple offline; `latest` documentation is insufficient version evidence. M2 builds data integrity. M3 proves one rule agent with minimal shared risk, portfolio and historical execution. M4 trains/evaluates ML using the same proposal boundary. M5 independently validates candidates. M6 alone adds approved paper connectivity and operational risk/recovery. M7–M9 add multiple agents, LLM advisory and expansion. M10 evaluates conditional live readiness under separate authorization. See [ROADMAP.md](ROADMAP.md) for gates and exclusions.
+M1 proves a coherent released Python/NautilusTrader/API/docs tuple offline; `latest` documentation is insufficient version evidence. M2 builds data integrity. M3a proves the initial ITSM agent with minimal shared risk, portfolio and historical execution; only after that baseline, M3b adds reusable candlestick recognition and independently evaluated rule variants. M4 trains/evaluates ML using the same proposal boundary and may reuse causal pattern features. M5 independently validates candidates before any M6 paper promotion. M6 alone adds approved paper connectivity and operational risk/recovery. M7–M9 add simultaneous agents, LLM advisory and expansion. M10 evaluates conditional live readiness under separate authorization. See [ROADMAP.md](ROADMAP.md) for gates and exclusions.

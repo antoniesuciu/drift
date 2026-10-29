@@ -46,3 +46,7 @@ The [offline implementation report](data/M2B1_IMPLEMENTATION.md) owns actual com
 ## M2b.2 preparation state
 
 The [acquisition plan](data/M2B2_ACQUISITION_PLAN.md) and linked vendor/market verification own the detailed evidence. Update Current State and keep independently reusable procurement/calendar findings in the project-specific Real Data Preparation note, linked from Project Overview. All writes remain inside this project's namespace; compare other-note hashes around the isolated update. Public research/planning is prepared, while account-specific quote/rights review, real admission, acquisition and gates 013/014 remain pending. Never store credentials, account-specific records or confidential license text in memory.
+
+## Candlestick requirements plan
+
+The [candlestick specification](CANDLESTICK_AGENTS.md), requirements and roadmap own the detailed catalogue, causal contracts and acceptance gates. Record the durable M3a-then-M3b decision in Architecture Decisions and Current State, with a concise overview pointer. Reuse existing project notes rather than copying the specification into memory. This is planning only: current M2 scope and gates remain unchanged, M3 has not started, and other projects/global notes remain outside the update.

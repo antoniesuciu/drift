@@ -6,6 +6,8 @@ One modular Python platform for reproducible quantitative research, with future 
 
 The first experiment is a falsifiable MES intraday time-series momentum adaptation with an approximately 30-minute holding window. ML is an early research capability after reliable data and a rule baseline; LLM agents are later, advisory components with no brokerage authority.
 
+[Candlestick Pattern Agents](docs/CANDLESTICK_AGENTS.md) are planned within the rule-based family in M3b, **after the initial M3a ITSM baseline**: reusable recognition, configurable timeframes/instruments, causal confirmations and shared proposals with entry/exit/protection policies. This documentation update starts no implementation and leaves current M2 preparation/admission gates unchanged.
+
 ## Read next
 
 | Document | Purpose |
@@ -13,6 +15,7 @@ The first experiment is a falsifiable MES intraday time-series momentum adaptati
 | [Requirements](REQUIREMENTS.md) | Stable IDs, scope and measurable acceptance criteria |
 | [Architecture](docs/ARCHITECTURE.md) | Boundaries, data flow and failure handling |
 | [Agent architecture](docs/AGENT_ARCHITECTURE.md) | Three families, shared proposals and hybrid composition |
+| [Candlestick agents](docs/CANDLESTICK_AGENTS.md) | Planned pattern catalogue, configuration, causal timing and M3b/M5/M6 gates |
 | [Decisions](docs/DECISIONS.md) | Adopted, provisional and deferred choices |
 | [Roadmap](docs/ROADMAP.md) | Active milestone and M0–M10 exit gates |
 | [Research synthesis](docs/RESEARCH_SYNTHESIS.md) | Critical review of all three Gemini reports |

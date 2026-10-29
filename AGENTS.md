@@ -9,6 +9,7 @@
 5. For M2b data work, read the [dataset specification](docs/data/HISTORICAL_DATA_SPEC.md), [provider comparison](docs/data/PROVIDER_COMPARISON.md) and [ingestion gates](docs/data/INGESTION_DESIGN.md) before implementing or acquiring data. Source recommendations are conditional and do not authorize purchases or account connections.
 6. For pipeline changes or M2b.2, read [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md). Preserve native catalog/provenance verification, causal snapshots, immutable publication and fixture-only restrictions until a separately approved admission change. Synthetic tests do not satisfy real-data gates 013/014.
 7. Before quote/account review, real-file admission or acquisition, read the [M2b.2 preparation plan](docs/data/M2B2_ACQUISITION_PLAN.md) and its linked vendor/market evidence. Exact quotes, applicable retention rights, dated calendars and real-definition handling remain prerequisites; the nine-job JSON plan has no execution approval.
+8. For candlestick detector, rule-policy or pattern-feature work, read the [candlestick plan](docs/CANDLESTICK_AGENTS.md). M3a ITSM must precede M3b; preserve completed-candle availability, shared RULE proposals and reusable detection. All candlestick gates remain pending; the plan does not start implementation or alter current M2 scope.
 
 ## Development and verification
 
