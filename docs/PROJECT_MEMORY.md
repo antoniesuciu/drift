@@ -21,10 +21,14 @@ The local filesystem is a fallback to unavailable MCP, not an installation or re
 - Overview: purpose, three agent families, repository document pointers and namespace rule.
 - Architecture decisions: adopted stack, provisional Nautilus compatibility, IBKR-first data, shared risk and authorization boundaries.
 - Research summary: ITSM adaptation, absence of demonstrated edge, causal timing/cost/data limitations and repository evidence links.
-- Current state: completed documentation work, M1 next/pending, later gates, published-history limitation and unresolved account/data inputs. Update actual commit IDs only after they exist.
+- Current state: M0/M1 completion evidence, verified runtime/dependencies/tests, M2 pending, later gates, published-history limitation and unresolved account/data inputs. Update actual commit IDs only after they exist.
 
 Read any existing target note before updating. Search project-specific memory before substantial tasks and reverify older factual claims. Keep updates small and independently reusable; avoid copying full reports or every completion message. Never store credentials, account identifiers, personal financial details or other sensitive information. Do not edit other projects, shared/global memory, vault configuration or folder organization.
 
 ## Initialization evidence
 
 Four notes were created locally in the namespace above after the required external-filesystem approval. Their exact contents were read back and verified. All five pre-existing Markdown notes retained their original SHA-256 hashes; no other-project/global note or vault configuration was written. See [INITIALIZATION.md](INITIALIZATION.md). No Obsidian MCP operation is claimed.
+
+## M1 state
+
+The [foundation evidence](M1_FOUNDATION.md) is authoritative for the implemented package and validation. Only this project's `Current State.md` is updated for M1, using the documented local fallback after reading the existing note and snapshotting other Markdown note hashes. M2 remains pending; no broker or historical-data work was performed. Other-project notes, shared/global memory and vault configuration are outside the write scope.

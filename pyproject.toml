@@ -1,0 +1,56 @@
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "quantlab"
+version = "0.1.0"
+description = "Offline foundation for reproducible quantitative trading research"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = ["nautilus-trader==1.231.0"]
+
+[project.optional-dependencies]
+ib = ["nautilus-trader[ib]==1.231.0"]
+
+[project.scripts]
+quantlab = "quantlab.__main__:main"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.19,<2",
+    "pytest>=8.4,<10",
+    "pytest-socket>=0.7,<1",
+    "ruff>=0.14,<1",
+]
+
+[tool.uv]
+required-version = "==0.13.6"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/quantlab"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-config --strict-markers --disable-socket"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/quantlab"]
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["nautilus_trader.*"]
+ignore_missing_imports = true
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "quantlab.smoke"
+disallow_subclassing_any = false

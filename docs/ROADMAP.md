@@ -1,6 +1,6 @@
 # Development roadmap
 
-**M0 documentation initialization is complete. Next milestone: M1 — pending, not started.** Status is evidence-driven; milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone at a time. All implementation milestones below are pending.
+**M0 and M1 are complete. Next milestone: M2 — pending, not started.** Status is evidence-driven; milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone at a time. M2–M10 remain pending.
 
 The user's final M0–M10 numbering is authoritative over older archived drafts. Testing, causality and foundational risk controls precede paper trading. Negative results can complete research milestones; promotion is a separate decision.
 
@@ -15,6 +15,8 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 - **Exclusions:** Runtime code/CI scaffold, installations, broker connections, datasets, model training, orders, push or hosting migration.
 
 ## M1 — Project foundation
+
+**Complete locally, 2026-10-29.** [M1 evidence](M1_FOUNDATION.md) records the verified tuple, 36 passing offline tests, formatting/lint/types, fresh installation, deterministic engine smoke and CI configuration. No server-side GitLab pipeline has run; the acceptance gate explicitly distinguishes configured CI from executed CI.
 
 - **Objective:** Prove the minimum offline Python/framework environment.
 - **Scope:** M1a compatible released Python/NautilusTrader/API/docs selection and minimal package/import smoke; M1b tiny synthetic engine/time fixtures; M1c pytest, lint/types as justified and GitLab CI configuration.
@@ -114,6 +116,6 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 - **Acceptance criteria:** Every readiness item has evidence and owner; no unresolved critical safety issue; any future live implementation/activation receives separate explicit authorization and numeric limits.
 - **Exclusions:** Automatic live enablement, implied profit guarantees or authorization created merely by passing tests.
 
-## First implementation task
+## Next implementation task (not started)
 
-**M1a:** Choose and record the exact released Python/NautilusTrader versions, matching documentation and supported IBKR adapter; add minimal package metadata/lock, `src/quantlab/__init__.py` and one offline import smoke test. Verify a clean local installation. Do not connect to IBKR. Then proceed to M1b synthetic engine/timestamp tests and M1c GitLab CI. This is a future task, not code implemented by M0.
+M1a–M1c are complete. M2a begins by specifying MES historical study dates/contracts, required session coverage, timestamp conventions and data-rights evidence, then assessing IBKR-first feasibility. Actual broker access or paid acquisition still needs separate authorization. Do not begin M2 automatically.

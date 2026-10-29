@@ -8,7 +8,7 @@ Reconciled 2026-10-29 from the handoff and the user's initialization task. **Ado
 | D-002 | Adopted | Rule-based, ML and LLM agent families; hybrids compose proposals. Agent family is independent of asset/horizon/mode. |
 | D-003 | Adopted | Repository `quant-trading-lab`, Python package `quantlab`, intended hosting/CI GitLab. Actual `origin` is GitHub; no migration or remote changes during initialization. |
 | D-004 | Adopted | Immutable source data plus curated Parquet; DuckDB analytical catalog, pandas/Polars by need. DuckDB is not the operational order ledger. |
-| D-005 | Provisional | NautilusTrader is preferred; choose a coherent released Python/framework/adapter/docs tuple and pass M1 offline tests. Latest documentation may describe a different release line. |
+| D-005 | Adopted for M1 | NautilusTrader 1.231.0 on Python 3.12 passes offline engine/timing replay and IB module imports. Release-tagged 1.x docs govern this tuple; authenticated broker compatibility remains unverified. See [M1 evidence](M1_FOUNDATION.md). |
 | D-006 | Adopted | Interactive Brokers is selected for eventual paper trading and initial historical feasibility. Alpaca is a future alternative, not a selected MES broker. Account/API permissions remain unverified. |
 | D-007 | Adopted | Source-neutral historical data, IBKR first. Databento optional only after measured coverage/quality gaps, rights review, quote and approved spending. No mandatory additional vendor. |
 | D-008 | Adopted | First instrument CME MES, actual expiring contracts and USD accounting; leverage and margin do not cap losses. |
@@ -23,6 +23,7 @@ Reconciled 2026-10-29 from the handoff and the user's initialization task. **Ado
 | D-017 | Adopted | Separate explicit approval before spending, broker connectivity, paper-order activation or live-money capability; public documentation research is permitted now. |
 | D-018 | Adopted | Preserve published commits: remote `main` confirmed at `a4c4670afcb982df3d2c28edebbe9635f0b716b1`; one normal local cleanup commit, no reset/amend/force-push. Archives remain in old history. |
 | D-019 | Adopted | Isolated Obsidian namespace `Memories/Projects/Quant-Trading-Lab/`, matching the discovered vault's `Memories/Projects` convention. Repository is authoritative; other projects/global notes are untouched. |
+| D-020 | Adopted | M1 uses uv 0.13.6, committed `uv.lock`, Hatchling 1.33.0, pytest/Ruff and strict source mypy. Pin the engine and lock transitive dependencies; Python support is limited initially to 3.12. No local Docker or broker deployment. |
 
 ## Reconciliation and consequences
 

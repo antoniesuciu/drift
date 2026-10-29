@@ -4,7 +4,7 @@ Baseline: 2026-10-29. The [decision log](docs/DECISIONS.md) records technology c
 
 ## Scope and interpretation
 
-**Initialization scope (M0):** documentation, original research preservation, isolated memory and repository initialization only. No trading code, dependency installation, broker connection, model training, paid downloads or order submission. M1 implementation remains pending.
+**Initialization scope (M0):** documentation, original research preservation, isolated memory and repository initialization only. M1 subsequently implemented the offline technical foundation; see [M1 evidence](docs/M1_FOUNDATION.md). Broker connectivity, trading strategies, model training, paid downloads and order submission remain outside completed scope.
 
 **Core platform:** one modular Python application, three agent families, historical research, reproducibility, shared portfolio/risk and eventual IBKR paper execution. **Future capabilities:** multiple concurrent agents, LLM research, market/currency expansion and conditional live readiness. **Research hypotheses:** EXP-001 profitability, ML uplift, LLM usefulness, ORB/mean-reversion alternatives and any deep-learning/RL benefit; none is an acceptance assumption.
 

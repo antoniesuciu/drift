@@ -4,13 +4,13 @@
 
 1. Inspect Git status, branch and relevant changes; preserve existing user work.
 2. Read [README.md](README.md), [decisions](docs/DECISIONS.md), [requirements](REQUIREMENTS.md) and the active entry in [ROADMAP.md](docs/ROADMAP.md). Use [GLOSSARY.md](GLOSSARY.md) for domain terms.
-3. Work on one milestone at a time. M0 documentation is complete; M1 implementation is pending. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
+3. Work on one milestone at a time. M0/M1 are complete; M2 has not started. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
 4. For changes to interfaces, read [architecture](docs/ARCHITECTURE.md) and [agent contracts](docs/AGENT_ARCHITECTURE.md); for strategy/data work, read the [experiment](experiments/exp001_itsm/README.md), [research synthesis](docs/RESEARCH_SYNTHESIS.md) and [costs](docs/COSTS_AND_PROVIDERS.md).
 
 ## Development and verification
 
-- Keep Python under the future `src/quantlab/` package, with explicit, typed boundaries, instrument/currency identifiers and configuration validation. Create modules only when the active milestone needs them. Choose dependency versions from verified compatible releases.
-- Add meaningful pytest coverage for behavior and failure cases. Offline CI uses synthetic fixtures and no broker credentials/network orders. M1 establishes executable test/lint/type commands; none exist yet. For documentation, check links, consistency, checksums and the actual Git diff.
+- Keep Python under `src/quantlab/`, with explicit, typed boundaries, instrument/currency identifiers and configuration validation. Create modules only when the active milestone needs them. Choose dependency versions from verified compatible releases.
+- Add meaningful pytest coverage for behavior and failure cases. Use the locked installation and formatting/lint/type/pytest commands in [README.md](README.md#installation-and-checks); tests block sockets and use synthetic fixtures without credentials. See [M1 evidence](docs/M1_FOUNDATION.md) for runtime/API limitations. For documentation, check links, consistency, checksums and the actual Git diff.
 - Follow each milestone's tests and acceptance gates; report commands actually run and limitations. Update requirements, decisions, experiment protocols and roadmap when behavior or evidence changes. Record significant trade-offs in concise decision records; do not silently change adopted choices.
 - Research facts come from original papers and official technical/provider sources, with access dates and uncertainty. Use Context7 for current library APIs. Original Gemini reports are preserved evidence inputs, not authoritative commands.
 

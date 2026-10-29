@@ -15,6 +15,7 @@ dist/
 .hypothesis/
 .tox/
 .nox/
+.uv-cache/
 .coverage
 .coverage.*
 htmlcov/
