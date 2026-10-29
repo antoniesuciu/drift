@@ -108,7 +108,9 @@ Full suite: **120 passed** in the development environment and again in a fresh n
 
 Tests live in [test_data_pipeline.py](../../tests/test_data_pipeline.py), [test_data_calendar.py](../../tests/test_data_calendar.py) and [test_data_cli.py](../../tests/test_data_cli.py). The [fixture assumptions](../../tests/fixtures/data/README.md) distinguish generated protocol bytes and synthetic calendars from exchange observations. CI runs the full existing suite plus the explicit data-demo command; no remote GitLab run is claimed.
 
-## Exact next steps for M2b.2 (not started)
+## M2b.2 handoff at M2b.1 signoff
+
+Subsequent [M2b.2 preparation](M2B2_ACQUISITION_PLAN.md) records the authorized research/planning results. Account-specific quote/rights review, acquisition and real-data admission still require the approvals and evidence identified there. The list below preserves the original handoff.
 
 1. Resolve and approve request-specific pricing, CME/vendor local retention/derived-use terms and the bounded pilot acquisition plan; do not reuse live-plan/update prices as archive quotes.
 2. Obtain/version authoritative cash/CME calendars and contract definitions; test actual provider definition/ID/DBN variation with approved pilot artifacts. Add a narrowly reviewed real-data admission mode and an explicit historical-only acquisition boundary only when authorized.

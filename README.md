@@ -2,7 +2,7 @@
 
 One modular Python platform for reproducible quantitative research, with future **rule-based, machine-learning and LLM research agents** sharing portfolio accounting and deterministic risk controls. The package is `quantlab`.
 
-**M0, M1, M2a and M2b.1 complete; M2b.2 has not started.** The package includes a validated offline synthetic historical-data pipeline and native NautilusTrader replay. Real vendor admission, trading strategies, broker connections and financial performance remain unimplemented/unverified.
+**M0, M1, M2a and M2b.1 complete; M2b.2 research/planning prepared.** The package includes a validated offline synthetic historical-data pipeline and native NautilusTrader replay. Real vendor admission, trading strategies, broker connections and financial performance remain unimplemented/unverified. Exact quotes, rights and explicit acquisition authorization remain pending.
 
 The first experiment is a falsifiable MES intraday time-series momentum adaptation with an approximately 30-minute holding window. ML is an early research capability after reliable data and a rule baseline; LLM agents are later, advisory components with no brokerage authority.
 
@@ -28,6 +28,7 @@ The first experiment is a falsifiable MES intraday time-series momentum adaptati
 | [Data provider comparison](docs/data/PROVIDER_COMPARISON.md) | Conditional source recommendation, pricing and rights gates |
 | [M2b ingestion design](docs/data/INGESTION_DESIGN.md) | Implementation boundaries, storage and acceptance criteria |
 | [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md) | Offline commands, formats, verification and status of all 14 gates |
+| [M2b.2 preparation](docs/data/M2B2_ACQUISITION_PLAN.md) | Verified public evidence, nine-job pilot plan, readiness gaps and gates 013/014 |
 
 ## Technical direction
 
@@ -72,7 +73,7 @@ src/quantlab/
 tests/            timing, configuration, engine, CLI and offline safety
 ```
 
-Future agent, portfolio/risk and broker modules remain absent. M2b.1 verifies Databento DBN mappings on generated fixtures only; no real data was acquired or spend authorized. The [provider decision](docs/data/PROVIDER_COMPARISON.md) still governs the conditional 2020–2025 archive and 2022 pilot. M2B-013/014 remain pending pricing/rights/real coverage and scale evidence. M2b.2 is next only on a new authorized task; M2 overall is not complete.
+Future agent, portfolio/risk and broker modules remain absent. M2b.1 verifies Databento DBN mappings on generated fixtures only; no real data was acquired or spend authorized. The [provider decision](docs/data/PROVIDER_COMPARISON.md) still governs the conditional 2020–2025 archive and 2022 pilot. M2b.2 preparation records public price/rights/calendar evidence and an exact proposed request schedule; account-specific quotes, retention terms and implementation prerequisites remain unresolved. M2B-013/014 and M2 overall remain incomplete. The next account/acquisition stage requires explicit authorization.
 
 ## Safety and data
 

@@ -4,10 +4,11 @@
 
 1. Inspect Git status, branch and relevant changes; preserve existing user work.
 2. Read [README.md](README.md), [decisions](docs/DECISIONS.md), [requirements](REQUIREMENTS.md) and the active entry in [ROADMAP.md](docs/ROADMAP.md). Use [GLOSSARY.md](GLOSSARY.md) for domain terms.
-3. Work on one milestone at a time. M0/M1/M2a/M2b.1 are complete; M2b.2 has not started and M2 overall remains incomplete. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
+3. Work on one milestone at a time. M0/M1/M2a/M2b.1 are complete; M2b.2 research/planning is recorded, while real pilot/archive admission and M2 overall remain incomplete. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
 4. For changes to interfaces, read [architecture](docs/ARCHITECTURE.md) and [agent contracts](docs/AGENT_ARCHITECTURE.md); for strategy/data work, read the [experiment](experiments/exp001_itsm/README.md), [research synthesis](docs/RESEARCH_SYNTHESIS.md) and [costs](docs/COSTS_AND_PROVIDERS.md).
 5. For M2b data work, read the [dataset specification](docs/data/HISTORICAL_DATA_SPEC.md), [provider comparison](docs/data/PROVIDER_COMPARISON.md) and [ingestion gates](docs/data/INGESTION_DESIGN.md) before implementing or acquiring data. Source recommendations are conditional and do not authorize purchases or account connections.
 6. For pipeline changes or M2b.2, read [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md). Preserve native catalog/provenance verification, causal snapshots, immutable publication and fixture-only restrictions until a separately approved admission change. Synthetic tests do not satisfy real-data gates 013/014.
+7. Before quote/account review, real-file admission or acquisition, read the [M2b.2 preparation plan](docs/data/M2B2_ACQUISITION_PLAN.md) and its linked vendor/market evidence. Exact quotes, applicable retention rights, dated calendars and real-definition handling remain prerequisites; the nine-job JSON plan has no execution approval.
 
 ## Development and verification
 

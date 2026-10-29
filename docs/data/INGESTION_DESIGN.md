@@ -2,7 +2,7 @@
 
 Design only, 2026-10-29. No ingestion code, data files, credentials or infrastructure are created by M2a. [HISTORICAL_DATA_SPEC.md](HISTORICAL_DATA_SPEC.md) owns dataset/session/time/roll policy; [PROVIDER_COMPARISON.md](PROVIDER_COMPARISON.md) owns procurement evidence. Implements REQ-DATA-001–004, relevant REQ-RESEARCH-001/SEC-002 and the data stage of the existing [architecture](../ARCHITECTURE.md).
 
-**Subsequent M2b.1 evidence:** the [offline implementation report](M2B1_IMPLEMENTATION.md) maps these gates to native synthetic DBN/catalog/replay tests and documents working commands, strict partition rejection and resource limits. The design below remains the broader M2b target. Acquisition/admission is disabled; gates 013/014 and real-provider/calendar/rights evidence remain pending. M2b.2 has not started.
+**Subsequent evidence:** the [M2b.1 implementation report](M2B1_IMPLEMENTATION.md) maps these gates to native synthetic DBN/catalog/replay tests and documents working commands, strict partition rejection and resource limits. The [M2b.2 preparation plan](M2B2_ACQUISITION_PLAN.md) records public research, exact proposed jobs, real-admission prerequisites and the detailed 013/014 procedure. The design below remains the broader M2b target. Acquisition/admission is disabled; gates 013/014 and real-provider/calendar/rights evidence remain pending.
 
 ## 1. Scope and stages
 
@@ -123,4 +123,4 @@ M2b is implemented and pilot-admitted only when M2B-001–013 pass; M2B-014 is a
 
 Before any real acquisition: resolve exact quote/retention permissions and actual contract definitions. Before archive admission: historical calendar provenance, exact source coverage/revisions and price/clock decoder fixture. Before economic conclusions: empirical sample adequacy and execution evidence remain M3/M5 gates.
 
-First M2b task, only after authorization: add the versioned config/manifest boundary and synthetic fixture-driven DBN/native-Bar normalization round-trip, retaining M1's network-disabled tests. Next implement validation/staging/catalog/coverage. Only then admit approved pilot files or an explicitly approved bounded historical acquisition. No work in this design begins automatically as part of M2a.
+M2b.1 has implemented the offline config/manifest, synthetic DBN/native-Bar round-trip, validation/staging/catalog/coverage and replay. The [M2b.2 preparation plan](M2B2_ACQUISITION_PLAN.md) now owns remaining quote/rights review, real-definition/calendar compatibility, bounded acquisition and pilot/archive acceptance sequencing. These remaining steps require the permissions stated there; the design itself grants no acquisition authorization.
