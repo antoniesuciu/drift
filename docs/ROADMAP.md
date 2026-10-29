@@ -1,6 +1,6 @@
 # Development roadmap
 
-**M0 and M1 are complete. Next milestone: M2 — pending, not started.** Status is evidence-driven; milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone at a time. M2–M10 remain pending.
+**M0, M1 and M2a are complete. Next task: M2b — pending, not started.** M2 overall remains incomplete; M2c and M3–M10 remain pending. Milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone/task at a time.
 
 The user's final M0–M10 numbering is authoritative over older archived drafts. Testing, causality and foundational risk controls precede paper trading. Negative results can complete research milestones; promotion is a separate decision.
 
@@ -27,6 +27,8 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 - **Exclusions:** Broker calls, paid data, strategies, ML/LLM runtime, orchestration or account configuration.
 
 ## M2 — Historical market data
+
+**M2a complete, 2026-10-29 — research/specification only.** [Dataset specification](data/HISTORICAL_DATA_SPEC.md), [provider comparison](data/PROVIDER_COMPARISON.md) and [M2b design/gates](data/INGESTION_DESIGN.md) define the 2020–2025 archive, development-only 2022 pilot, timestamp/calendar/roll rules, conditional Databento recommendation and unresolved cost/retention/coverage gates. No market data, dependencies, ingestion code or broker connections were introduced. M2b/M2c and real-data admission remain unstarted.
 
 - **Objective:** Create a usable, auditable historical/feature dataset.
 - **Scope:** M2a exact MES history requirements and IBKR coverage feasibility; M2b authorized acquisition and raw/curated storage; M2c validation, contract rolls and causal feature views. Split work by these tasks.
@@ -118,4 +120,4 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 
 ## Next implementation task (not started)
 
-M1a–M1c are complete. M2a begins by specifying MES historical study dates/contracts, required session coverage, timestamp conventions and data-rights evidence, then assessing IBKR-first feasibility. Actual broker access or paid acquisition still needs separate authorization. Do not begin M2 automatically.
+M2b starts with the versioned request/manifest boundary and synthetic fixture-driven native-Bar/DBN normalization round-trip in the [ingestion design](data/INGESTION_DESIGN.md). Then implement validation/staging/catalog/coverage and admit explicitly approved pilot artifacts. Exact quote, license/retention and acquisition permissions remain gates, not assumptions. Do not begin M2b automatically.

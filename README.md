@@ -2,7 +2,7 @@
 
 One modular Python platform for reproducible quantitative research, with future **rule-based, machine-learning and LLM research agents** sharing portfolio accounting and deterministic risk controls. The package is `quantlab`.
 
-**M0 and M1 complete; M2 has not started.** The package provides an offline, synthetic NautilusTrader replay and foundational time validation. No trading strategy, historical ingestion, brokerage connection or financial performance is implemented or demonstrated.
+**M0, M1 and M2a complete; M2b has not started.** The package provides an offline, synthetic NautilusTrader replay and foundational time validation. M2a adds the historical-data specification only; no trading strategy, historical ingestion, brokerage connection or financial performance is implemented or demonstrated.
 
 The first experiment is a falsifiable MES intraday time-series momentum adaptation with an approximately 30-minute holding window. ML is an early research capability after reliable data and a rule baseline; LLM agents are later, advisory components with no brokerage authority.
 
@@ -24,10 +24,13 @@ The first experiment is a falsifiable MES intraday time-series momentum adaptati
 | [Project memory](docs/PROJECT_MEMORY.md) | Isolated Obsidian namespace and repository authority |
 | [Initialization audit](docs/INITIALIZATION.md) | Handoff reconciliation, cleanup and validation |
 | [M1 foundation](docs/M1_FOUNDATION.md) | Verified environment, API evidence, tests and limitations |
+| [MES dataset](docs/data/HISTORICAL_DATA_SPEC.md) | Frozen study/pilot, endpoints, calendars and roll policy |
+| [Data provider comparison](docs/data/PROVIDER_COMPARISON.md) | Conditional source recommendation, pricing and rights gates |
+| [M2b ingestion design](docs/data/INGESTION_DESIGN.md) | Implementation boundaries, storage and acceptance criteria |
 
 ## Technical direction
 
-M1 uses Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. IBKR remains the eventual paper broker; the optional `ib` extra is installed for offline import verification only. Parquet/DuckDB, provider ingestion and ML/LLM research remain later milestones. Evaluate IBKR historical data first in M2; Databento is optional and requires an evidenced gap and approved spend. No cloud infrastructure or orchestration framework is selected.
+M1 uses Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. IBKR remains the eventual paper broker; the optional `ib` extra is installed for offline import verification only. Parquet/DuckDB ingestion and ML/LLM research remain later work. M2a evaluated IBKR-first archive feasibility; the documented expired-history gap supports a conditional Databento recommendation, still subject to quote/rights review and approved spend. No cloud infrastructure or orchestration framework is selected.
 
 ## Repository and hosting
 
@@ -66,7 +69,7 @@ src/quantlab/
 tests/            timing, configuration, engine, CLI and offline safety
 ```
 
-Future agents, portfolio/risk and broker modules are deliberately absent until their milestone needs working behavior. The versioned proposal schema remains documented for M3. Next planned work is M2a's historical-data requirements/coverage assessment, under separate authorization for any broker access; M2 has not begun.
+Future agents, portfolio/risk and broker modules are deliberately absent until their milestone needs working behavior. The versioned proposal schema remains documented for M3. M2a recommends conditionally quoted Databento historical data for a 2020–2025 MES archive, with a small 2022 engineering pilot and FirstRate individual-contract data as an alternative. IBKR's expired-contract limit cannot cover that archive. No data was acquired or spend authorized; the [provider decision](docs/data/PROVIDER_COMPARISON.md) records remaining quote/retention/coverage gates. M2b implementation is next, only on a new task; it has not begun.
 
 ## Safety and data
 

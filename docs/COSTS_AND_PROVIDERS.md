@@ -2,6 +2,8 @@
 
 Reviewed **2026-10-29** against the official sources linked below. This is a research procurement and compatibility plan. No broker connection, account inspection, paid request or trading test has been performed. Public documentation establishes advertised capabilities; account eligibility and actual data coverage remain unverified.
 
+**Subsequent evidence:** M1's pinned offline engine/import compatibility is recorded in [M1_FOUNDATION.md](M1_FOUNDATION.md). M2a's more specific [provider decision](data/PROVIDER_COMPARISON.md) and [MES dataset](data/HISTORICAL_DATA_SPEC.md) govern the historical archive: IBKR's documented expiry limit cannot supply the six-year period; Databento historical PAYG is conditionally recommended, with an individual-contract FirstRate alternative. No paid source, quote, entitlement or retention right has been approved. The earlier checkpoints below remain background, not an instruction to repeat completed feasibility research.
+
 ## Selected roles
 
 | Component | Decision | Qualification and cost policy |

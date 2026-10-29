@@ -4,8 +4,9 @@
 
 1. Inspect Git status, branch and relevant changes; preserve existing user work.
 2. Read [README.md](README.md), [decisions](docs/DECISIONS.md), [requirements](REQUIREMENTS.md) and the active entry in [ROADMAP.md](docs/ROADMAP.md). Use [GLOSSARY.md](GLOSSARY.md) for domain terms.
-3. Work on one milestone at a time. M0/M1 are complete; M2 has not started. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
+3. Work on one milestone at a time. M0/M1/M2a are complete; M2b has not started. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
 4. For changes to interfaces, read [architecture](docs/ARCHITECTURE.md) and [agent contracts](docs/AGENT_ARCHITECTURE.md); for strategy/data work, read the [experiment](experiments/exp001_itsm/README.md), [research synthesis](docs/RESEARCH_SYNTHESIS.md) and [costs](docs/COSTS_AND_PROVIDERS.md).
+5. For M2b data work, read the [dataset specification](docs/data/HISTORICAL_DATA_SPEC.md), [provider comparison](docs/data/PROVIDER_COMPARISON.md) and [ingestion gates](docs/data/INGESTION_DESIGN.md) before implementing or acquiring data. Source recommendations are conditional and do not authorize purchases or account connections.
 
 ## Development and verification
 

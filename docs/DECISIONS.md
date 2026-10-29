@@ -24,6 +24,8 @@ Reconciled 2026-10-29 from the handoff and the user's initialization task. **Ado
 | D-018 | Adopted | Preserve published commits: remote `main` confirmed at `a4c4670afcb982df3d2c28edebbe9635f0b716b1`; one normal local cleanup commit, no reset/amend/force-push. Archives remain in old history. |
 | D-019 | Adopted | Isolated Obsidian namespace `Memories/Projects/Quant-Trading-Lab/`, matching the discovered vault's `Memories/Projects` convention. Repository is authoritative; other projects/global notes are untouched. |
 | D-020 | Adopted | M1 uses uv 0.13.6, committed `uv.lock`, Hatchling 1.33.0, pytest/Ruff and strict source mypy. Pin the engine and lock transitive dependencies; Python support is limited initially to 3.12. No local Docker or broker deployment. |
+| D-021 | Provisional procurement | M2a recommends Databento historical PAYG for the six-year individual-contract MES archive because IBKR's documented expired-history limit excludes required old contracts. FirstRate individual MES data is the principal alternative. Actual quote, retention/rights and delivered coverage must pass before purchase/admission; Databento remains optional at platform level. [Evidence](data/PROVIDER_COMPARISON.md). |
+| D-022 | Adopted research specification | Freeze MES minute study 2020–2025, development-only 2022 pipeline slices, prior-cash-close/endpoint buckets, fixed Monday roll and modeled availability policy in [MES-ITSM-DATA-v1](data/HISTORICAL_DATA_SPEC.md). These are project choices, not verified vendor delivery or empirical alpha. M2b reuses native Nautilus loaders/catalog plus provenance sidecars. |
 
 ## Reconciliation and consequences
 
