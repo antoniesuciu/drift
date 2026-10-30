@@ -91,9 +91,6 @@ credentials.yml
 *.7z
 /tmp/
 /temp/
-/handoff_extracted/
-/quant_trading_work_handoff*/
-/INIT_TASK.md
 
 # Editor and operating-system temporary files
 .idea/
