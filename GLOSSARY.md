@@ -18,6 +18,16 @@ _Avoid_: Order, approved trade
 
 **Availability time**: The earliest time an observation could have been used by the decision process, accounting for completion, publication and delivery. It can differ from the event timestamp and acquisition date.
 
-**Contract**: A venue-qualified tradable instrument with its own expiry and specifications. A continuous futures series is a research representation, not a contract that can receive orders.
+**Instrument**: An identified tradable product with a defined share class or contract, currency and trading specifications. Provider tickers and broker identifiers can refer to the same instrument without being interchangeable identifiers.
+
+**Contract**: A particular derivative instrument with its own specifications and, where applicable, expiry. A continuous futures series is a research representation, not an executable contract.
+
+**Data provider**: A source of market observations under a specific feed and use agreement. It can differ from the broker executing trades.
+
+**Feed**: A defined stream or historical collection of market observations with particular venue coverage, construction and timeliness. Different feeds for the same instrument need not contain identical bars.
+
+**Corporate action**: An issuer event affecting a security's shares or distributions. A split changes the share/price basis; adjusted research values and raw executable prices represent different views.
+
+**Admission**: An evidence-based decision that a specified dataset, instrument or execution route is suitable for a declared use. It does not by itself authorize an account connection or trading.
 
 **Paper trading**: Broker-simulated execution on an explicitly selected paper account. Its fills do not establish live execution quality or profitability.

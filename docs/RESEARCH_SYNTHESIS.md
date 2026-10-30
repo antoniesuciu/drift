@@ -1,5 +1,7 @@
 # Research synthesis
 
+**Scope update, 2026-10-30:** active research is NVDA with Alpaca history and IBKR execution; crypto is deferred. MES/SPY and vendor comparisons below retain their original research context. [Current protocol](../experiments/exp001_itsm/README.md) and [NVDA plan](data/NVDA_DATA_PLAN.md) govern new work; no prior paper result proves NVDA alpha.
+
 Reviewed 2026-10-29. This document evaluates the supplied research; it contains no project backtest results. Requirements and decisions remain authoritative in [REQUIREMENTS.md](../REQUIREMENTS.md) and [DECISIONS.md](DECISIONS.md).
 
 ## Evidence and provenance

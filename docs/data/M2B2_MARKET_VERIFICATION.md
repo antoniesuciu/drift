@@ -1,5 +1,7 @@
 # M2b.2 — market, calendar and timestamp verification
 
+**Historical MES research — inactive for current scope.** Preserve these dated market/calendar findings as evidence; [NVDA_DATA_PLAN.md](NVDA_DATA_PLAN.md) governs new NVDA/Alpaca work. References below to the frozen MES specification or gate 014 do not authorize or require MES acquisition.
+
 Reviewed **2026-10-29**, using public CME, NYSE/ICE and Databento documentation. No market-data files, samples, authenticated API responses or actual contract definitions were acquired. The [frozen specification](HISTORICAL_DATA_SPEC.md) remains authoritative for the research dates and project roll policy; this note distinguishes documented market rules from facts that still need dated artifacts. Pricing and rights are assessed separately in [vendor verification](M2B2_VENDOR_VERIFICATION.md).
 
 ## Coverage and instrument identity

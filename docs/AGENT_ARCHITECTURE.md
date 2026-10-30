@@ -6,7 +6,7 @@ Agent is a domain component, not a synonym for LLM autonomy or a separate proces
 
 | Family | Inputs and decision mechanism | Candidate examples | Evaluation |
 |---|---|---|---|
-| Rule-based | Available market observations and fixed deterministic rules/statistics | M3a MES ITSM first, M3b Candlestick Pattern Agents; later ORB, mean reversion, trend, stat-arb, volatility breakout | Replay identity, causal timing, net-cost OOS performance and robustness |
+| Rule-based | Available market observations and fixed deterministic rules/statistics | M3a NVDA ITSM first, M3b Candlestick Pattern Agents; later ORB, mean reversion, trend, stat-arb, volatility breakout | Replay identity, causal timing, net-cost OOS performance and robustness |
 | ML | Causal features and a trained, versioned inference artifact | Logistic regression, random forest, LightGBM/XGBoost; independent predictions or meta-label filters | Fold/label integrity, calibration, drift and net comparison to simple controls |
 | LLM | Licensed as-of news, earnings, filings, macro/events and evidence retrieval | Research assistant, event-risk assessment, sentiment/earnings interpretation | Evidence accuracy, temporal validity, injection tests, no-LLM baseline and full costs |
 
@@ -17,6 +17,10 @@ LSTM/Transformers and reinforcement learning are experimental options, not requi
 [Candlestick design and acceptance gates](CANDLESTICK_AGENTS.md) plan the 10 pattern forms, configurable instruments and 1m/5m/15m/30m/1h timeframes, optional trend/support-resistance/volume/volatility confirmations and entry/exit/stop/target rules. Recognition produces deterministic observations from completed, available candles; a separate rule policy supplies direction and confirmations. Doji/Inside Bar can remain neutral. The same versioned detection values/cutoffs are reusable as future ML features without a trading policy or broker dependency.
 
 Candlestick agents use `family=RULE` and the proposal contract below, with detector/aggregation/filter/policy and source references carried through existing lineage fields. Shared portfolio/risk alone authorizes sizing and execution constraints. A pattern observation is neither an order nor a fourth family. M3b follows the completed initial ITSM baseline and evaluates variants independently; M5 out-of-sample validation and M6 authorization remain prerequisites for paper use. This is planned behavior; no agent or feature component is implemented by this update.
+
+## Independent configuration
+
+The initial real instrument/source/broker are NVDA / Alpaca historical SIP / IBKR. They are configuration and admission choices, not agent-family definitions. A policy consumes canonical available observations and instrument metadata; it receives no provider HTTP client or broker connection. Replacing a source adapter must preserve observable input semantics; replacing a strategy must preserve the proposal interface. New instruments need their own admitted calendar/actions/costs. Crypto is deferred, and future ML/LLM selection does not start with this scope update.
 
 ## Proposal contract
 
@@ -38,7 +42,7 @@ Conceptual schema version 1, to become executable only when M3 needs it:
 
 At processing clock `t`, require `data_asof_utc <= generated_at_utc <= t < valid_until_utc`, all referenced input availability times <= generation, and a known instrument/configuration/schema. Historical acquisition time is distinct from modeled historical availability. Reject unsupported schema, malformed/future data, bad lineage and already-consumed IDs. Record reason codes for rejections and abstentions. A duplicate cannot create an additional intent/order.
 
-NO_TRADE is an explicit abstention, not an implicit cancellation. FLAT passes portfolio/risk checks and can only affect the appropriate attributed allocation. M3 evaluates one agent/contract at a time: ITSM first, then independently configured candlestick variants. More complex concurrent netting/attribution is introduced and tested in M7. Risk-reducing requests remain subject to order validity and broker reconciliation.
+NO_TRADE is an explicit abstention, not an implicit cancellation. FLAT passes portfolio/risk checks and can only affect the appropriate attributed allocation. M3 evaluates one agent/instrument at a time: NVDA ITSM first, then independently configured candlestick variants. More complex concurrent netting/attribution is introduced and tested in M7. Risk-reducing requests remain subject to order validity and broker reconciliation.
 
 ## Hybrid composition and conflicts
 

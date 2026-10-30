@@ -1,5 +1,7 @@
 # MES historical-data provider decision
 
+**Historical MES reference — superseded for active scope, 2026-10-30.** Use [NVDA_DATA_PLAN.md](NVDA_DATA_PLAN.md) for NVDA/Alpaca admission. Preserve this document as evidence for the existing synthetic MES implementation and previous planning; its procurement steps and JSON requests are inactive and authorize no execution.
+
 Reviewed **2026-10-29** using public primary documentation only. No account was opened, provider cost API called, broker connected, sample/data downloaded or purchase made. Advertised coverage and documented semantics are distinguished from **unverified** contract-level completeness, account entitlements and request-specific prices. Dataset scope is owned by [HISTORICAL_DATA_SPEC.md](HISTORICAL_DATA_SPEC.md); M2b behavior and gates belong to [INGESTION_DESIGN.md](INGESTION_DESIGN.md).
 
 M2b.2's [vendor verification](M2B2_VENDOR_VERIFICATION.md) updates public pricing/rights evidence, including optional Standard L0 history and the distinction between free metadata queries and billable definition time series. The [market verification](M2B2_MARKET_VERIFICATION.md) and [nine-job acquisition plan](M2B2_ACQUISITION_PLAN.md) record historical-calendar/metadata limits and exact proposed request bounds. Exact pilot/archive totals and applicable Databento retention rights remain unresolved; no account query or acquisition occurred.

@@ -1,5 +1,7 @@
 # M2b.2 — vendor pricing and rights verification
 
+**Historical MES procurement research — inactive for current scope.** Vendor comparisons/quotes below support the earlier plan, not a purchase or next task. Current NVDA/Alpaca rights/admission work follows [NVDA_DATA_PLAN.md](NVDA_DATA_PLAN.md).
+
 Reviewed **2026-10-29**, using public first-party documentation, the official Databento API reference and Context7. No account login, authenticated metadata query, data/sample download, purchase or vendor contact occurred. This note updates the procurement evidence in [PROVIDER_COMPARISON.md](PROVIDER_COMPARISON.md); dataset selection remains [MES-ITSM-DATA-v1](HISTORICAL_DATA_SPEC.md). **Public price structure is verified; request-specific totals and applicable Databento retention terms are not.**
 
 ## Costs that can and cannot be established publicly

@@ -1,43 +1,54 @@
-# EXP-001 — MES intraday time-series momentum adaptation
+# EXP-001 — NVDA intraday momentum adaptation
 
-**State:** Research design only; not executed. Rule-based implementation M3; validation M5. No return, Sharpe, win rate or profitability is claimed. See [synthesis](../../docs/RESEARCH_SYNTHESIS.md) for paper evidence and distinctions from replication.
+**Protocol: EXP-001-NVDA-v1, 2026-10-30. State: planning only; no strategy or measured returns.** Initial NVDA/Alpaca/IBKR scope is confirmed by the user. This replaces the unexecuted MES design as the active experiment; historical MES code/tests and specifications remain regression evidence. The split is preserved, not reselected from observed results. [Requirements](../../REQUIREMENTS.md), [NVDA data plan](../../docs/data/NVDA_DATA_PLAN.md) and [roadmap](../../docs/ROADMAP.md) govern admission and sequencing.
 
-## Hypothesis and rule
+## Hypothesis and reusable policy
 
-Hypothesis: alignment of early-session and pre-close momentum may predict an executable final-half-hour MES return after costs. Null: this alignment offers no robust positive net expectancy or useful advantage over controls on unseen data. The rule is a proposed adaptation; an academic finding on another instrument/sample does not verify it.
+Hypothesis: agreement of overnight-plus-early momentum and pre-close momentum predicts NVDA's final-half-hour return after realistic execution costs. Null: it has no robust positive net expectancy or useful advantage over controls on unseen data. Academic SPY findings and earlier MES planning do not establish NVDA alpha or a paper replication.
 
-For an eligible full US cash session, use the same actual expiring MES contract for all prices:
+The policy receives available observations and effective instrument/action metadata; it does not create provider or broker clients. Instrument, provider, fee policy, allowed directions and execution adapter are independently configured. NVDA is the sole real initial instrument, not a constant embedded in the reusable sign-agreement calculation.
 
-`r_early = P(10:00 ET) / P(previous full cash-session close at 16:00 ET) - 1`
+On a full eligible US cash session:
 
-`r_preclose = P(15:30 ET) / P(15:00 ET) - 1`
+```text
+r_early = P(10:00) / split_neutral_previous_close − 1
+r_preclose = P(15:30) / P(15:00) − 1
 
-Long if both strictly positive, short if both strictly negative; otherwise NO_TRADE. Maximum one entry per eligible session. A zero return abstains. Prices are positive, validated completed-bar endpoints, not bar-start labels used as close observations. On holidays/early closes, missing endpoints, stale data, unknown mapping or a contract roll between endpoints, abstain and record why. Skip sessions following an early-close session for this first frozen variant, so the prior endpoint remains an unambiguous full-session close.
+both strictly positive → LONG proposal
+both strictly negative → SHORT proposal, subject to the frozen direction/borrow policy
+zero, disagreement or unavailable inputs → NO_TRADE with reason
+```
 
-The first return includes overnight information. Do not replace it with 09:30→10:00 without registering a separate experiment. Exact paper formulas, fitted regression, sample and ETF/futures differences belong in a replication protocol before any replication claim.
+Use the immediately preceding cash session; if it closes early, abstain rather than skip back to a convenient earlier full session. Current early-close/closed sessions also abstain. Maximum one entry per eligible session. Unknown instrument mapping, required split actions, missing/stale endpoints or earlier unknown input gaps abstain and stay in coverage.
 
-## Decision and execution timing
+All signal endpoints are closes of the completed minute **ending** at the stated New York clock. Prior close is that minute's close ending 16:00, not an assumed official auction price. The early return includes overnight information. Record this proxy and its difference from any paper's official close methodology.
 
-Use UTC internally and `America/New_York` plus a versioned cash calendar for windows. For minute bars, `P(15:30)` is the close of the bar ending 15:30, available only after that bar completes plus declared feed/processing delay. Databento raw OHLCV timestamps label interval start; normalize explicitly. The [provider document](../../docs/COSTS_AND_PROVIDERS.md) and [requirements](../../REQUIREMENTS.md) govern timestamp validation.
+Across a split, express the prior raw close on the current share basis using the known effective factor; for a 4:1 split, divide the old close by four. Keep executable prices/share quantities raw. The baseline is split-neutral price return, with cash dividends left in the overnight price return; a total-return variant needs its own trial. Missing action evidence cannot become a false momentum signal.
 
-Generate the proposal after all inputs are available. Enter at the first eligible subsequent executable quote/trade, with a declared latency, never retrospectively at the signal-generating close. For OHLCV-only replay, use a conservative next-bar convention and document its optimism/uncertainty; equal event timestamps require explicit event ordering, not an assumption of instantaneous fills.
+Historical short scenarios must declare assumed borrow availability/rates and are hypothetical until account evidence exists. Freeze allowed directions before results; a long-only policy is a named variant, not silent removal of losing shorts. Shared portfolio/risk owns final quantities and permission checks; proposals are not orders.
 
-Exit target is by the 16:00 ET cash close, using a preregistered scheduled liquidation lead time/latency that does not depend on observing the future 16:00 closing price. Declare fill eligibility at the cutoff and what happens to unfilled/partial residuals; log cutoff failure, carry remaining exposure explicitly in PnL/risk and flag the run for review. Never invent a fill to enforce a flat position. No new entry if insufficient time remains under this policy. Intended holding period is approximately 30 minutes and can be shorter due to entry latency/exit lead time.
+## Decision and execution time
+
+Use UTC internally, `America/New_York` and a versioned cash calendar. Alpaca minute labels are starts: the 15:29 bar completes at 15:30 and becomes usable only after declared availability. Baseline 1-second and adverse 60-second modeled delays are research assumptions, not measured service guarantees.
+
+Generate after all required observations/actions are available. Enter at the first eligible subsequent executable event. A signal close or next-bar open that already occurred before availability cannot be a retrospective fill. OHLCV-only replay needs a frozen conservative fill convention, explicit event ordering and disclosed uncertainty.
+
+Target liquidation by the 16:00 cash close through a scheduled lead time and latency frozen in advance; do not observe the final close to choose an earlier exit. Record partial/unfilled/residual exposure and any missed cutoff in PnL/risk. Never invent a fill to guarantee flatness. Intended hold is approximately 30 minutes, shortened by entry latency/exit lead.
 
 ## Freeze before results
 
-M2 must establish accessible contract-level coverage. Before running M3 on real data, record exact dates/contracts, raw/curated hashes, trading calendar/version, price endpoints, roll policy, minimum coverage, delivery/processing latency, sizing, exit/cutoff behavior, fee tier, spread/slippage scenarios, dataset rights and the code/config versions. These are unresolved inputs, not defaults hidden in code.
+- Dataset `NVDA-SIP-DATA-v1`: study 2020-01-02–2025-12-31, prior 2019-12-31 context and declared warmup. Development 2020–2022; validation 2023; final holdout 2024–2025. The audit's alternative split was not adopted.
+- Rights/access, feed, raw hashes, action/mapping/calendar versions, coverage/exclusions and historical revision/availability limitations.
+- Policy/config/version, allowed directions and assumed short availability; whole-share quantities, numeric historical risk budget, entry/exit/cutoff handling and event-order convention.
+- Dated commissions/minimums, route/regulatory/clearing charges, raw tick/share math, spread/slippage, FX and borrow/financing assumptions; zero/base/stressed scenarios and sample-adequacy/promotion criteria.
+- Every trial and failed/rejected variant. Retuning creates a new trial/protocol, not reuse of an untouched holdout claim.
 
-Use one MES contract as an arithmetic research baseline only after the configured synthetic risk budget permits it; a minimum tradable size can exceed the eventual capital budget. Positions must not be scaled from day margin. MES point/tick math and all fees follow the [cost model](../../docs/COSTS_AND_PROVIDERS.md). Avoid adding spread again if the fill prices already use bid/ask. Report commissions/fees and price impact separately.
+No capital, fee tier, borrow, numeric risk limit or profitable configuration is silently supplied by this document. M2 admission precedes M3 execution; user authorization for requirements does not start either implementation or acquisition.
 
-Freeze chronological development, validation and untouched final holdout dates before viewing outcomes. Track every attempted variant; changed windows/costs/thresholds create a new trial ID. Walk-forward fitting applies to any later ML filter, not the fixed rule itself. Purge overlapping labels where relevant. Preserve rejected ideas and reasons.
+## Controls, metrics and acceptance
 
-## Controls, metrics and decision
+Compare no-trade, unconditional same-window direction, early-sign-only and preclose-sign-only controls. A seeded randomized-direction control should match eligible dates/windows and disclose dependence. Report gross/net PnL with capital definition, fees, exposure/turnover, trade counts, drawdown, exclusions, action/calendar slices and cost/delay sensitivity; use dependence-aware uncertainty rather than treating minute bars as independent trades.
 
-Compare no-trade, simple unconditional same-window direction, early-sign-only and preclose-sign-only baselines. A seeded randomized-direction control can test conditional signal value while matching trading dates/holding windows; use dependence-aware uncertainty and document its limits. These are controls, not extra hidden candidate searches. Include gross/net PnL and returns with capital definition, fees, turnover, trade count, drawdown, win/loss distribution, regime/roll slices and cost/latency sensitivity. Report coverage and skipped-session counts alongside performance.
+M3 needs reproducible proposals and raw-share PnL through native simulation with hand-calculated long/short, action, fee/minimum, timing, missing/revised data, early-close, duplicate, partial-fill, cutoff and risk-rejection cases. The policy must consume the shared interface with no Alpaca/IBKR import. A second synthetic instrument and another policy fixture verify extension without admitting another real market.
 
-Before final holdout access, write numeric candidate promotion criteria tied to actual costs, sample adequacy and risk tolerance, with an uncertainty method appropriate to serial dependence. Research completion requires a reproducible go/modify/reject verdict, not a positive Sharpe. A modified strategy returns to development with a new trial record; repeated reuse of the same final holdout must be disclosed and cannot remain called untouched.
-
-## Required test cases
-
-Long/short/zero/disagreement and exact endpoint availability; duplicate/missing/late bars; UTC/ET DST and holidays/early closes; prior early-close exclusion; same-contract/roll mapping; proposal expiry/deduplication; one-entry limit; next-event fill and nonzero latency; cutoff/partial fills; explicit commissions/spread/slippage; long/short multiplier PnL; over-budget rejection and halt. No broker connection or order submission is needed to test this design.
+M5 independently evaluates frozen out-of-sample evidence before any M6 paper proposal; rule-only validation does not require ML implementation. Null/negative research can complete the experiment and block promotion. M3b candlestick research follows the initial baseline; crypto and ML/LLM model selection remain deferred. No account connection or order submission is required to test this protocol.

@@ -1,5 +1,7 @@
 # Documentation initialization audit
 
+**Historical M0 signoff record.** Commit/cleanup instructions below describe that completed task, not current authorization. Current scope and pending work are in [requirements](../REQUIREMENTS.md) and the [NVDA plan](data/NVDA_DATA_PLAN.md).
+
 Date: 2026-10-29. Scope: documentation and planning only. This record describes evidence, not runtime trading readiness. See [provenance](research/README.md) for original hashes and consolidation.
 
 ## History and cleanup decision

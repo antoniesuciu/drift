@@ -1,5 +1,7 @@
 # GOAL: Implement M1 — Project Foundation
 
+**Historical task — M1 is complete.** Retained as the original task input, not current implementation or commit authorization. Follow [AGENTS.md](AGENTS.md), [current requirements](REQUIREMENTS.md) and the [NVDA plan](docs/data/NVDA_DATA_PLAN.md) for new work; the active scope is NVDA/Alpaca/IBKR.
+
 You are the lead quantitative software engineer working on `quant-trading-lab`, a modular algorithmic trading platform supporting rule-based, ML-based, and LLM-based trading agents.
 
 M0 (Research and Architecture) is complete.

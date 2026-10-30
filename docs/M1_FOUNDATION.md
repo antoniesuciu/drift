@@ -1,5 +1,7 @@
 # M1 — verified offline foundation
 
+**Foundation evidence, not current market admission.** The verified runtime below remains synthetic MES; current NVDA/Alpaca requirements are in [NVDA_DATA_PLAN.md](data/NVDA_DATA_PLAN.md). No NVDA implementation or account compatibility is implied by this M1 record.
+
 Validated 2026-10-29. Scope: [TASK_M1.md](../TASK_M1.md), [M1 roadmap](ROADMAP.md#m1--project-foundation), REQ-DATA-002's M1 timing cases, REQ-BACKTEST-001, REQ-NFR-001/002 and the M1 CI secret-check configuration in REQ-SEC-001. No M2 ingestion, strategies, orders, broker connection, training or paid data was introduced.
 
 ## Environment and dependency decision

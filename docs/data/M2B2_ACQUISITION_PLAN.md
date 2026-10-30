@@ -1,5 +1,7 @@
 # M2b.2 — real-data preparation and acquisition plan
 
+**Historical MES reference — superseded for active scope, 2026-10-30.** Use [NVDA_DATA_PLAN.md](NVDA_DATA_PLAN.md) for NVDA/Alpaca admission. Preserve this document as evidence for the existing synthetic MES implementation and previous planning; its procurement steps and JSON requests are inactive and authorize no execution.
+
 Prepared **2026-10-29** against [MES-ITSM-DATA-v1](HISTORICAL_DATA_SPEC.md), [the ingestion gates](INGESTION_DESIGN.md) and implementation commit `0b637034203d82a5e5d1760fbc40c3cc0ffecfa9`. **Research/planning is complete to the public-evidence limits below; acquisition, real-data admission, gates 013/014 and M2 overall remain pending.** No account, authenticated metadata call, market-data/sample download, purchase, broker connection or M3 work occurred. Application code, dependencies and fixture-only admission remain unchanged.
 
 The [vendor verification](M2B2_VENDOR_VERIFICATION.md) owns price/rights evidence; [market verification](M2B2_MARKET_VERIFICATION.md) owns coverage, contract/calendar sources and timestamp facts. This document owns the executable request schedule, implementation prerequisites and admission procedure. The [machine-readable request plan](M2B2_PILOT_REQUESTS.json) contains exact proposed parameters with authorization, prices and identities explicitly unresolved. It is a planning artifact, **not a request accepted by today's `quantlab data-ingest`**.

@@ -1,5 +1,7 @@
 # MES historical dataset specification — M2a
 
+**Historical MES reference — superseded for active scope, 2026-10-30.** Use [NVDA_DATA_PLAN.md](NVDA_DATA_PLAN.md) for NVDA/Alpaca admission. Preserve this document as evidence for the existing synthetic MES implementation and previous planning; its procurement steps and JSON requests are inactive and authorize no execution.
+
 Specification `MES-ITSM-DATA-v1`, 2026-10-29. **Project policy** below defines a frozen dataset, not measured coverage or market results. Verified external facts have linked primary sources; unverified procurement/delivery questions are listed explicitly. No data was acquired. [Provider comparison](PROVIDER_COMPARISON.md) owns pricing/rights and [ingestion design](INGESTION_DESIGN.md) owns M2b implementation gates. The [EXP-001 rule](../../experiments/exp001_itsm/README.md) is unchanged.
 
 ## 1. Dataset tiers and date boundaries

@@ -50,3 +50,7 @@ The [acquisition plan](data/M2B2_ACQUISITION_PLAN.md) and linked vendor/market v
 ## Candlestick requirements plan
 
 The [candlestick specification](CANDLESTICK_AGENTS.md), requirements and roadmap own the detailed catalogue, causal contracts and acceptance gates. Record the durable M3a-then-M3b decision in Architecture Decisions and Current State, with a concise overview pointer. Reuse existing project notes rather than copying the specification into memory. This is planning only: current M2 scope and gates remain unchanged, M3 has not started, and other projects/global notes remain outside the update.
+
+## NVDA scope alignment, 2026-10-30
+
+The user confirmed NVDA ordinary shares, Alpaca historical SIP and IBKR execution; crypto is deferred. [D-026–028](DECISIONS.md), [NVDA_DATA_PLAN.md](data/NVDA_DATA_PLAN.md) and the updated requirements/architecture/roadmap now own that direction. Record the durable source/broker separation, metadata-driven extension interfaces and preserved 2020–2022 / 2023 / 2024–2025 split in the existing project notes. Keep old MES procurement/calendar findings explicitly historical, preserve synthetic runtime evidence, and state that all NVDA admission/strategy gates remain pending. The user subsequently authorized a local commit of these reviewed documents. Implementation, acquisition, orders and push remain outside this task.

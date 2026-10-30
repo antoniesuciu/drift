@@ -4,12 +4,12 @@
 
 1. Inspect Git status, branch and relevant changes; preserve existing user work.
 2. Read [README.md](README.md), [decisions](docs/DECISIONS.md), [requirements](REQUIREMENTS.md) and the active entry in [ROADMAP.md](docs/ROADMAP.md). Use [GLOSSARY.md](GLOSSARY.md) for domain terms.
-3. Work on one milestone at a time. M0/M1/M2a/M2b.1 are complete; M2b.2 research/planning is recorded, while real pilot/archive admission and M2 overall remain incomplete. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
+3. Work on one milestone at a time. Preserve M0/M1/M2a/M2b.1 historical evidence. Active scope is NVDA shares / Alpaca historical SIP / IBKR; crypto is deferred. M2b.2 NVDA admission and M2 overall remain incomplete, and runtime remains synthetic MES-only. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
 4. For changes to interfaces, read [architecture](docs/ARCHITECTURE.md) and [agent contracts](docs/AGENT_ARCHITECTURE.md); for strategy/data work, read the [experiment](experiments/exp001_itsm/README.md), [research synthesis](docs/RESEARCH_SYNTHESIS.md) and [costs](docs/COSTS_AND_PROVIDERS.md).
-5. For M2b data work, read the [dataset specification](docs/data/HISTORICAL_DATA_SPEC.md), [provider comparison](docs/data/PROVIDER_COMPARISON.md) and [ingestion gates](docs/data/INGESTION_DESIGN.md) before implementing or acquiring data. Source recommendations are conditional and do not authorize purchases or account connections.
-6. For pipeline changes or M2b.2, read [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md). Preserve native catalog/provenance verification, causal snapshots, immutable publication and fixture-only restrictions until a separately approved admission change. Synthetic tests do not satisfy real-data gates 013/014.
-7. Before quote/account review, real-file admission or acquisition, read the [M2b.2 preparation plan](docs/data/M2B2_ACQUISITION_PLAN.md) and its linked vendor/market evidence. Exact quotes, applicable retention rights, dated calendars and real-definition handling remain prerequisites; the nine-job JSON plan has no execution approval.
-8. For candlestick detector, rule-policy or pattern-feature work, read the [candlestick plan](docs/CANDLESTICK_AGENTS.md). M3a ITSM must precede M3b; preserve completed-candle availability, shared RULE proposals and reusable detection. All candlestick gates remain pending; the plan does not start implementation or alter current M2 scope.
+5. For NVDA data, provider or instrument changes, read the [active NVDA plan](docs/data/NVDA_DATA_PLAN.md) before implementation/admission. Preserve raw/adjusted share units, completed-candle availability, the frozen research split and native provenance. Source choice does not authorize acquisition or account access.
+6. For pipeline changes, read [M2b.1 evidence](docs/data/M2B1_IMPLEMENTATION.md) and [extension interfaces](docs/ARCHITECTURE.md#extension-interfaces). Preserve existing MES regressions and fixture-only restrictions until an approved admission change; NVDA-001–010 need their own evidence. Keep provider parsing and broker lifecycle out of strategy/risk modules.
+7. Earlier [MES acquisition planning](docs/data/M2B2_ACQUISITION_PLAN.md), dataset/ingestion specifications and the nine-job JSON are historical, inactive evidence. Consult them only for retained MES behavior or a separately requested futures task; do not resume MES procurement for NVDA work.
+8. For candlestick detector, rule-policy or pattern-feature work, read the [candlestick plan](docs/CANDLESTICK_AGENTS.md). M3a NVDA ITSM must precede M3b; preserve completed-candle availability, shared RULE proposals and reusable detection. All candlestick gates remain pending; the plan does not start implementation or alter current M2 scope.
 
 ## Development and verification
 
@@ -22,7 +22,7 @@
 
 - Preregister hypotheses, splits, costs and parameters. Record all attempted trials and failed experiments. Never fabricate financial results or treat synthetic data as measured market performance.
 - Prevent lookahead: completed bars, publication/availability times, causal feature transforms and purged overlapping training labels. Refit scalers/models only on training folds; keep the final holdout untouched.
-- Preserve raw data/provenance and gaps, actual futures expiries, roll rules, calendars, DST and vendor timestamp semantics. Continuous series are not executable instruments.
+- Preserve raw data/provenance and gaps, effective instrument mappings/increments, equity corporate actions, calendars/DST and vendor timestamp semantics. Futures expiry/roll rules apply to futures, not every asset; adjusted research series are not raw executable prices.
 - Model commissions, exchange/regulatory fees, spread, slippage and multiplier/currency math explicitly. Avoid counting spread twice when using executable bid/ask fills. Paper fills and bar-only simulations have limitations.
 
 ## Trading and security guardrails

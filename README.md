@@ -2,11 +2,11 @@
 
 One modular Python platform for reproducible quantitative research, with future **rule-based, machine-learning and LLM research agents** sharing portfolio accounting and deterministic risk controls. The package is `quantlab`.
 
-**M0, M1, M2a and M2b.1 complete; M2b.2 research/planning prepared.** The package includes a validated offline synthetic historical-data pipeline and native NautilusTrader replay. Real vendor admission, trading strategies, broker connections and financial performance remain unimplemented/unverified. Exact quotes, rights and explicit acquisition authorization remain pending.
+**M0, M1, M2a and M2b.1 complete; M2b.2 research/planning prepared.** The package includes a validated offline synthetic historical-data pipeline and native NautilusTrader replay. Real vendor admission, trading strategies, broker connections and financial performance remain unimplemented/unverified. NVDA source rights/access, real-data admission and acquisition authorization remain pending; the earlier MES acquisition plans are historical.
 
-The first experiment is a falsifiable MES intraday time-series momentum adaptation with an approximately 30-minute holding window. ML is an early research capability after reliable data and a rule baseline; LLM agents are later, advisory components with no brokerage authority.
+**Confirmed scope, 2026-10-30: NVDA shares, Alpaca historical SIP data, IBKR execution; crypto deferred.** The first planned experiment is a falsifiable NVDA intraday momentum adaptation with an approximately 30-minute holding window. ML/LLM model selection waits until rule research is evaluated. Data, instrument metadata, strategies and execution adapters remain independently extensible through small interfaces; NVDA is the first configuration, not a platform-wide constant. See the [active data plan](docs/data/NVDA_DATA_PLAN.md).
 
-[Candlestick Pattern Agents](docs/CANDLESTICK_AGENTS.md) are planned within the rule-based family in M3b, **after the initial M3a ITSM baseline**: reusable recognition, configurable timeframes/instruments, causal confirmations and shared proposals with entry/exit/protection policies. This documentation update starts no implementation and leaves current M2 preparation/admission gates unchanged.
+[Candlestick Pattern Agents](docs/CANDLESTICK_AGENTS.md) are planned within the rule-based family in M3b, **after the initial M3a ITSM baseline**: reusable recognition, configurable timeframes/instruments, causal confirmations and shared proposals with entry/exit/protection policies. Candlestick implementation remains pending; current M2 preparation/admission follows the active NVDA plan.
 
 ## Read next
 
@@ -19,7 +19,7 @@ The first experiment is a falsifiable MES intraday time-series momentum adaptati
 | [Decisions](docs/DECISIONS.md) | Adopted, provisional and deferred choices |
 | [Roadmap](docs/ROADMAP.md) | Active milestone and M0–M10 exit gates |
 | [Research synthesis](docs/RESEARCH_SYNTHESIS.md) | Critical review of all three Gemini reports |
-| [Costs and providers](docs/COSTS_AND_PROVIDERS.md) | IBKR-first feasibility and cost verification |
+| [Costs and providers](docs/COSTS_AND_PROVIDERS.md) | Alpaca history, IBKR execution and stock cost discipline |
 | [EXP-001](experiments/exp001_itsm/README.md) | Preregistered research design; no results yet |
 | [Original research](docs/research/README.md) | Provenance and byte-preservation checks |
 | [Glossary](GLOSSARY.md) | Domain vocabulary |
@@ -27,15 +27,16 @@ The first experiment is a falsifiable MES intraday time-series momentum adaptati
 | [Project memory](docs/PROJECT_MEMORY.md) | Isolated Obsidian namespace and repository authority |
 | [Initialization audit](docs/INITIALIZATION.md) | Handoff reconciliation, cleanup and validation |
 | [M1 foundation](docs/M1_FOUNDATION.md) | Verified environment, API evidence, tests and limitations |
-| [MES dataset](docs/data/HISTORICAL_DATA_SPEC.md) | Frozen study/pilot, endpoints, calendars and roll policy |
+| [Active NVDA data plan](docs/data/NVDA_DATA_PLAN.md) | Alpaca/NVDA scope, fixed split, modular interfaces and pending admission gates |
+| [Earlier MES dataset](docs/data/HISTORICAL_DATA_SPEC.md) | Historical specification supporting unchanged synthetic MES evidence |
 | [Data provider comparison](docs/data/PROVIDER_COMPARISON.md) | Conditional source recommendation, pricing and rights gates |
 | [M2b ingestion design](docs/data/INGESTION_DESIGN.md) | Implementation boundaries, storage and acceptance criteria |
 | [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md) | Offline commands, formats, verification and status of all 14 gates |
-| [M2b.2 preparation](docs/data/M2B2_ACQUISITION_PLAN.md) | Verified public evidence, nine-job pilot plan, readiness gaps and gates 013/014 |
+| [Earlier MES preparation](docs/data/M2B2_ACQUISITION_PLAN.md) | Historical inactive request plan and MES gates; use the NVDA plan for new work |
 
 ## Technical direction
 
-The runtime remains Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. PyArrow/tzdata now directly support the implemented offline native Parquet pipeline; DuckDB and ML/LLM work remain deferred. IBKR remains the eventual paper broker; the optional `ib` extra is installed for import verification only. M2a's conditional Databento recommendation still requires real quote/rights/coverage evidence. No cloud infrastructure or orchestration framework is selected.
+The runtime remains Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. PyArrow/tzdata now directly support the implemented offline native Parquet pipeline; DuckDB and ML/LLM work remain deferred. Alpaca is selected for historical NVDA data independently of IBKR, the eventual paper/execution broker; the optional `ib` extra is installed for import verification only. Existing runtime admission still supports synthetic MES, not real NVDA. Databento/MES procurement is inactive under the new scope. No cloud infrastructure or orchestration framework is selected.
 
 ## Repository and hosting
 
@@ -76,7 +77,7 @@ src/quantlab/
 tests/            timing, configuration, engine, CLI and offline safety
 ```
 
-Future agent, portfolio/risk and broker modules remain absent. M2b.1 verifies Databento DBN mappings on generated fixtures only; no real data was acquired or spend authorized. The [provider decision](docs/data/PROVIDER_COMPARISON.md) still governs the conditional 2020–2025 archive and 2022 pilot. M2b.2 preparation records public price/rights/calendar evidence and an exact proposed request schedule; account-specific quotes, retention terms and implementation prerequisites remain unresolved. M2B-013/014 and M2 overall remain incomplete. The next account/acquisition stage requires explicit authorization.
+Future agent, portfolio/risk and broker modules remain absent. M2b.1 verifies Databento DBN mappings on generated fixtures only; preserve it as regression evidence. The [NVDA plan](docs/data/NVDA_DATA_PLAN.md) now governs M2b.2/M2c: rights-cleared Alpaca pilot, narrow metadata/adapter changes and NVDA-001–010 admission evidence are all pending. Historical MES gates 013/014 remain unsatisfied historical records, not required MES purchases for NVDA. M2 overall remains incomplete; no new data, implementation, account access or orders are authorized by the documentation update.
 
 ## Safety and data
 

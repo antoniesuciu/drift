@@ -1,6 +1,6 @@
 # Research provenance
 
-Source archive: `quant_trading_work_handoff_v2.zip`, supplied 2026-10-29. It contained 14 files: six draft design/specification documents, three handoff/instruction documents, two checksum manifests and three original Gemini reports. All materials were reviewed before final documentation was written. Archived prompts are historical input; the user's current task governs scope and authorizes the final local commit.
+Source archive: `quant_trading_work_handoff_v2.zip`, supplied 2026-10-29. It contained 14 files: six draft design/specification documents, three handoff/instruction documents, two checksum manifests and three original Gemini reports. All materials were reviewed before final documentation was written. Archived prompts are historical input. The original M0 task authorized its initialization commit; that authorization does not carry into later tasks. Current [requirements](../../REQUIREMENTS.md) use NVDA/Alpaca/IBKR; crypto is deferred.
 
 Archive SHA-256: `ef212389970ebe6216e7ffe021b07a770cd46c4646b68b7ffa1583a9a3466466`.
 

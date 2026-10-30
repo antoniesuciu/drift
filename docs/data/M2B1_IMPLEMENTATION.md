@@ -1,5 +1,7 @@
 # M2b.1 — offline historical pipeline
 
+**Preserved synthetic MES runtime evidence.** Current real-data planning is [NVDA/Alpaca](NVDA_DATA_PLAN.md). The original M2b.2 handoff and MES gates below are historical; keep the working regressions, and use NVDA-001–010 for new admission rather than resuming MES acquisition.
+
 Implemented 2026-10-29 against [MES-ITSM-DATA-v1](HISTORICAL_DATA_SPEC.md) and the [ingestion design](INGESTION_DESIGN.md). **M2b.1 is complete locally; M2b overall and M2b.2 real-data admission remain incomplete.** No acquisition, vendor account/API access, broker connection, order, strategy or model is implemented. Configuration currently requires `mode=offline`, `synthetic=true` and a `synthetic:` rights reference; acquisition and real-vendor admission fail closed rather than pretending to validate a quote/license.
 
 ## Run it
