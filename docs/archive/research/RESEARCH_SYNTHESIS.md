@@ -1,8 +1,8 @@
 # Research synthesis
 
-**Scope update, 2026-10-30:** active research is NVDA with Alpaca history and IBKR execution; crypto is deferred. MES/SPY and vendor comparisons below retain their original research context. [Current protocol](../experiments/exp001_itsm/README.md) and [NVDA plan](data/NVDA_DATA_PLAN.md) govern new work; no prior paper result proves NVDA alpha.
+**Scope update, 2026-10-30:** active research is NVDA with Alpaca history and IBKR execution; crypto is deferred. MES/SPY and vendor comparisons below retain their original research context. [Current protocol](../../../experiments/exp001_itsm/README.md) and [NVDA plan](../../data/NVDA_DATA_PLAN.md) govern new work; no prior paper result proves NVDA alpha.
 
-Reviewed 2026-10-29. This document evaluates the supplied research; it contains no project backtest results. Requirements and decisions remain authoritative in [REQUIREMENTS.md](../REQUIREMENTS.md) and [DECISIONS.md](DECISIONS.md).
+Reviewed 2026-10-29. This document evaluates the supplied research; it contains no project backtest results. Requirements and decisions remain authoritative in [REQUIREMENTS.md](../../../REQUIREMENTS.md) and [DECISIONS.md](../../DECISIONS.md).
 
 ## Evidence and provenance
 
@@ -10,9 +10,9 @@ All three Gemini reports were reviewed in full. Originals are retained unchanged
 
 | Original | Main contribution | Treatment |
 | --- | --- | --- |
-| [01: Broad feasibility](research/original/gemini_01_broad_feasibility.txt) | Market, broker, infrastructure and storage survey | Useful problem inventory; many precise fees, margins, latency and regulatory conclusions need correction or verification. |
-| [02: Horizon and strategy comparison](research/original/gemini_02_horizons_strategy_comparison.txt) | 5–60 minute strategies, ORB, cost decomposition, ML filters | Candidate hypotheses; neither excursion-to-cost ratios nor model rankings prove an edge. |
-| [03: Empirical short horizon](research/original/gemini_03_empirical_short_horizon.txt) | Challenges unconditional ORB; motivates intraday momentum | Stronger motivation for EXP-001, with important return-definition and evidence-transfer caveats. |
+| [01: Broad feasibility](original/gemini_01_broad_feasibility.txt) | Market, broker, infrastructure and storage survey | Useful problem inventory; many precise fees, margins, latency and regulatory conclusions need correction or verification. |
+| [02: Horizon and strategy comparison](original/gemini_02_horizons_strategy_comparison.txt) | 5–60 minute strategies, ORB, cost decomposition, ML filters | Candidate hypotheses; neither excursion-to-cost ratios nor model rankings prove an edge. |
+| [03: Empirical short horizon](original/gemini_03_empirical_short_horizon.txt) | Challenges unconditional ORB; motivates intraday momentum | Stronger motivation for EXP-001, with important return-definition and evidence-transfer caveats. |
 
 The previous standalone `firstResearch.md` was an editorial condensation of report 01, rather than another original research report. Its useful cautions about costs, ambiguous bars, sizing, paper fills and overfitting are incorporated here and in the final specifications. It contained no additional primary empirical dataset or study.
 
@@ -36,13 +36,13 @@ Holding period, feature/bar interval and execution-data resolution are separate 
 
 ## Intraday momentum and EXP-001
 
-**M2a follow-up:** the [dataset specification](data/HISTORICAL_DATA_SPEC.md#2-what-the-academic-signal-actually-is) records an inspectable original-author manuscript's r1/r12/r13 and sign-agreement strategy, including its zero-return convention and the remaining published-final-methods retrieval limit. Use that bounded evidence rather than repeating the same paper discovery. The accepted MES rule is unchanged.
+**M2a follow-up:** the [dataset specification](../mes-data/HISTORICAL_DATA_SPEC.md#2-what-the-academic-signal-actually-is) records an inspectable original-author manuscript's r1/r12/r13 and sign-agreement strategy, including its zero-return convention and the remaining published-final-methods retrieval limit. Use that bounded evidence rather than repeating the same paper discovery. The accepted MES rule is unchanged.
 
 **Reported finding:** Gao, Han, Li and Zhou study S&P 500 ETF observations from 1993–2013 and report that the return from the **previous day's close to the end of the first half hour** predicts the final half-hour return. This includes overnight information. Report 03's description of the first return as only 09:30–10:00 ET omits that distinction. The paper's abstract also reports stronger predictability in particular volatility, volume and news conditions. These historical findings do not establish modern MES profitability. [Gao et al., 2018, publisher abstract and introduction](https://www.sciencedirect.com/science/article/pii/S0304405X18301351).
 
 **Reported finding:** Li, Sakkas and Urquhart examine 16 developed markets, finding economically and statistically significant ITSM in most markets, with links to liquidity, volatility and information continuity. The published article is titled *Intraday time series momentum: Global evidence and links to market characteristics*; the supplied report uses an earlier working title. International historical evidence supports investigation, without validating an exact MES execution rule. [University of Nottingham publication record](https://nottingham-repository.worktribe.com/output/5273197).
 
-**Hypothesis:** a low-turnover MES sign-agreement adaptation can produce positive returns after realistic costs in unseen data. The provisional signals use previous cash close to 10:00 ET and 15:00–15:30 ET; agreement proposes direction for the final half hour. This is an adaptation, not a verified replication of either paper. The experiment protocol must specify the actual contract, cash-close proxy, previous-session mapping, early closes, roll handling, signal availability and executable entry after inputs become known. A 15:30 completed price cannot also guarantee a fill at that same price. [EXP-001 protocol](../experiments/exp001_itsm/README.md).
+**Hypothesis:** a low-turnover MES sign-agreement adaptation can produce positive returns after realistic costs in unseen data. The provisional signals use previous cash close to 10:00 ET and 15:00–15:30 ET; agreement proposes direction for the final half hour. This is an adaptation, not a verified replication of either paper. The experiment protocol must specify the actual contract, cash-close proxy, previous-session mapping, early closes, roll handling, signal availability and executable entry after inputs become known. A 15:30 completed price cannot also guarantee a fill at that same price. [EXP-001 protocol](../../../experiments/exp001_itsm/README.md).
 
 The reports' exact R-squared values, annualized returns, certainty-equivalent gains and crisis coefficients have not been reproduced against the original study tables or our target data. They are not project performance targets. Proposed rebalancing and hedging explanations remain mechanisms to investigate; asserting that nearly all relevant information arrives before the open is unjustified.
 
@@ -55,7 +55,7 @@ The reports' exact R-squared values, annualized returns, certainty-equivalent ga
 
 ## Costs, providers, brokers and simulation
 
-The [cost and provider assessment](COSTS_AND_PROVIDERS.md) owns procurement criteria and current technical checks. Preserve these research conclusions:
+The [cost and provider assessment](../../COSTS_AND_PROVIDERS.md) owns procurement criteria and current technical checks. Preserve these research conclusions:
 
 1. Compare conditional **net** return with costs, not average bar range with commission. Costs include broker and venue fees, spread, slippage, financing/borrow/funding where applicable, FX and fixed operating overhead. Use account-, instrument- and date-specific schedules.
 2. Avoid double-counting spread when PnL already uses executable bid/ask fills. Passive orders require a non-fill/adverse-selection model; “maker fee only” is not a complete execution assumption.

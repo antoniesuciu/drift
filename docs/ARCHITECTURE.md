@@ -1,8 +1,6 @@
 # Platform architecture
 
-**Active scope, 2026-10-30:** NVDA shares, Alpaca historical SIP, IBKR eventual execution. The existing runtime remains synthetic MES-only. [NVDA data/admission](data/NVDA_DATA_PLAN.md) is current; older MES metadata examples describe preserved implementation, not the next real market. Crypto is deferred; ML/LLM model selection waits for rule evaluation.
-
-Design baseline: 2026-10-29; scope/interface revision: 2026-10-30. Existing M1/M2b.1 code is offline synthetic evidence; the new NVDA design remains pending. [Requirements](../REQUIREMENTS.md) own acceptance criteria; [decisions](DECISIONS.md) own technology status; [glossary](../GLOSSARY.md) owns terminology.
+A local modular Python application: data, agents, coordination, portfolio, risk and execution behind small interfaces. [Requirements](../REQUIREMENTS.md) own acceptance criteria, [decisions](DECISIONS.md) own technology status, [glossary](../GLOSSARY.md) owns terminology. Scope: NVDA shares, Alpaca historical SIP, IBKR as eventual execution broker; the data-ingestion pipeline still accepts only synthetic MES, while strategies and the backtest runner use configured synthetic instruments.
 
 ## Shape and boundaries
 
@@ -59,17 +57,59 @@ Data symbols are not broker contract IDs. Historical feed and live execution ven
 
 ## Minimal integration contracts
 
-Data exposes validated point-in-time observations keyed by instrument and availability time. Agent inputs contain a decision clock, data snapshot references and frozen rule/model configuration. Agents return the [proposal contract](AGENT_ARCHITECTURE.md#proposal-contract); they do not place orders.
+Data exposes validated point-in-time observations keyed by instrument and availability time. Agent inputs contain a decision clock, data snapshot references and frozen rule/model configuration. Agents return the [proposal contract](#proposal-contract); they do not place orders.
 
 Portfolio policy converts eligible directional proposals to candidate position changes under explicit sizing/allocation rules. Risk checks aggregate filled **and pending** exposure, reserves approved capacity, and produces an identified order intent bound to the account, mode, instrument, size, price/order constraints, expiry, proposal IDs and risk-policy version. Execution rechecks freshness, halt/account identity and reservation validity immediately before submission. Approval is invalid if material portfolio/market state changes; revalidate instead of treating approval as permanent.
 
 Execution events carry intent/order IDs, broker acknowledgements, fills, cancel/reject events and fees into the single-writer portfolio ledger. Partial fills and cancel/fill races update reservations. Unknown submission outcomes halt new risk until reconciliation; retry does not imply a second order. Multi-agent research starts with synchronous ordered evaluation, not distributed consensus.
 
-## Candlestick recognition and policy boundary
+## Agents and the proposal contract
 
-Planned M3b data flow: validated completed/available candles and causal aggregation → reusable deterministic pattern observations → configured rule confirmations/entry/exit policy → existing RULE proposals → shared portfolio/risk/execution. Later ML consumes the same observations as causal features. The detector owns shape calculations, input cutoffs and provenance; it owns no positions, sizing, order lifecycle or training. Rule policy owns directional interpretation and proposed entry/exit/stop/target constraints referenced by the common proposal; portfolio/risk validates and authorizes actual intents.
+An agent is a domain component, not a synonym for LLM autonomy or a separate process; instrument, horizon and historical/paper mode are independent axes. Rule strategies are specified in [STRATEGIES.md](STRATEGIES.md).
 
-Keep recognition, trading policy and feature consumption separable with small components/functions using existing validated data and Nautilus facilities. No new service, agent family, TA dependency or executable module is introduced by this design. Higher-timeframe buckets are unavailable until complete and all required constituents are available; missing/partial buckets, future pivots and stitched expiry prices cannot become earlier features. [Candlestick specification](CANDLESTICK_AGENTS.md) owns precise definitions, configuration, proposal mapping and measurable gates; this diagram does not claim those components already exist.
+### Three families
+
+| Family | Inputs and decision mechanism | Candidate examples | Evaluation |
+|---|---|---|---|
+| Rule-based | Available market observations and fixed deterministic rules/statistics | M3a NVDA ITSM first, M3b Candlestick Pattern Agents; statistical rules (ORB, VWAP/Bollinger mean reversion, reversal, trend) are specified in [STRATEGIES.md](STRATEGIES.md); relative strength, stat-arb and volatility breakout are future | Replay identity, causal timing, net-cost OOS performance and robustness |
+| ML | Causal features and a trained, versioned inference artifact | Logistic regression, random forest, LightGBM/XGBoost; independent predictions or meta-label filters | Fold/label integrity, calibration, drift and net comparison to simple controls |
+| LLM | Licensed as-of news, earnings, filings, macro/events and evidence retrieval | Research assistant, event-risk assessment, sentiment/earnings interpretation | Evidence accuracy, temporal validity, injection tests, no-LLM baseline and full costs |
+
+LSTM/Transformers and reinforcement learning are experimental options, not required infrastructure. Hybrids are compositions of these three families. An agent instance has an independent identity/configuration; instrument, horizon and historical/paper mode are separate axes.
+
+### Proposal contract
+
+Schema version 1, implemented in `src/quantlab/strategies/proposal.py` (its `family` admits RULE, ML or LLM; only RULE agents exist):
+
+| Field | Meaning / validity rule |
+|---|---|
+| `schema_version`, `proposal_id` | Supported schema and globally unique/idempotent proposal identity |
+| `agent_id`, `family`, `strategy_id` | Configured producer, one of RULE/ML/LLM, and policy/experiment lineage |
+| `instrument_id` | Venue-qualified instrument with expiry/currency metadata; an advisory may reference a configured scope containing instruments |
+| `generated_at_utc`, `data_asof_utc` | Creation time and latest availability of any input; both timezone-aware UTC |
+| `valid_until_utc`, `horizon_seconds` | Expiry and intended decision horizon; expiry must follow creation |
+| `intent` | LONG, SHORT, FLAT, NO_TRADE or ADVISORY; FLAT requests reducing a strategy allocation, not liquidating other agents' holdings |
+| `rule_or_model_version`, `input_refs` | Versioned rule/model/feature/prompt references and reproducible source/artifact IDs |
+| `rationale` | Short explanation plus evidence references; explanatory prose has no execution authority |
+| `score`, `score_semantics` (optional) | Defined meaning and calibration version, never a universal comparable probability |
+| `quantity_hint` (optional) | Non-binding suggestion; portfolio/risk determines approved size |
+| `parent_proposal_ids` (hybrids) | Complete trace of upstream proposals and registered composition-policy version |
+
+At processing clock `t`, require `data_asof_utc <= generated_at_utc <= t < valid_until_utc`, all referenced input availability times <= generation, and a known instrument/configuration/schema. Historical acquisition time is distinct from modeled historical availability. Reject unsupported schema, malformed/future data, bad lineage and already-consumed IDs. Record reason codes for rejections and abstentions. A duplicate cannot create an additional intent/order.
+
+NO_TRADE is an explicit abstention, not an implicit cancellation. FLAT passes portfolio/risk checks and can only affect the appropriate attributed allocation. M3 evaluates one agent/instrument at a time: NVDA ITSM first, then independently configured candlestick variants. More complex concurrent netting/attribution is introduced and tested in M7. Risk-reducing requests remain subject to order validity and broker reconciliation.
+
+### Hybrid composition and conflicts
+
+Future example: **Rule momentum proposal → ML accept/reject filter → LLM event-risk advisory → portfolio allocation → central risk → execution**. ML can also emit an independent directional proposal. LLMs emit ADVISORY only; any eventual use of advice is a registered, deterministic, tested composition policy. A positive model score cannot override a risk rejection.
+
+For the initial hybrid policy, a missing/expired/invalid required filter leads to abstention. Optional filters are explicitly declared; omitted advice is never silently converted to approval. Opposite proposals for the same instrument follow a configured policy (initial conservative default: abstain on unresolved conflict), not arrival-order wins. Preserve gross contributions, pending orders and attribution even when net positions cancel. Do not add cross-agent score weighting until meaning/calibration is justified by an experiment.
+
+### LLM trust and evaluation boundary
+
+External text is untrusted data. Restrict retrieval tools to reviewed read-only sources; isolate credentials and portfolio policy. Schema-validate outputs, verify cited evidence exists, distinguish unknown from neutral, and reject instructions embedded in retrieved text. LLMs cannot invoke broker adapters, produce authorized order intents, change risk limits or run arbitrary tools/code.
+
+Archive permissible source snapshots with publication/availability/revision times and record model/prompt/token costs and generated outputs. Deterministic replay uses captured outputs where allowed; repeat API calls are not assumed identical. Later-trained models can leak subsequent knowledge into historical evaluations; use suitable time-bounded evaluation/prospective testing and disclose remaining contamination. Tests cover injection, malformed JSON/schema, invented citations, later publication, stale data, unavailable model and cost-limit exhaustion. Completion measures evaluated research quality and failure behavior; useful trading benefit remains unproven.
 
 ## Time, instruments and storage
 
@@ -87,4 +127,4 @@ Before M6, choose a minimal durable journal/recovery mechanism based on verified
 
 ## Staged construction
 
-M1 proves a coherent released Python/NautilusTrader/API/docs tuple offline; `latest` documentation is insufficient version evidence. M2 builds data integrity. M3a proves the initial ITSM agent with minimal shared risk, portfolio and historical execution; only after that baseline, M3b adds reusable candlestick recognition and independently evaluated rule variants. M4 is a future separately authorized ML evaluation after rule research is assessed; it uses the same proposal interface and may reuse causal pattern features. M5 independently validates candidates before any M6 paper promotion. M6 alone adds approved paper connectivity and operational risk/recovery. M7–M9 add simultaneous agents, LLM advisory and expansion. M10 evaluates conditional live readiness under separate authorization. See [ROADMAP.md](ROADMAP.md) for gates and exclusions.
+Milestones, gates and exclusions live in [ROADMAP.md](ROADMAP.md). A coherent released Python/NautilusTrader/API/docs tuple is proven offline first; `latest` documentation is not version evidence.

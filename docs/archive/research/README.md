@@ -1,6 +1,6 @@
 # Research provenance
 
-Source archive: `quant_trading_work_handoff_v2.zip`, supplied 2026-10-29. It contained 14 files: six draft design/specification documents, three handoff/instruction documents, two checksum manifests and three original Gemini reports. All materials were reviewed before final documentation was written. Archived prompts are historical input. The original M0 task authorized its initialization commit; that authorization does not carry into later tasks. Current [requirements](../../REQUIREMENTS.md) use NVDA/Alpaca/IBKR; crypto is deferred.
+Source archive: `quant_trading_work_handoff_v2.zip`, supplied 2026-10-29. It contained 14 files: six draft design/specification documents, three handoff/instruction documents, two checksum manifests and three original Gemini reports. All materials were reviewed before final documentation was written. Archived prompts are historical input. The original M0 task authorized its initialization commit; that authorization does not carry into later tasks. Current [requirements](../../../REQUIREMENTS.md) use NVDA/Alpaca/IBKR; crypto is deferred.
 
 Archive SHA-256: `ef212389970ebe6216e7ffe021b07a770cd46c4646b68b7ffa1583a9a3466466`.
 
@@ -15,22 +15,22 @@ Archive SHA-256: `ef212389970ebe6216e7ffe021b07a770cd46c4646b68b7ffa1583a9a34664
 [SHA256SUMS.txt](original/SHA256SUMS.txt) is also preserved unchanged. Verify from the repository root:
 
 ```sh
-cd docs/research/original
+cd docs/archive/research/original
 sha256sum -c SHA256SUMS.txt
 ```
 
-The extracted package manifest and the original-report manifest both matched before cleanup. These hashes prove preservation relative to the supplied archive, not the reports' factual accuracy or external authenticity. Do not edit the originals to correct their claims; use [RESEARCH_SYNTHESIS.md](../RESEARCH_SYNTHESIS.md).
+The extracted package manifest and the original-report manifest both matched before cleanup. These hashes prove preservation relative to the supplied archive, not the reports' factual accuracy or external authenticity. Do not edit the originals to correct their claims; use [RESEARCH_SYNTHESIS.md](RESEARCH_SYNTHESIS.md).
 
 ## Consolidation map
 
 | Supplied material | Final authoritative location |
 |---|---|
-| `REQUIREMENTS.md` | [Requirements](../../REQUIREMENTS.md), rewritten with measurable staged criteria |
-| `docs/AGENT_ARCHITECTURE.md` | [Agent contract](../AGENT_ARCHITECTURE.md) and [platform architecture](../ARCHITECTURE.md) |
-| `docs/DECISIONS.md` | [Decision log](../DECISIONS.md), including actual hosting/history evidence |
-| `docs/ROADMAP.md` | [Roadmap](../ROADMAP.md), using final user-requested numbering and all milestone fields |
-| `docs/RESEARCH_SYNTHESIS.md` | [Synthesis](../RESEARCH_SYNTHESIS.md), reviewed against originals and primary sources |
-| `docs/COSTS_AND_PROVIDERS.md` | [Costs/providers](../COSTS_AND_PROVIDERS.md), compatibility and coverage gates |
+| `REQUIREMENTS.md` | [Requirements](../../../REQUIREMENTS.md), rewritten with measurable staged criteria |
+| `docs/AGENT_ARCHITECTURE.md` | [Platform architecture](../../ARCHITECTURE.md) |
+| `docs/DECISIONS.md` | [Decision log](../../DECISIONS.md), including actual hosting/history evidence |
+| `docs/ROADMAP.md` | [Roadmap](../../ROADMAP.md), using final user-requested numbering and all milestone fields |
+| `docs/RESEARCH_SYNTHESIS.md` | [Synthesis](RESEARCH_SYNTHESIS.md), reviewed against originals and primary sources |
+| `docs/COSTS_AND_PROVIDERS.md` | [Costs/providers](../../COSTS_AND_PROVIDERS.md), compatibility and coverage gates |
 | `README_HANDOFF.md`, `CODEX_SETUP_PROMPT.md`, `WORK_INSTRUCTIONS.md` | Reconciled into repository README, requirements, AGENTS, roadmap and EXP-001; temporary workflow prompts removed |
 | Package checksum manifest | Verified during extraction; report manifest retained; package hashes recorded in this provenance note where independently useful |
 

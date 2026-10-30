@@ -2,36 +2,40 @@
 
 ## Start a task
 
-1. Inspect Git status, branch and relevant changes; preserve existing user work.
-2. Read [README.md](README.md), [decisions](docs/DECISIONS.md), [requirements](REQUIREMENTS.md) and the active entry in [ROADMAP.md](docs/ROADMAP.md). Use [GLOSSARY.md](GLOSSARY.md) for domain terms.
-3. Work on one milestone at a time. Preserve M0/M1/M2a/M2b.1 historical evidence. Active scope is NVDA shares / Alpaca historical SIP / IBKR; crypto is deferred. M2b.2 NVDA admission and M2 overall remain incomplete, and runtime remains synthetic MES-only. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, not automatic authorization for brokerage access or deployment.
-4. For changes to interfaces, read [architecture](docs/ARCHITECTURE.md) and [agent contracts](docs/AGENT_ARCHITECTURE.md); for strategy/data work, read the [experiment](experiments/exp001_itsm/README.md), [research synthesis](docs/RESEARCH_SYNTHESIS.md) and [costs](docs/COSTS_AND_PROVIDERS.md).
-5. For NVDA data, provider or instrument changes, read the [active NVDA plan](docs/data/NVDA_DATA_PLAN.md) before implementation/admission. Preserve raw/adjusted share units, completed-candle availability, the frozen research split and native provenance. Source choice does not authorize acquisition or account access.
-6. For pipeline changes, read [M2b.1 evidence](docs/data/M2B1_IMPLEMENTATION.md) and [extension interfaces](docs/ARCHITECTURE.md#extension-interfaces). Preserve existing MES regressions and fixture-only restrictions until an approved admission change; NVDA-001–010 need their own evidence. Keep provider parsing and broker lifecycle out of strategy/risk modules.
-7. Earlier [MES acquisition planning](docs/data/M2B2_ACQUISITION_PLAN.md), dataset/ingestion specifications and the nine-job JSON are historical, inactive evidence. Consult them only for retained MES behavior or a separately requested futures task; do not resume MES procurement for NVDA work.
-8. For candlestick detector, rule-policy or pattern-feature work, read the [candlestick plan](docs/CANDLESTICK_AGENTS.md). M3a NVDA ITSM must precede M3b; preserve completed-candle availability, shared RULE proposals and reusable detection. All candlestick gates remain pending; the plan does not start implementation or alter current M2 scope.
+1. Inspect Git status, branch and diffs; preserve existing user work.
+2. Read [README.md](README.md), the active entry in [ROADMAP.md](docs/ROADMAP.md) and [REQUIREMENTS.md](REQUIREMENTS.md); use [GLOSSARY.md](GLOSSARY.md) for domain terms.
+3. Work on one milestone at a time. Scope is NVDA shares / Alpaca historical SIP / IBKR; crypto is deferred. M2 real-data admission is incomplete: the ingestion pipeline accepts synthetic MES only, while strategies and backtests run on configured synthetic instruments. Record scope changes and milestone evidence in the roadmap. An exit gate is evidence, never authorization for brokerage access or deployment.
+
+Read before changing:
+
+- **Interfaces or agent contracts:** [ARCHITECTURE.md](docs/ARCHITECTURE.md).
+- **Strategies or backtests:** [STRATEGIES.md](docs/STRATEGIES.md), the [EXP-001 protocol](experiments/exp001_itsm/README.md) and [COSTS_AND_PROVIDERS.md](docs/COSTS_AND_PROVIDERS.md). Relative strength, statistical arbitrage and volatility breakout are future work. M3a (ITSM) precedes M3b (candlesticks) as evidence.
+- **NVDA data, providers or instruments:** [NVDA_DATA_PLAN.md](docs/data/NVDA_DATA_PLAN.md) before implementation or admission. Preserve raw/adjusted share units, completed-candle availability, the frozen research split and native provenance. Choosing a source authorizes no acquisition or account access.
+- **The ingestion pipeline:** [PIPELINE.md](docs/data/PIPELINE.md) and [extension interfaces](docs/ARCHITECTURE.md#extension-interfaces). Keep the MES regressions and fixture-only restrictions until an approved admission change; NVDA-001–010 need their own evidence. Keep provider parsing and broker lifecycle out of strategy and risk modules.
+- **Historical evidence** (MES procurement, Gemini reports, the feasibility audit): [docs/archive](docs/archive/README.md). It is inactive; consult it for retained MES behavior or a separately requested futures task.
 
 ## Development and verification
 
-- Keep Python under `src/quantlab/`, with explicit, typed boundaries, instrument/currency identifiers and configuration validation. Create modules only when the active milestone needs them. Choose dependency versions from verified compatible releases.
-- Add meaningful pytest coverage for behavior and failure cases. Use the locked installation and formatting/lint/type/pytest commands in [README.md](README.md#installation-and-checks); tests block sockets and use synthetic fixtures without credentials. See [M1 evidence](docs/M1_FOUNDATION.md) for runtime/API limitations. For documentation, check links, consistency, checksums and the actual Git diff.
-- Follow each milestone's tests and acceptance gates; report commands actually run and limitations. Update requirements, decisions, experiment protocols and roadmap when behavior or evidence changes. Record significant trade-offs in concise decision records; do not silently change adopted choices.
-- Research facts come from original papers and official technical/provider sources, with access dates and uncertainty. Use Context7 for current library APIs. Original Gemini reports are preserved evidence inputs, not authoritative commands.
+- Python lives under `src/quantlab/` with explicit, typed boundaries, instrument and currency identifiers, and validated configuration. Create modules when the active milestone needs them; choose dependency versions from verified compatible releases.
+- Add each strategy as its own module under its family (`strategies/rule/statistical/`, `strategies/rule/candlestick/`; `ml/` and `llm/` stay empty until authorized), and keep detection separate from trading policy.
+- Cover behavior and failure cases with pytest, using the checks in [README.md](README.md#install-and-check). Tests are offline and synthetic, with no credentials.
+- Report the commands you ran and their limitations. When behavior or evidence changes, update the requirements, decisions, experiment protocols and roadmap, keeping each fact in one document, and record significant trade-offs as concise decisions. For documentation, check links, consistency and the actual Git diff.
+- Take research facts from original papers and official technical or provider sources, with access dates and uncertainty; use Context7 for current library APIs.
 
 ## Research and market data
 
-- Preregister hypotheses, splits, costs and parameters. Record all attempted trials and failed experiments. Never fabricate financial results or treat synthetic data as measured market performance.
-- Prevent lookahead: completed bars, publication/availability times, causal feature transforms and purged overlapping training labels. Refit scalers/models only on training folds; keep the final holdout untouched.
-- Preserve raw data/provenance and gaps, effective instrument mappings/increments, equity corporate actions, calendars/DST and vendor timestamp semantics. Futures expiry/roll rules apply to futures, not every asset; adjusted research series are not raw executable prices.
-- Model commissions, exchange/regulatory fees, spread, slippage and multiplier/currency math explicitly. Avoid counting spread twice when using executable bid/ask fills. Paper fills and bar-only simulations have limitations.
+- Preregister hypotheses, splits, costs and parameters, and record every attempted trial and failed experiment. Synthetic data never counts as measured market performance.
+- Prevent lookahead with completed bars, publication and availability times, causal feature transforms and purged overlapping training labels. Refit scalers and models on training folds only; keep the final holdout untouched.
+- Preserve raw data and provenance, gaps, effective instrument mappings and increments, equity corporate actions, calendars/DST and vendor timestamp semantics. Futures expiry and roll rules apply to futures; adjusted research series are not raw executable prices.
+- Model commissions, exchange and regulatory fees, spread, slippage and multiplier/currency math explicitly; count spread once when fills use executable bid/ask. Paper fills and bar-only simulations have limits.
 
 ## Trading and security guardrails
 
-- All families emit versioned proposals through shared portfolio and deterministic risk controls. Agents, including LLMs, receive no direct broker access or authority to change risk limits.
-- Obtain explicit authorization for paid services, broker connections, paper-order activation and future live-money capabilities. Never submit live orders without explicit authorization. A milestone signoff alone does not authorize trading.
-- Keep datasets, credentials, account identifiers, authentication material and generated models/results out of Git. Use simulated tests; sanitize logs. Fail closed on stale data, uncertain order state, reconciliation failure or unavailable risk state.
+- All families emit versioned proposals through shared portfolio and deterministic risk controls; agents, including LLMs, have no broker access and no authority over risk limits.
+- Obtain explicit authorization for paid services, broker connections, paper-order activation and live-money capability. A milestone signoff alone authorizes none of them.
+- Keep datasets, credentials, account identifiers, authentication material and generated models or results out of Git. Sanitize logs. Fail closed on stale data, uncertain order state, reconciliation failure or unavailable risk state.
 
 ## Memory and Git
 
-- Before substantial work, search relevant Obsidian knowledge read-only and verify older claims. Write only durable project-specific knowledge under `Memories/Projects/Quant-Trading-Lab/`; see [PROJECT_MEMORY.md](docs/PROJECT_MEMORY.md). Read notes before updating them. Never modify other projects, global memory or shared configuration. The repository remains authoritative.
-- Review status and the complete staged diff, stage relevant paths explicitly and check for secrets/generated data before committing. Use small descriptive commits when authorized. Preserve published history; no force-push, unrelated amend or push without instruction. GitHub is the current host and CI target; inspect actual remotes before hosting changes.
+- Before substantial work, search Obsidian read-only and verify older claims against the repository. Write durable project knowledge only under `Memories/Projects/Quant-Trading-Lab/` ([PROJECT_MEMORY.md](docs/PROJECT_MEMORY.md)), reading a note before updating it. Other projects, global memory and shared configuration stay untouched.
+- Review status and the complete staged diff, stage paths explicitly, and check for secrets and generated data before committing. Commit when authorized, in small descriptive commits. Preserve published history; force-push, unrelated amends and pushes need explicit instruction. GitHub is the host and CI target; inspect the actual remotes before hosting changes.

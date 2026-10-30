@@ -1,6 +1,6 @@
 # Providers, compatibility and cost discipline
 
-Active scope revised **2026-10-30**: NVDA ordinary shares, Alpaca historical SIP data, IBKR execution. [D-026–028](DECISIONS.md) records the user decision; [NVDA data plan](data/NVDA_DATA_PLAN.md) owns requests and admission gates. The [audit](PROJECT_AUDIT.md) preserves wider dated comparisons; crypto and MES procurement are outside current work.
+Active scope revised **2026-10-30**: NVDA ordinary shares, Alpaca historical SIP data, IBKR execution. [D-026–028](DECISIONS.md) records the user decision; [NVDA data plan](data/NVDA_DATA_PLAN.md) owns requests and admission gates. The [audit](archive/audit/PROJECT_AUDIT.md) preserves wider dated comparisons; crypto and MES procurement are outside current work.
 
 ## Independent roles
 
@@ -25,7 +25,7 @@ No Alpaca brokerage integration is selected. A historical REST reader does not n
 
 ## Framework compatibility and actual implementation
 
-[M1 evidence](M1_FOUNDATION.md) verifies Python 3.12 / NautilusTrader 1.231.0, locked dependencies, real engine timing and IB adapter imports. [M2b.1](data/M2B1_IMPLEMENTATION.md) verifies native DBN/catalog/provenance and order-free synthetic MES replay. This work remains valid regression evidence; it does not prove real NVDA data support, fee/fill behavior or authenticated IBKR compatibility.
+[M1 evidence](M1_FOUNDATION.md) verifies Python 3.12 / NautilusTrader 1.231.0, locked dependencies, real engine timing and IB adapter imports. [M2b.1](data/PIPELINE.md) verifies native DBN/catalog/provenance and order-free synthetic MES replay. This work remains valid regression evidence; it does not prove real NVDA data support, fee/fill behavior or authenticated IBKR compatibility.
 
 Use release-tagged documentation matching the installed tuple; moving 2.x examples are not evidence for 1.231.0. Preserve the current native catalog and causal snapshots. Add only the equity/source metadata and adapters the NVDA task needs, with interfaces tested independently of strategy/risk. No migration, dependency install, broker app or empty agent framework is part of this scope update.
 
@@ -52,4 +52,4 @@ Budget FX on actual conversions, not every order solely because the account base
 
 The current [paper-account guide](https://www.ibkrguides.com/clientportal/aboutpapertradingaccounts.htm) describes simulated top-of-book fills and other limitations. [Daily/weekly reauthentication](https://www.interactivebrokers.com/docs/tws-api/doc/tws-settings/daily-weekly-reauthentication), stale feeds, disconnects, unknown order state and reconciliation need tests before M6 activation. A paper result is operational evidence, not proof of achievable live profit.
 
-Crypto is deferred. Prior MES expired-contract/provider/quote research remains historical evidence in [provider comparison](data/PROVIDER_COMPARISON.md) and [acquisition planning](data/M2B2_ACQUISITION_PLAN.md); it is not a prerequisite or purchase instruction for NVDA. Adding another market/source later requires a separately admitted configuration and regression tests through the same interfaces. No capital, account eligibility, risk limits, short inventory, paid subscription or strategy edge is established.
+Crypto is deferred. Prior MES expired-contract/provider/quote research was removed with the dropped MES procurement plan (see Git history); it is not a prerequisite or purchase instruction for NVDA. Adding another market/source later requires a separately admitted configuration and regression tests through the same interfaces. No capital, account eligibility, risk limits, short inventory, paid subscription or strategy edge is established.

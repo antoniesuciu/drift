@@ -31,3 +31,11 @@ _Avoid_: Order, approved trade
 **Admission**: An evidence-based decision that a specified dataset, instrument or execution route is suitable for a declared use. It does not by itself authorize an account connection or trading.
 
 **Paper trading**: Broker-simulated execution on an explicitly selected paper account. Its fills do not establish live execution quality or profitability.
+
+**Opening range**: The high and low of the first 5, 15 or 30 minutes of the cash session from 09:30 New York. An opening range breakout trades a completed close beyond it.
+
+**Session VWAP**: The volume-weighted average of typical price, `(high + low + close) / 3`, from the session open through the latest available candle. VWAP and Bollinger mean reversion fade a fresh move of the close beyond a multiple of the matching dispersion.
+_Avoid_: Using a full-session VWAP for a decision made earlier in the session
+
+**Statistical rule agent**: A rule-based agent that turns completed price-series readings (breakout, mean reversion, reversal, trend, momentum) into proposals, as distinct from candlestick pattern agents. Relative-strength agents need benchmark data and are future work.
+

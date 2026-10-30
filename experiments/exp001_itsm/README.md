@@ -1,6 +1,6 @@
 # EXP-001 — NVDA intraday momentum adaptation
 
-**Protocol: EXP-001-NVDA-v1, 2026-10-30. State: planning only; no strategy or measured returns.** Initial NVDA/Alpaca/IBKR scope is confirmed by the user. This replaces the unexecuted MES design as the active experiment; historical MES code/tests and specifications remain regression evidence. The split is preserved, not reselected from observed results. [Requirements](../../REQUIREMENTS.md), [NVDA data plan](../../docs/data/NVDA_DATA_PLAN.md) and [roadmap](../../docs/ROADMAP.md) govern admission and sequencing.
+**Protocol: EXP-001-NVDA-v1, 2026-10-30. State: protocol frozen; the rule and a synthetic-data backtest are implemented (2026-10-30), with no real data and no measured returns.** Initial NVDA/Alpaca/IBKR scope is confirmed by the user. This replaces the unexecuted MES design as the active experiment; historical MES code/tests and specifications remain regression evidence. The split is preserved, not reselected from observed results. [Requirements](../../REQUIREMENTS.md), [NVDA data plan](../../docs/data/NVDA_DATA_PLAN.md) and [roadmap](../../docs/ROADMAP.md) govern admission and sequencing.
 
 ## Hypothesis and reusable policy
 

@@ -1,60 +1,39 @@
 # Development roadmap
 
-**M0, M1, M2a and M2b.1 retain their completed historical evidence. Active scope is now NVDA / Alpaca historical SIP / IBKR (2026-10-30).** The runtime remains synthetic MES-only. M2b.2 is replanned around the [NVDA admission plan](data/NVDA_DATA_PLAN.md); all real NVDA gates, M2c and M2 overall remain incomplete. M3–M10 remain pending; crypto and ML/LLM selection are deferred. Milestone completion does not authorize brokerage access, purchases or orders. Work on one milestone/task at a time.
+Milestones M0–M10 and their exit gates; the user's numbering is authoritative. Work on one milestone at a time. Testing, causality and foundational risk controls precede paper trading. Negative results can complete research milestones; promotion is a separate decision, and a completed milestone never authorizes brokerage access, purchases or orders.
 
-The user's final M0–M10 numbering is authoritative over older archived drafts. Testing, causality and foundational risk controls precede paper trading. Negative results can complete research milestones; promotion is a separate decision.
+**Active scope (2026-10-30):** NVDA shares, Alpaca historical SIP, IBKR as the eventual broker. The ingestion pipeline still accepts only synthetic MES; the M3 strategies and the backtest runner exist as software on synthetic data. All real NVDA gates, M2c and M2 overall are pending. Crypto and ML/LLM model selection are deferred.
 
-**Workspace-audit remediation M7 — GitHub CI:** separate numbering from the trading platform's M7 below. The [GitHub workflow](../.github/workflows/ci.yml) provides one Ubuntu/Python 3.12 job for pushes to main and pull requests, with locked provisioning and existing offline quality/tests. Legacy GitLab configuration is retained, not executed by GitHub. Hosted execution remains unverified until the user pushes; this remediation does not advance data, strategy, paper or multi-agent milestones. Local validation: actionlint 1.7.11 passed; a fresh uv 0.13.6 / Python 3.12.3 locked environment passed lock/dependency checks, Ruff format/lint, mypy and all 120 tests (36 known upstream pandas warnings).
+| Milestone | Status |
+|---|---|
+| M0 Research and architecture | Complete: documentation foundation, decisions, checksummed research ([archive](archive/README.md)) |
+| M1 Project foundation | Complete locally, 2026-10-29: pinned Python 3.12 / NautilusTrader 1.231.0, locked uv environment, offline engine smoke ([evidence](M1_FOUNDATION.md)) |
+| M2a Data specification | Complete: MES dataset specification and provider research, now historical ([archive](archive/mes-data/HISTORICAL_DATA_SPEC.md)) |
+| M2b.1 Offline pipeline | Complete locally: native DBN decoding, Parquet catalog, provenance, replay; 14 gates mapped ([pipeline](data/PIPELINE.md)) |
+| M2b.2 / M2c Real data admission | Pending, replanned for NVDA/Alpaca: gates NVDA-001–010 ([plan](data/NVDA_DATA_PLAN.md)); the MES acquisition plan was dropped |
+| M3 Rule strategies | Software on synthetic data; historical gates pending (below) |
+| M4–M10 | Pending |
 
-## M0 — Research and architecture
+**GitHub CI** (separate from the platform's M7 below): one Ubuntu 24.04 / Python 3.12 job on pushes to `main` and pull requests, with locked provisioning and the offline Ruff, mypy and pytest checks ([workflow](../.github/workflows/ci.yml)); hosted success is claimed only after GitHub runs it. GitLab configuration was removed ([D-029](DECISIONS.md)).
 
-- **Objective:** Establish an implementation-ready documentation foundation.
-- **Scope:** Reconcile handoff, all three reports, requirements, decisions, roadmap, agent workflow and isolated memory; safe Git cleanup.
-- **Deliverables:** [README](../README.md), [requirements](../REQUIREMENTS.md), [architecture](ARCHITECTURE.md), [agent contract](AGENT_ARCHITECTURE.md), [decisions](DECISIONS.md), this roadmap, [synthesis](RESEARCH_SYNTHESIS.md), [providers](COSTS_AND_PROVIDERS.md), originals, [EXP-001](../experiments/exp001_itsm/README.md), ignore rules and memory notes.
-- **Dependencies:** Supplied archive/task; read-only Git/remote and vault inspection; primary-source verification.
-- **Automated tests:** Documentation links/anchors, requirement-ID uniqueness, complete milestone fields, original hashes, ignore/fixture policy and staged-file checks; no trading tests exist yet.
-- **Acceptance criteria:** All required docs reviewed and consistent; three original hashes match; temporary handoff/duplicate files removed after reconciliation; other-project memory unchanged; one local commit with published history preserved. See [initialization audit](INITIALIZATION.md).
-- **Exclusions:** Runtime code/CI scaffold, installations, broker connections, datasets, model training, orders, push or hosting migration.
+## M2 — Historical market data (scope reference)
 
-## M1 — Project foundation
-
-**Complete locally, 2026-10-29.** [M1 evidence](M1_FOUNDATION.md) records the verified tuple, 36 passing offline tests, formatting/lint/types, fresh installation, deterministic engine smoke and CI configuration. No server-side GitLab pipeline has run; the acceptance gate explicitly distinguishes configured CI from executed CI.
-
-- **Objective:** Prove the minimum offline Python/framework environment.
-- **Scope:** M1a compatible released Python/NautilusTrader/API/docs selection and minimal package/import smoke; M1b tiny synthetic engine/time fixtures; M1c pytest, lint/types as justified and GitLab CI configuration.
-- **Deliverables:** `pyproject.toml`, dependency lock, minimal `src/quantlab/`, tests and documented local/CI commands; compatibility record including adapter limitations. No empty agent modules.
-- **Dependencies:** M0 acceptance; current official release-specific docs. See [compatibility gate](COSTS_AND_PROVIDERS.md).
-- **Automated tests:** Import and event-driven engine smoke offline; UTC/ET DST and bar completion/availability cases; lint/type checks for introduced code, reproducible clean install.
-- **Acceptance criteria:** Pinned tuple passes offline on supported local runtime; CI config uses no credentials/network orders. Record actual CI run separately once GitLab runner exists; config alone is not a green pipeline.
-- **Exclusions:** Broker calls, paid data, strategies, ML/LLM runtime, orchestration or account configuration.
-
-## M2 — Historical market data
-
-**Current direction:** admit NVDA Alpaca data through the existing native catalog/replay path; retain development 2020–2022, validation 2023, holdout 2024–2025. Earlier MES specifications and requests below are historical evidence, not active acquisition instructions. NVDA-001–010 govern new admission; historical MES 013/014 are not relabeled as NVDA passes or required purchases.
-
-**M2a complete, 2026-10-29 — research/specification only.** [Dataset specification](data/HISTORICAL_DATA_SPEC.md), [provider comparison](data/PROVIDER_COMPARISON.md) and [M2b design/gates](data/INGESTION_DESIGN.md) define the 2020–2025 archive, development-only 2022 pilot, timestamp/calendar/roll rules, conditional Databento recommendation and unresolved cost/retention/coverage gates. No market data, dependencies, ingestion code or broker connections were introduced by M2a. At that signoff, M2b/M2c and real-data admission were unstarted.
-
-**M2b.1 complete locally, 2026-10-29 — synthetic offline implementation.** [Evidence and all 14 gate statuses](data/M2B1_IMPLEMENTATION.md): native DBN decoding, validated metadata/time/calendar/roll, exact Parquet/provenance round-trip and deterministic order-free replay. **120 tests pass**, including unchanged M1 tests; format/lint/types/lock/dependency checks pass. Offline portions of 001–012 are verified; real-service/calendar/metadata evidence and 013/014 remain pending. No acquisition or broker connection. M2b.2, M2c and full M2 remain incomplete.
-
-**M2b.2 preparation recorded, 2026-10-29 — research and planning only.** [Acquisition/acceptance plan](data/M2B2_ACQUISITION_PLAN.md), linked primary-source vendor/market research and a machine-readable nine-job pilot schedule. Exact pilot/archive/FirstRate purchase totals and applicable Databento retention rights remain unresolved; public prices are comparison inputs only. Historical roll changes, dated-calendar gaps, real-definition compatibility and monthly-batch prerequisites are explicit. The unchanged 120-test offline suite passes. No account query, market-data download, purchase or admission occurred; gates 013/014, M2c and M2 overall remain pending.
-
-- **Objective:** Create a usable, auditable historical/feature dataset.
-- **Scope:** M2a historical MES planning is retained; active M2b.2 defines rights-cleared NVDA/Alpaca requests, narrow adapter/instrument-metadata work and separately authorized pilot admission. M2c validates sessions, split actions and causal feature views; archive scale-up follows measured pilot evidence.
-- **Deliverables:** Coverage/rights report, provider-neutral ingestion, immutable raw and partitioned Parquet, provenance manifests, optional DuckDB queries and dataset-quality report.
-- **Dependencies:** M1; [NVDA plan](data/NVDA_DATA_PLAN.md), applicable Alpaca rights/access and task-specific authorization before implementation/acquisition. Broker selection does not require IBKR history. No paid alternative or account connection is implied.
-- **Automated tests:** Preserve MES regressions; add NVDA source pagination/feed identity, metadata-driven units, raw/adjusted actions, duplicates/gaps/revisions, availability, holidays/early closes/DST, native manifest reconstruction and future invariance. Equivalent source fixtures and a second synthetic instrument prove shared interfaces without another real market.
-- **Acceptance criteria:** NVDA-001–007 plus pilot 009–010 evidence for pilot signoff; 008 plus archive 009–010 evidence for M2 completion. Each year meets the preregistered coverage gate, gaps/outcomes remain explicit, catalog/provenance replay is reproducible and resource budgets measured. All NVDA gates are pending; old synthetic passes do not satisfy them.
-- **Exclusions:** Paper/live orders, silent synthetic substitution, speculative depth archives, model fitting or unapproved subscriptions.
+- **Objective:** a usable, auditable historical dataset. **Scope:** rights-cleared NVDA/Alpaca requests, narrow adapter and instrument-metadata work, a separately authorized pilot, then session, split-action and causal-feature validation (M2c); archive scale-up follows measured pilot evidence. **Split:** development 2020–2022, validation 2023, holdout 2024–2025.
+- **Dependencies:** M1, the [NVDA plan](data/NVDA_DATA_PLAN.md), applicable Alpaca rights and task-specific authorization. Broker choice does not require IBKR history.
+- **Acceptance:** NVDA-001–007 plus pilot evidence of 009–010 for pilot signoff; 008 plus archive evidence of 009–010 for M2 completion. Each year meets the preregistered coverage gate, gaps and outcomes stay explicit, catalog/provenance replay reproduces, resource budgets are measured. Old synthetic passes satisfy none of the NVDA gates.
+- **Exclusions:** paper or live orders, silent synthetic substitution, speculative depth archives, model fitting, unapproved subscriptions.
 
 ## M3 — Rule-based trading agents
 
+**Software implemented on synthetic data (2026-10-30); historical gates pending.** `strategies/rule/statistical/` holds ITSM, opening range breakout, VWAP and Bollinger mean reversion, short-term reversal and trend following; `strategies/rule/candlestick/` holds the ten-pattern detector, 1m–1h aggregation, four filters and the policy ([specifications](STRATEGIES.md), REQ-STRAT-001–016). `backtest/` adds sizing, risk limits, exit policy, a NautilusTrader runner and reports (REQ-BACKTEST-003, [D-030, D-031](DECISIONS.md)). Evidence is offline tests only: hand-computed trades, exact-reference differential tests, look-ahead invariance, reproducibility. There is no real data and no measured return; M3a historical acceptance, CANDLE-008 and every M5/M6 gate remain pending. Work on the non-ITSM rules began before M3a signoff at the owner's direction, so no historical result of any of them may be reported before M3a signoff. Relative strength, statistical arbitrage and volatility breakout are future work (REQ-STRAT-016).
+
 - **Objective:** Prove the initial causal ITSM baseline and shared historical execution path, then add a testable candlestick rule capability.
-- **Scope/order:** **M3a first:** EXP-001-NVDA-v1 ITSM, deterministic proposals, one-agent sizing/portfolio/risk and cost-aware native replay. **M3b only after M3a signoff:** [Candlestick Pattern Agents](CANDLESTICK_AGENTS.md) under RULE, with all 10 detection forms, configurable instruments and 1m/5m/15m/30m/1h candles, optional confirmations and entry/exit/stop/target rules. Evaluate variants independently; other statistical strategies remain candidates.
+- **Scope/order:** **M3a first:** EXP-001-NVDA-v1 ITSM, deterministic proposals, one-agent sizing/portfolio/risk and cost-aware native replay. **M3b only after M3a signoff (as evidence):** [candlestick pattern agents](STRATEGIES.md) under RULE, with all 10 detection forms, configurable instruments and 1m/5m/15m/30m/1h candles, optional confirmations and entry/exit/stop/target rules. Evaluate variants independently; the other statistical strategies are specified in [STRATEGIES.md](STRATEGIES.md) and follow the same preregistration.
 - **Deliverables:** M3a instrument-configured NVDA baseline, shared proposals/risk, runner/config, raw-share costs/PnL and trial ledger; independent policies use the same interfaces. M3b reusable completed-candle detectors/shape records, rule-policy/shared-proposal integration, causal feature-consumption contract and at least one preregistered candlestick historical report with full costs and all attempted variants recorded.
-- **Dependencies:** M1/M2, admitted NVDA data/calendar/actions/costs and preregistered EXP-001-NVDA-v1 timing/fill/borrow/cost settings. M3b requires recorded M3a completion; this requirements update neither starts M3 nor enlarges current M2 implementation.
+- **Dependencies:** M1/M2, admitted NVDA data/calendar/actions/costs and preregistered EXP-001-NVDA-v1 timing/fill/borrow/cost settings. M3b requires recorded M3a completion.
 - **Automated tests:** M3a covers positive/negative/zero/disagreeing split-neutral returns, missing bars/actions, early-close skips, timing, one-entry/session, raw-share PnL and proposal/risk checks; two policy fixtures prove no provider/broker coupling. M3b adds the CANDLE-001–008/010 detector-side cases: all patterns/timeframes, hand-calculated aggregation, instrument isolation, confirmation warmup/conflicts, future-data invariance, shared proposal identity and entry/exit/protection/cost edge cases.
 - **Acceptance criteria:** M3a fixed inputs reproduce proposals/metrics within declared tolerance and all risk/cost/timing cases pass before M3b. M3b passes CANDLE-001–008 and reusable detector-side CANDLE-010 evidence; retain failures/null results. M4 tests fitted ML reuse; M5/M6 own CANDLE-009 out-of-sample verdict and paper promotion for each proposed variant. Positive returns are not required for research completion.
-- **Exclusions:** Broker connectivity, tuning on final holdout, starting candlestick implementation before the ITSM baseline, implementing every other rule family, simultaneous-agent coordination or paper promotion from an in-sample result.
+- **Exclusions:** Broker connectivity, tuning on the final holdout, simultaneous-agent coordination, paper promotion from an in-sample result.
 
 ## M4 — ML research and agents
 
@@ -128,4 +107,4 @@ The user's final M0–M10 numbering is authoritative over older archived drafts.
 
 ## Next stage — authorized task required
 
-Specifications now align with the confirmed NVDA/Alpaca/IBKR scope and modular interfaces. The next separate task should implement only the narrow offline NVDA adapter/metadata prerequisites and fixture gates in [NVDA_DATA_PLAN.md](data/NVDA_DATA_PLAN.md), then seek rights/access-cleared pilot acquisition authorization. Preserve synthetic MES regressions, the native catalog and causal snapshots. Full archive, rule implementation, broker connectivity and orders remain subsequent gates; the old nine-job MES schedule is inactive. The user authorized a local documentation commit after review; implementation, dependency changes, acquisition and push remain outside this scope.
+The next separate task implements only the narrow offline NVDA adapter and metadata prerequisites and the fixture gates in [NVDA_DATA_PLAN.md](data/NVDA_DATA_PLAN.md), then seeks rights- and access-cleared pilot acquisition authorization. Preserve the synthetic MES regressions, the native catalog and causal snapshots. Full archive acquisition, historical rule results, broker connectivity and orders are subsequent gates.

@@ -1,10 +1,10 @@
 # M2b ingestion architecture and acceptance gates
 
-**Historical MES reference — superseded for active scope, 2026-10-30.** Use [NVDA_DATA_PLAN.md](NVDA_DATA_PLAN.md) for NVDA/Alpaca admission. Preserve this document as evidence for the existing synthetic MES implementation and previous planning; its procurement steps and JSON requests are inactive and authorize no execution.
+**Historical MES reference — superseded for active scope, 2026-10-30.** Use [NVDA_DATA_PLAN.md](../../data/NVDA_DATA_PLAN.md) for NVDA/Alpaca admission. Preserve this document as evidence for the existing synthetic MES implementation and previous planning; its procurement steps and JSON requests are inactive and authorize no execution.
 
-Design only, 2026-10-29. No ingestion code, data files, credentials or infrastructure are created by M2a. [HISTORICAL_DATA_SPEC.md](HISTORICAL_DATA_SPEC.md) owns dataset/session/time/roll policy; [PROVIDER_COMPARISON.md](PROVIDER_COMPARISON.md) owns procurement evidence. Implements REQ-DATA-001–004, relevant REQ-RESEARCH-001/SEC-002 and the data stage of the existing [architecture](../ARCHITECTURE.md).
+Design only, 2026-10-29. No ingestion code, data files, credentials or infrastructure are created by M2a. [HISTORICAL_DATA_SPEC.md](HISTORICAL_DATA_SPEC.md) owns dataset/session/time/roll policy; PROVIDER_COMPARISON.md owns procurement evidence. Implements REQ-DATA-001–004, relevant REQ-RESEARCH-001/SEC-002 and the data stage of the existing [architecture](../../ARCHITECTURE.md).
 
-**Subsequent evidence:** the [M2b.1 implementation report](M2B1_IMPLEMENTATION.md) maps these gates to native synthetic DBN/catalog/replay tests and documents working commands, strict partition rejection and resource limits. The [M2b.2 preparation plan](M2B2_ACQUISITION_PLAN.md) records public research, exact proposed jobs, real-admission prerequisites and the detailed 013/014 procedure. The design below remains the broader M2b target. Acquisition/admission is disabled; gates 013/014 and real-provider/calendar/rights evidence remain pending.
+**Subsequent evidence:** the [M2b.1 implementation report](../../data/PIPELINE.md) maps these gates to native synthetic DBN/catalog/replay tests and documents working commands, strict partition rejection and resource limits. The M2b.2 preparation plan records public research, exact proposed jobs, real-admission prerequisites and the detailed 013/014 procedure. The design below remains the broader M2b target. Acquisition/admission is disabled; gates 013/014 and real-provider/calendar/rights evidence remain pending.
 
 ## 1. Scope and stages
 
@@ -125,4 +125,4 @@ M2b is implemented and pilot-admitted only when M2B-001–013 pass; M2B-014 is a
 
 Before any real acquisition: resolve exact quote/retention permissions and actual contract definitions. Before archive admission: historical calendar provenance, exact source coverage/revisions and price/clock decoder fixture. Before economic conclusions: empirical sample adequacy and execution evidence remain M3/M5 gates.
 
-M2b.1 has implemented the offline config/manifest, synthetic DBN/native-Bar round-trip, validation/staging/catalog/coverage and replay. The [M2b.2 preparation plan](M2B2_ACQUISITION_PLAN.md) now owns remaining quote/rights review, real-definition/calendar compatibility, bounded acquisition and pilot/archive acceptance sequencing. These remaining steps require the permissions stated there; the design itself grants no acquisition authorization.
+M2b.1 has implemented the offline config/manifest, synthetic DBN/native-Bar round-trip, validation/staging/catalog/coverage and replay. The M2b.2 preparation plan now owns remaining quote/rights review, real-definition/calendar compatibility, bounded acquisition and pilot/archive acceptance sequencing. These remaining steps require the permissions stated there; the design itself grants no acquisition authorization.

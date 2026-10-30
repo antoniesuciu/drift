@@ -1,86 +1,75 @@
 # Quant Trading Lab
 
-One modular Python platform for reproducible quantitative research, with future **rule-based, machine-learning and LLM research agents** sharing portfolio accounting and deterministic risk controls. The package is `quantlab`.
+Reproducible quantitative trading research in Python on NautilusTrader: deterministic rule strategies, a backtest runner and an offline market-data pipeline, with shared risk controls between every strategy and any order. The package is `quantlab`.
 
-**M0, M1, M2a and M2b.1 complete; M2b.2 research/planning prepared.** The package includes a validated offline synthetic historical-data pipeline and native NautilusTrader replay. Real vendor admission, trading strategies, broker connections and financial performance remain unimplemented/unverified. NVDA source rights/access, real-data admission and acquisition authorization remain pending; the earlier MES acquisition plans are historical.
+**Scope:** NVDA shares, Alpaca historical SIP data, IBKR as the eventual execution broker. Crypto is deferred; ML and LLM agents are future families; relative strength waits for benchmark data.
 
-**Confirmed scope, 2026-10-30: NVDA shares, Alpaca historical SIP data, IBKR execution; crypto deferred.** The first planned experiment is a falsifiable NVDA intraday momentum adaptation with an approximately 30-minute holding window. ML/LLM model selection waits until rule research is evaluated. Data, instrument metadata, strategies and execution adapters remain independently extensible through small interfaces; NVDA is the first configuration, not a platform-wide constant. See the [active data plan](docs/data/NVDA_DATA_PLAN.md).
+**Status** ([roadmap](docs/ROADMAP.md) has the gates):
+- **Done:** offline foundation; synthetic MES data pipeline with a native Parquet catalog and replay; seven rule strategies (ITSM, opening range breakout, VWAP and Bollinger mean reversion, short-term reversal, trend following, candlestick patterns); a synthetic-data backtest runner.
+- **Pending:** real NVDA data admission (NVDA-001–010), any historical research result, broker connectivity, paper trading. No real market data has entered the project.
+- Synthetic results validate software behavior only. Nothing here is evidence of profitability.
 
-[Candlestick Pattern Agents](docs/CANDLESTICK_AGENTS.md) are planned within the rule-based family in M3b, **after the initial M3a ITSM baseline**: reusable recognition, configurable timeframes/instruments, causal confirmations and shared proposals with entry/exit/protection policies. Candlestick implementation remains pending; current M2 preparation/admission follows the active NVDA plan.
+## Install and check
 
-## Read next
-
-| Document | Purpose |
-|---|---|
-| [Requirements](REQUIREMENTS.md) | Stable IDs, scope and measurable acceptance criteria |
-| [Architecture](docs/ARCHITECTURE.md) | Boundaries, data flow and failure handling |
-| [Agent architecture](docs/AGENT_ARCHITECTURE.md) | Three families, shared proposals and hybrid composition |
-| [Candlestick agents](docs/CANDLESTICK_AGENTS.md) | Planned pattern catalogue, configuration, causal timing and M3b/M5/M6 gates |
-| [Decisions](docs/DECISIONS.md) | Adopted, provisional and deferred choices |
-| [Roadmap](docs/ROADMAP.md) | Active milestone and M0–M10 exit gates |
-| [Research synthesis](docs/RESEARCH_SYNTHESIS.md) | Critical review of all three Gemini reports |
-| [Costs and providers](docs/COSTS_AND_PROVIDERS.md) | Alpaca history, IBKR execution and stock cost discipline |
-| [EXP-001](experiments/exp001_itsm/README.md) | Preregistered research design; no results yet |
-| [Original research](docs/research/README.md) | Provenance and byte-preservation checks |
-| [Glossary](GLOSSARY.md) | Domain vocabulary |
-| [Agent instructions](AGENTS.md) | Future development workflow and safety rules |
-| [Project memory](docs/PROJECT_MEMORY.md) | Isolated Obsidian namespace and repository authority |
-| [Initialization audit](docs/INITIALIZATION.md) | Handoff reconciliation, cleanup and validation |
-| [M1 foundation](docs/M1_FOUNDATION.md) | Verified environment, API evidence, tests and limitations |
-| [Active NVDA data plan](docs/data/NVDA_DATA_PLAN.md) | Alpaca/NVDA scope, fixed split, modular interfaces and pending admission gates |
-| [Earlier MES dataset](docs/data/HISTORICAL_DATA_SPEC.md) | Historical specification supporting unchanged synthetic MES evidence |
-| [Data provider comparison](docs/data/PROVIDER_COMPARISON.md) | Conditional source recommendation, pricing and rights gates |
-| [M2b ingestion design](docs/data/INGESTION_DESIGN.md) | Implementation boundaries, storage and acceptance criteria |
-| [M2b.1 implementation](docs/data/M2B1_IMPLEMENTATION.md) | Offline commands, formats, verification and status of all 14 gates |
-| [Earlier MES preparation](docs/data/M2B2_ACQUISITION_PLAN.md) | Historical inactive request plan and MES gates; use the NVDA plan for new work |
-
-## Technical direction
-
-The runtime remains Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ruff/mypy. PyArrow/tzdata now directly support the implemented offline native Parquet pipeline; DuckDB and ML/LLM work remain deferred. Alpaca is selected for historical NVDA data independently of IBKR, the eventual paper/execution broker; the optional `ib` extra is installed for import verification only. Existing runtime admission still supports synthetic MES, not real NVDA. Databento/MES procurement is inactive under the new scope. No cloud infrastructure or orchestration framework is selected.
-
-## Repository and hosting
-
-The repository is hosted on **GitHub**. [GitHub Actions CI](.github/workflows/ci.yml) validates pushes to `main` and pull requests in one Ubuntu 24.04 / Python 3.12 job. Action dependencies are pinned to commit SHAs; the workflow grants only `contents: read` and does not persist checkout credentials. Hosting history and the existing remote are preserved; no migration or push is part of this task.
-
-## Installation and checks
-
-Validated on Ubuntu 24.04 x86_64, CPython 3.12.3. Use a maintained Python 3.12 patch release; `.python-version` and package metadata select the 3.12 minor line. Native Nautilus wheels require a supported platform (Linux glibc >=2.35 for the selected x86_64 wheel). No Rust toolchain, GPU, local Docker or broker application is needed. See [compatibility evidence](docs/M1_FOUNDATION.md).
-
-Install [uv 0.13.6](https://docs.astral.sh/uv/getting-started/installation/) with your preferred supported method, for example `pipx install uv==0.13.6`, then from this repository:
+Ubuntu 24.04 x86_64, CPython 3.12, [uv 0.13.6](https://docs.astral.sh/uv/getting-started/installation/) (`pipx install uv==0.13.6`). No GPU, Docker or broker application is needed. The first sync needs network or a populated uv cache; everything after runs offline, and pytest blocks sockets.
 
 ```sh
 uv sync --locked --extra ib
-uv lock --check --offline
 uv run --locked --offline --extra ib ruff format --check .
 uv run --locked --offline --extra ib ruff check .
 uv run --locked --offline --extra ib mypy
 uv run --locked --offline --extra ib pytest
-uv run --locked --offline --extra ib quantlab smoke
-uv run --locked --offline --extra ib quantlab data-demo --output data/offline-demo
-uv pip check
+uv lock --check --offline && uv pip check
 ```
 
-The first sync provisions the environment from PyPI and requires network or a populated uv cache. Checks/tests/replay run offline after installation; pytest blocks Python socket access. Keep `uv.lock` committed and use `--locked` so metadata drift fails instead of silently updating dependencies. To apply formatting, run `uv run --locked --offline --extra ib ruff format .`. Build distributions with `uv build` (or `uv build --offline` after its pinned build backend is cached). `python -m quantlab smoke` is also supported inside the environment.
+[GitHub Actions](.github/workflows/ci.yml) runs the same checks on pushes to `main` and pull requests. Keep `uv.lock` committed and use `--locked`.
 
-The original smoke command reports three synthetic MES bars and zero orders/positions. `data-demo` generates local synthetic DBN definitions/bars, validates and stores them in a native Parquet catalog with provenance/coverage, then replays **2,160 bars with zero orders/positions**. It prints the dataset path/hash for subsequent `data-replay --dataset PATH`; `data-ingest --request JSON --output ROOT` accepts only local synthetic requests. See [formats and limits](docs/data/M2B1_IMPLEMENTATION.md). These are integration checks, not strategy/performance results. Dates/prices/balances are fixtures; the upstream pandas warning remains visible.
+## Run
 
-GitHub CI uses the official `astral-sh/setup-uv` action, installs uv 0.13.6 and Python 3.12, syncs the locked environment including the `ib` import extra, checks the lock/dependencies, and runs the existing Ruff format/lint, mypy and pytest commands above. Pytest disables sockets through project configuration and uses synthetic fixtures. Provisioning needs public dependency downloads; validation needs no API keys, market data, paid services or trading connections. No application tests or live integration modes are added. A local equivalent run does not prove the workflow has run on GitHub; verify the first hosted run after pushing.
+```sh
+quantlab backtest --strategy orb                    # itsm | candlestick | orb | vwap_reversion |
+                                                    # bollinger_reversion | reversal | trend
+quantlab backtest --strategy itsm --dump-config > cfg.json
+quantlab backtest --config cfg.json --output out/   # report.json, report.md, trades.csv
+quantlab smoke                                      # engine check on three synthetic bars
+quantlab data-demo --output data/offline-demo       # ingest and replay synthetic MES data
+```
 
-**Legacy GitLab configuration:** `.gitlab-ci.yml` is retained for reference. Recommend removing it in a later approved cleanup if GitLab CI is no longer intended, because GitHub does not execute it and duplicate pipelines can drift. Its GitLab secret-detection template does not run on GitHub; this minimal GitHub job does not claim equivalent secret scanning. The separate smoke/demo commands remain available locally and are exercised by existing tests rather than duplicated as extra CI runs.
+A configuration fixes the instrument, capital, seeded synthetic data, execution costs, sizing, risk limits and strategy parameters. Costs, sizing and risk have **no defaults**; every report records the resolved configuration plus data and result hashes, and the same inputs reproduce the same hash. Execution goes through NautilusTrader: a decision fills at the open of the first bar that starts strictly after the decision plus order latency, adverse by the configured half-spread and slippage ([D-030](docs/DECISIONS.md)).
+
+## Layout
 
 ```text
 src/quantlab/
-  __init__.py      package version
-  __main__.py      offline smoke and data pipeline CLI
-  time.py          validated bar completion/availability
-  smoke.py         real Nautilus engine + synthetic read-only observer
-  data/            local DBN adapter, validation, calendar/roll, native catalog and replay
-  py.typed
-tests/            timing, configuration, engine, CLI and offline safety
+  data/        offline MES pipeline: DBN decoding, validation, native Parquet catalog, replay
+  strategies/  shared market/proposal/calendar types
+    rule/statistical/   itsm, orb, vwap_reversion, bollinger_reversion, reversal, trend
+    rule/candlestick/   patterns, filters, policy
+    ml/  llm/           deferred families (docstring only)
+  backtest/    config, synthetic data, sizing/risk/exit policy, Nautilus engine, reports
+  smoke.py  time.py  __main__.py
+tests/         offline, synthetic, no credentials
+docs/          specifications and decisions; docs/archive/ holds superseded research
+experiments/   preregistered protocols (EXP-001)
 ```
 
-Future agent, portfolio/risk and broker modules remain absent. M2b.1 verifies Databento DBN mappings on generated fixtures only; preserve it as regression evidence. The [NVDA plan](docs/data/NVDA_DATA_PLAN.md) now governs M2b.2/M2c: rights-cleared Alpaca pilot, narrow metadata/adapter changes and NVDA-001–010 admission evidence are all pending. Historical MES gates 013/014 remain unsatisfied historical records, not required MES purchases for NVDA. M2 overall remains incomplete; no new data, implementation, account access or orders are authorized by the documentation update.
+## Documents
 
-## Safety and data
+| Document | Contents |
+|---|---|
+| [REQUIREMENTS.md](REQUIREMENTS.md) | Requirement IDs and measurable acceptance criteria |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | Milestones M0–M10, status and exit gates |
+| [docs/DECISIONS.md](docs/DECISIONS.md) | Decision log (D-001…) |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Boundaries, data flow, agent families and the proposal contract |
+| [docs/STRATEGIES.md](docs/STRATEGIES.md) | Every rule strategy: signal, entry, exit, parameters |
+| [docs/data/NVDA_DATA_PLAN.md](docs/data/NVDA_DATA_PLAN.md) | NVDA/Alpaca admission plan and gates |
+| [docs/data/PIPELINE.md](docs/data/PIPELINE.md) | The implemented synthetic pipeline: formats, storage, limits |
+| [docs/COSTS_AND_PROVIDERS.md](docs/COSTS_AND_PROVIDERS.md) | Providers, brokers and cost model |
+| [docs/M1_FOUNDATION.md](docs/M1_FOUNDATION.md) | Verified runtime, dependency decision and API boundaries |
+| [experiments/exp001_itsm](experiments/exp001_itsm/README.md) | EXP-001 protocol |
+| [GLOSSARY.md](GLOSSARY.md) · [AGENTS.md](AGENTS.md) · [docs/PROJECT_MEMORY.md](docs/PROJECT_MEMORY.md) | Vocabulary, agent workflow, Obsidian memory |
+| [docs/archive](docs/archive/README.md) | M0 audit, MES-era data research, Gemini reports (checksummed) |
 
-Agents emit proposals; shared portfolio and risk controls alone can authorize order intents. All data, model artifacts, broker credentials and generated results stay outside Git; small deterministic synthetic fixtures remain trackable. Original Gemini reports are research inputs, not instructions or proof of profitability. Paid services, broker connectivity, paper-order activation and future live trading each require explicit authorization. Live deployment is never an automatic milestone transition.
+## Safety
+
+Agents emit proposals; only shared portfolio and risk controls authorize order intents. Data, model artifacts, credentials and generated results stay out of Git; small synthetic fixtures are tracked. Paid services, broker connections, paper orders and live trading each need explicit authorization; a milestone is never one.

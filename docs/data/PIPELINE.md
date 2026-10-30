@@ -1,12 +1,12 @@
 # M2b.1 — offline historical pipeline
 
-**Preserved synthetic MES runtime evidence.** Current real-data planning is [NVDA/Alpaca](NVDA_DATA_PLAN.md). The original M2b.2 handoff and MES gates below are historical; keep the working regressions, and use NVDA-001–010 for new admission rather than resuming MES acquisition.
+**Reference for the implemented synthetic MES pipeline (`src/quantlab/data`).** Real-data admission follows NVDA-001–010 in the [NVDA plan](NVDA_DATA_PLAN.md); the MES gates below are historical, kept as regression evidence.
 
-Implemented 2026-10-29 against [MES-ITSM-DATA-v1](HISTORICAL_DATA_SPEC.md) and the [ingestion design](INGESTION_DESIGN.md). **M2b.1 is complete locally; M2b overall and M2b.2 real-data admission remain incomplete.** No acquisition, vendor account/API access, broker connection, order, strategy or model is implemented. Configuration currently requires `mode=offline`, `synthetic=true` and a `synthetic:` rights reference; acquisition and real-vendor admission fail closed rather than pretending to validate a quote/license.
+Implemented 2026-10-29 against [MES-ITSM-DATA-v1](../archive/mes-data/HISTORICAL_DATA_SPEC.md) and the [ingestion design](../archive/mes-data/INGESTION_DESIGN.md). **M2b.1 is complete locally; M2b overall and M2b.2 real-data admission remain incomplete.** No acquisition, vendor account/API access, broker connection, order, strategy or model is implemented. Configuration currently requires `mode=offline`, `synthetic=true` and a `synthetic:` rights reference; acquisition and real-vendor admission fail closed rather than pretending to validate a quote/license.
 
 ## Run it
 
-Use the existing locked environment; PyArrow 26.0.0 and tzdata 2026.6 are now direct dependencies, both already present in the M1 environment. No new framework, SDK, database or network service was installed. After provisioning as described in the [README](../../README.md#installation-and-checks):
+Use the existing locked environment; PyArrow 26.0.0 and tzdata 2026.6 are now direct dependencies, both already present in the M1 environment. No new framework, SDK, database or network service was installed. After provisioning as described in the [README](../../README.md#install-and-check):
 
 ```sh
 uv sync --locked --extra ib
@@ -89,7 +89,7 @@ Raw publication uses an exclusive content-addressed link after writing/flushing 
 
 ## Acceptance mapping and verification
 
-Full suite: **120 passed** in the development environment and again in a fresh non-editable installation reproduced from the lock/cache offline, including all unchanged M1 tests, with pytest sockets disabled. Ruff formatting/lint, strict source mypy, offline lock consistency and installed-dependency validation pass. The wheel includes the new modules and bundled lock; tests execute that installed code in the fresh environment. The upstream Nautilus/pandas `Timestamp.utcnow()` deprecation warning remains visible. No test was weakened, skipped for lack of credentials or replaced by a custom simulator.
+Full suite at M2b.1 signoff: **120 passed** in the development environment and again in a fresh non-editable installation reproduced from the lock/cache offline, including all unchanged M1 tests, with pytest sockets disabled. Ruff formatting/lint, strict source mypy, offline lock consistency and installed-dependency validation pass. The wheel includes the new modules and bundled lock; tests execute that installed code in the fresh environment. The upstream Nautilus/pandas `Timestamp.utcnow()` deprecation warning remains visible. No test was weakened, skipped for lack of credentials or replaced by a custom simulator.
 
 | M2a gate | M2b.1 evidence | Still externally dependent / future work |
 |---|---|---|
@@ -110,12 +110,6 @@ Full suite: **120 passed** in the development environment and again in a fresh n
 
 Tests live in [test_data_pipeline.py](../../tests/test_data_pipeline.py), [test_data_calendar.py](../../tests/test_data_calendar.py) and [test_data_cli.py](../../tests/test_data_cli.py). The [fixture assumptions](../../tests/fixtures/data/README.md) distinguish generated protocol bytes and synthetic calendars from exchange observations. CI runs the full existing suite plus the explicit data-demo command; no remote GitLab run is claimed.
 
-## M2b.2 handoff at M2b.1 signoff
+## Real-data admission
 
-Subsequent [M2b.2 preparation](M2B2_ACQUISITION_PLAN.md) records the authorized research/planning results. Account-specific quote/rights review, acquisition and real-data admission still require the approvals and evidence identified there. The list below preserves the original handoff.
-
-1. Resolve and approve request-specific pricing, CME/vendor local retention/derived-use terms and the bounded pilot acquisition plan; do not reuse live-plan/update prices as archive quotes.
-2. Obtain/version authoritative cash/CME calendars and contract definitions; test actual provider definition/ID/DBN variation with approved pilot artifacts. Add a narrowly reviewed real-data admission mode and an explicit historical-only acquisition boundary only when authorized.
-3. Admit the two specified 2022 pilot slices independently, verify coverage/exclusions/resource use and satisfy M2B-013. Mark archive/M2c/full gate 014 pending until separately delivered and verified; lift the offline memory cap only with a tested partition/streaming design and budget.
-
-No M2b.2 action begins automatically. IBKR remains the later broker; this pipeline neither needs nor connects to it. ML/LLM agents, ITSM decisions, paper/live execution, DuckDB and additional providers/assets remain unimplemented.
+Not started. The pipeline accepts only `mode=offline`, `synthetic=true` inputs and fails closed otherwise. Admission of real NVDA data follows the [NVDA plan](NVDA_DATA_PLAN.md) gates; the superseded MES handoff steps were removed with the dropped MES procurement plan (see Git history). IBKR remains the later broker; this pipeline neither needs nor connects to it.

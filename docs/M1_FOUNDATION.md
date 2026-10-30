@@ -2,7 +2,7 @@
 
 **Foundation evidence, not current market admission.** The verified runtime below remains synthetic MES; current NVDA/Alpaca requirements are in [NVDA_DATA_PLAN.md](data/NVDA_DATA_PLAN.md). No NVDA implementation or account compatibility is implied by this M1 record.
 
-Validated 2026-10-29. Scope: [TASK_M1.md](../TASK_M1.md), [M1 roadmap](ROADMAP.md#m1--project-foundation), REQ-DATA-002's M1 timing cases, REQ-BACKTEST-001, REQ-NFR-001/002 and the M1 CI secret-check configuration in REQ-SEC-001. No M2 ingestion, strategies, orders, broker connection, training or paid data was introduced.
+Validated 2026-10-29. Scope: the M1 acceptance in the [roadmap](ROADMAP.md), REQ-DATA-002's M1 timing cases, REQ-BACKTEST-001, REQ-NFR-001/002 and the M1 CI secret-check configuration in REQ-SEC-001. No M2 ingestion, strategies, orders, broker connection, training or paid data was introduced.
 
 ## Environment and dependency decision
 
@@ -27,7 +27,7 @@ The implementation uses `BacktestEngine`, `BacktestEngineConfig`, `LoggingConfig
 
 The fixture is MESZ6.CME with synthetic activation/expiry metadata, USD 5 multiplier and 0.25-point tick, plus three completed minute bars starting 2026-03-09 13:30 UTC. Values/volume/contract dates/account balance are synthetic; contract permissions, margin and tradeability have not been established. `ts_event` denotes interval completion in this fixture; `ts_init` denotes completion plus configured delivery delay. The selected engine sorts and dispatches data by `ts_init`. Callback observations demonstrate bars are not delivered at their start or before modeled availability. Vendor timestamp mapping and exchange calendars remain M2.
 
-`BarInterval` validates aware datetimes, normalizes to UTC before comparing instants (including DST folds), rejects imaginary local times, nonpositive windows and availability before completion. `SmokeConfig` bounds fixture size and latency. These are the only shared foundational types needed now. The conceptual proposal schema remains in [AGENT_ARCHITECTURE.md](AGENT_ARCHITECTURE.md#proposal-contract) for M3; no agent skeletons, broker wrappers, portfolio/risk implementations or orchestrators were created.
+`BarInterval` validates aware datetimes, normalizes to UTC before comparing instants (including DST folds), rejects imaginary local times, nonpositive windows and availability before completion. `SmokeConfig` bounds fixture size and latency. These are the only shared foundational types needed now. The conceptual proposal schema remains in [the proposal contract](ARCHITECTURE.md#proposal-contract) for M3; no agent skeletons, broker wrappers, portfolio/risk implementations or orchestrators were created.
 
 Historical API references: [tagged backtest API](https://github.com/nautechsystems/nautilus_trader/blob/v1.231.0/docs/api_reference/backtest.md), [data semantics](https://github.com/nautechsystems/nautilus_trader/blob/v1.231.0/docs/concepts/data/index.md), and the installed release's `backtest/engine.pyx` and native object docstrings. These references were checked alongside the running installed wheel rather than assumed interchangeable with 2.x.
 
@@ -45,7 +45,7 @@ The [tagged IB guide](https://github.com/nautechsystems/nautilus_trader/blob/v1.
 | Functional tests | 36 passing pytest cases with `--disable-socket`: package/CLI, rejected network/order modes, config boundaries, actual engine replay, zero orders/positions, configured fixture sizes/latencies, IB module imports, completion/availability, UTC/ET DST transitions/fold, nonexistent/naive time and invalid intervals. |
 | Determinism | Equal reports from fresh engines in tests and byte-identical JSON from independent CLI processes; event times/closes/callback clocks and engine iteration counts are checked. Wall-clock durations and random run IDs are intentionally excluded, not claimed deterministic. |
 | Quality | `ruff format --check .`, `ruff check .`, strict source `mypy`, `uv lock --check --offline` and `uv pip check` pass. Third-party extension types are isolated at the narrow engine bridge; mypy does not prove native implementation correctness. |
-| CI | Same locked provisioning/offline checks configured in `.gitlab-ci.yml`; standard [GitLab secret detection](https://docs.gitlab.com/user/application_security/secret_detection/pipeline/) included. CI scripts exercised locally; server validation, runner execution and analyzer results are not claimed. |
+| CI | The same locked provisioning and offline checks, run by [GitHub Actions](../.github/workflows/ci.yml). The original GitLab configuration, including its secret-detection template, was removed ([D-029](DECISIONS.md)), so CI has no secret scanner. Hosted execution is not claimed until GitHub runs it. |
 | Safety | Application has no network client, broker configuration or order mode. Test socket access is denied; no real account, credentials, external data or services are used by tests. No real/simulated trade is submitted by the smoke run. |
 | Preservation | Original Gemini report hashes and existing unrelated project memory remain protected; dependencies, environments, caches and build artifacts are ignored. |
 

@@ -1,6 +1,6 @@
 # NVDA historical data and admission plan
 
-Adopted specification, **2026-10-30**, `NVDA-SIP-DATA-v1`. Implements the requirements direction in [D-026–028](../DECISIONS.md); **all gates below are pending**. This document authorizes no download, account access or implementation. The working runtime still accepts synthetic Databento MES only; [M2b.1 evidence](M2B1_IMPLEMENTATION.md) remains accurate for that scope.
+Adopted specification, **2026-10-30**, `NVDA-SIP-DATA-v1`. Implements the requirements direction in [D-026–028](../DECISIONS.md); **all gates below are pending**. This document authorizes no download, account access or implementation. The working runtime still accepts synthetic Databento MES only; [M2b.1 evidence](PIPELINE.md) remains accurate for that scope.
 
 ## Scope and frozen periods
 
@@ -45,7 +45,7 @@ Alpaca's documented `asof` selects symbol mapping, not a historical corporate-ac
 
 ## Modular extension contract
 
-Keep four independent configuration choices: **data adapter/feed**, **instrument metadata**, **strategy policy**, **execution adapter**. Broker contract lookup and order acknowledgements stay in execution; provider symbols/adjustments stay in data; strategy intent uses the [common proposal](../AGENT_ARCHITECTURE.md#proposal-contract); shared portfolio/risk owns quantities and limits.
+Keep four independent configuration choices: **data adapter/feed**, **instrument metadata**, **strategy policy**, **execution adapter**. Broker contract lookup and order acknowledgements stay in execution; provider symbols/adjustments stay in data; strategy intent uses the [common proposal](../ARCHITECTURE.md#proposal-contract); shared portfolio/risk owns quantities and limits.
 
 A later source or instrument supplies its own mapping, units, calendar, actions and capability checks through the same interface. Add product-specific validation where needed, with regression coverage and version changes when semantics genuinely differ. Configurability is not automatic admission. Existing synthetic MES fixtures can remain a second source/instrument regression case; they are not another active market. No shared normalizer or detector should contain a trading-policy branch for the string `NVDA`.
 
@@ -68,4 +68,4 @@ NVDA-001–007 and pilot evidence of 009–010 precede real pilot signoff; 008 a
 
 ## Sources and current limitations
 
-Official pages rechecked **2026-10-30**: [bars request/pagination/adjustments](https://docs.alpaca.markets/us/reference/stockbars), [feed/timestamp FAQ](https://docs.alpaca.markets/us/docs/market-data-faq), [plans](https://docs.alpaca.markets/us/docs/about-market-data-api), [public terms](https://files.alpaca.markets/disclosures/library/TermsAndConditions.pdf), [customer agreement §30](https://files.alpaca.markets/disclosures/library/AcctAppMarginAndCustAgmt.pdf). Public jurisdiction/retention uncertainty is detailed in the [audit](../PROJECT_AUDIT.md); no authenticated entitlement or dataset was tested. [NVIDIA 2021 release](https://nvidianews.nvidia.com/news/nvidia-announces-four-for-one-stock-split-pending-stockholder-approval-at-annual-meeting-set-for-june-3) and [2024 split FAQ](https://investor.nvidia.com/files/doc_downloads/2024/05/NVIDIA-2024-Stock-Split-FAQ.pdf) support the action fixtures; actual source mapping/actions still need admission evidence.
+Official pages rechecked **2026-10-30**: [bars request/pagination/adjustments](https://docs.alpaca.markets/us/reference/stockbars), [feed/timestamp FAQ](https://docs.alpaca.markets/us/docs/market-data-faq), [plans](https://docs.alpaca.markets/us/docs/about-market-data-api), [public terms](https://files.alpaca.markets/disclosures/library/TermsAndConditions.pdf), [customer agreement §30](https://files.alpaca.markets/disclosures/library/AcctAppMarginAndCustAgmt.pdf). Public jurisdiction/retention uncertainty is detailed in the [audit](../archive/audit/PROJECT_AUDIT.md); no authenticated entitlement or dataset was tested. [NVIDIA 2021 release](https://nvidianews.nvidia.com/news/nvidia-announces-four-for-one-stock-split-pending-stockholder-approval-at-annual-meeting-set-for-june-3) and [2024 split FAQ](https://investor.nvidia.com/files/doc_downloads/2024/05/NVIDIA-2024-Stock-Split-FAQ.pdf) support the action fixtures; actual source mapping/actions still need admission evidence.
