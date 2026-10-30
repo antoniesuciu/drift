@@ -65,3 +65,7 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "quantlab.data.replay"
 disallow_subclassing_any = false
+
+[[tool.mypy.overrides]]
+module = "quantlab.backtest.engine"
+disallow_subclassing_any = false
