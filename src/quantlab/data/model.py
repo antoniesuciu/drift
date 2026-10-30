@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass
 from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
+from functools import cache
 from importlib.metadata import version
 from importlib.resources import files
 from pathlib import Path
@@ -51,7 +52,9 @@ def instant(ns: int) -> datetime:
     return datetime(1970, 1, 1, tzinfo=UTC) + timedelta(microseconds=ns // 1000)
 
 
+@cache
 def local_ns(day: str, clock: str) -> int:
+    """New York wall clock to UTC ns; pure and hot (called per candle), hence cached."""
     return timestamp(datetime.fromisoformat(f"{day}T{clock}:00").replace(tzinfo=NY).isoformat())
 
 
