@@ -40,7 +40,7 @@ The runtime remains Python 3.12, NautilusTrader 1.231.0, uv 0.13.6 and pytest/Ru
 
 ## Repository and hosting
 
-GitLab is the intended host and CI target. Inspection found an existing **GitHub** `origin` with the accidental archive commit already published. That history and remote are preserved; this initialization adds one normal local cleanup commit. No push or hosting migration is part of this task. A future authorized migration can add a GitLab remote and push normally without rewriting published history. No GitLab project URL or functioning CI is claimed here.
+The repository is hosted on **GitHub**. [GitHub Actions CI](.github/workflows/ci.yml) validates pushes to `main` and pull requests in one Ubuntu 24.04 / Python 3.12 job. Action dependencies are pinned to commit SHAs; the workflow grants only `contents: read` and does not persist checkout credentials. Hosting history and the existing remote are preserved; no migration or push is part of this task.
 
 ## Installation and checks
 
@@ -64,7 +64,9 @@ The first sync provisions the environment from PyPI and requires network or a po
 
 The original smoke command reports three synthetic MES bars and zero orders/positions. `data-demo` generates local synthetic DBN definitions/bars, validates and stores them in a native Parquet catalog with provenance/coverage, then replays **2,160 bars with zero orders/positions**. It prints the dataset path/hash for subsequent `data-replay --dataset PATH`; `data-ingest --request JSON --output ROOT` accepts only local synthetic requests. See [formats and limits](docs/data/M2B1_IMPLEMENTATION.md). These are integration checks, not strategy/performance results. Dates/prices/balances are fixtures; the upstream pandas warning remains visible.
 
-`.gitlab-ci.yml` configures the same checks plus GitLab's standard secret-detection template. Provisioning uses an official uv/Python image; no local Docker setup is required. Its scripts were exercised locally; no GitLab pipeline execution is claimed because no GitLab remote/runner has been configured or pushed.
+GitHub CI uses the official `astral-sh/setup-uv` action, installs uv 0.13.6 and Python 3.12, syncs the locked environment including the `ib` import extra, checks the lock/dependencies, and runs the existing Ruff format/lint, mypy and pytest commands above. Pytest disables sockets through project configuration and uses synthetic fixtures. Provisioning needs public dependency downloads; validation needs no API keys, market data, paid services or trading connections. No application tests or live integration modes are added. A local equivalent run does not prove the workflow has run on GitHub; verify the first hosted run after pushing.
+
+**Legacy GitLab configuration:** `.gitlab-ci.yml` is retained for reference. Recommend removing it in a later approved cleanup if GitLab CI is no longer intended, because GitHub does not execute it and duplicate pipelines can drift. Its GitLab secret-detection template does not run on GitHub; this minimal GitHub job does not claim equivalent secret scanning. The separate smoke/demo commands remain available locally and are exercised by existing tests rather than duplicated as extra CI runs.
 
 ```text
 src/quantlab/

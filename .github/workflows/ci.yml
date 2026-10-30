@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Python checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.6"
+          python-version: "3.12"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Install Python 3.12
+        run: uv python install 3.12
+
+      - name: Install locked dependencies
+        run: uv sync --locked --extra ib
+
+      - name: Verify lock and environment
+        run: |
+          uv lock --check --offline
+          uv pip check
+
+      - name: Check formatting
+        run: uv run --locked --offline --extra ib ruff format --check .
+
+      - name: Lint
+        run: uv run --locked --offline --extra ib ruff check .
+
+      - name: Type check
+        run: uv run --locked --offline --extra ib mypy
+
+      - name: Test with sockets disabled by pytest configuration
+        run: uv run --locked --offline --extra ib pytest

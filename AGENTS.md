@@ -34,4 +34,4 @@
 ## Memory and Git
 
 - Before substantial work, search relevant Obsidian knowledge read-only and verify older claims. Write only durable project-specific knowledge under `Memories/Projects/Quant-Trading-Lab/`; see [PROJECT_MEMORY.md](docs/PROJECT_MEMORY.md). Read notes before updating them. Never modify other projects, global memory or shared configuration. The repository remains authoritative.
-- Review status and the complete staged diff, stage relevant paths explicitly and check for secrets/generated data before committing. Use small descriptive commits when authorized. Preserve published history; no force-push, unrelated amend or push without instruction. GitLab is intended hosting; inspect actual remotes rather than assuming migration occurred.
+- Review status and the complete staged diff, stage relevant paths explicitly and check for secrets/generated data before committing. Use small descriptive commits when authorized. Preserve published history; no force-push, unrelated amend or push without instruction. GitHub is the current host and CI target; inspect actual remotes before hosting changes.

@@ -4,6 +4,8 @@
 
 The user's final M0–M10 numbering is authoritative over older archived drafts. Testing, causality and foundational risk controls precede paper trading. Negative results can complete research milestones; promotion is a separate decision.
 
+**Workspace-audit remediation M7 — GitHub CI:** separate numbering from the trading platform's M7 below. The [GitHub workflow](../.github/workflows/ci.yml) provides one Ubuntu/Python 3.12 job for pushes to main and pull requests, with locked provisioning and existing offline quality/tests. Legacy GitLab configuration is retained, not executed by GitHub. Hosted execution remains unverified until the user pushes; this remediation does not advance data, strategy, paper or multi-agent milestones. Local validation: actionlint 1.7.11 passed; a fresh uv 0.13.6 / Python 3.12.3 locked environment passed lock/dependency checks, Ruff format/lint, mypy and all 120 tests (36 known upstream pandas warnings).
+
 ## M0 — Research and architecture
 
 - **Objective:** Establish an implementation-ready documentation foundation.
