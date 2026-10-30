@@ -4,7 +4,7 @@ The Git repository is authoritative for specifications and research protocols. O
 
 ## Location and tools
 
-Read-only discovery found no exposed Obsidian MCP tool or resource in this session. The local Obsidian vault registry identifies `LLMMemory`; its established project convention is `Memories/Projects/`. No existing Quant Trading Lab notes were found. The dedicated namespace is therefore:
+Verified during workspace-audit M8, 2026-10-30: Obsidian MCP is available and the existing project notes are accessible. Prefer its read, search and edit tools; use its move operation when relocating notes so history and internal links are preserved. The established project namespace is:
 
 ```text
 Memories/Projects/Quant-Trading-Lab/
@@ -15,17 +15,23 @@ Memories/Projects/Quant-Trading-Lab/
 └── Real Data Preparation.md
 ```
 
-The local filesystem is a fallback to unavailable MCP, not an installation or reconfiguration of an MCP server. Writes to this external vault require the execution environment's filesystem approval. Prepare and review the exact notes first; create them exclusively inside this namespace. If access is unavailable or denied, leave these as the proposed structure, report the memory deliverable incomplete, and never redirect trading context into another project's notes.
+Codex and Claude Code use the same notes and entry points: start at Project Overview, then Current State and relevant topic links. There are no agent-specific folders or provenance tags. InvestorAI uses the same flat project-folder convention in the separate sibling namespace `Memories/Projects/InvestorAI/`; it is not Quant Trading Lab memory.
+
+Verify MCP availability in each session rather than assuming it is present or absent. Direct filesystem access is a fallback only after verifying the actual vault path and permitted access. If neither route is available, report the limitation; never redirect trading context into another project's notes or change vault configuration.
 
 ## Contents and maintenance
 
 - Overview: purpose, three agent families, repository document pointers and namespace rule.
-- Architecture decisions: adopted stack, provisional Nautilus compatibility, IBKR-first data, shared risk and authorization boundaries.
+- Architecture decisions: verified pinned Python/Nautilus foundation, NVDA/Alpaca historical SIP with IBKR execution, independent extension interfaces, shared risk and authorization boundaries. Earlier IBKR-first history and MES procurement are superseded.
 - Research summary: ITSM adaptation, absence of demonstrated edge, causal timing/cost/data limitations and repository evidence links.
-- Current state: M0/M1/M2a/M2b.1 evidence, implemented offline pipeline and verified limitations, M2b.2 preparation with admission pending, later gates, published-history limitation and unresolved account/data inputs. Update actual commit IDs only after they exist.
-- Real-data preparation: concise M2b.2 quote/rights/calendar findings, admission prerequisites and links to the repository acquisition plan; keep detailed source research and request tables in Git. Link this topic from the project overview.
+- Current state: M0/M1/M2a/M2b.1 evidence, synthetic MES runtime and verified limitations, pending NVDA admission, later gates, GitHub CI and unresolved account/data inputs. Distinguish recorded validation from checks rerun in the current task. Update actual commit IDs only after they exist.
+- Real-data preparation: active [NVDA plan](data/NVDA_DATA_PLAN.md), rights/calendar/action prerequisites and admission gates; retain earlier MES quote/procurement findings as historical, inactive evidence. Keep detailed research and request tables in Git. Link this topic from the project overview.
 
 Read any existing target note before updating. Search project-specific memory before substantial tasks and reverify older factual claims. Keep updates small and independently reusable; avoid copying full reports or every completion message. Never store credentials, account identifiers, personal financial details or other sensitive information. Do not edit other projects, shared/global memory, vault configuration or folder organization.
+
+## Historical milestone records
+
+The following sections record earlier task scopes and verification, including filesystem fallback when MCP was unavailable. They do not describe current tool availability or authorize new work. The NVDA plan supersedes the MES acquisition instructions below. Workspace-audit M8 concerns shared-memory organization, separately from the platform's future M8 LLM milestone.
 
 ## Initialization evidence
 
