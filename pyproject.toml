@@ -3,18 +3,23 @@ requires = ["hatchling==1.33.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "quantlab"
+name = "drift"
 version = "0.1.0"
 description = "Offline foundation for reproducible quantitative trading research"
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
-dependencies = ["nautilus-trader==1.231.0", "pyarrow==26.0.0", "tzdata==2026.6"]
+dependencies = [
+    "duckdb==2.0.0",
+    "nautilus-trader==1.231.0",
+    "pyarrow==26.0.0",
+    "tzdata==2026.6",
+]
 
 [project.optional-dependencies]
 ib = ["nautilus-trader[ib]==1.231.0"]
 
 [project.scripts]
-quantlab = "quantlab.__main__:main"
+drift = "drift.__main__:main"
 
 [dependency-groups]
 dev = [
@@ -28,10 +33,10 @@ dev = [
 required-version = "==0.13.6"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/quantlab"]
+packages = ["src/drift"]
 
 [tool.hatch.build.targets.wheel.force-include]
-"uv.lock" = "quantlab/uv.lock"
+"uv.lock" = "drift/uv.lock"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -46,7 +51,7 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.mypy]
 python_version = "3.12"
-files = ["src/quantlab"]
+files = ["src/drift"]
 strict = true
 
 [[tool.mypy.overrides]]
@@ -55,7 +60,7 @@ ignore_missing_imports = true
 follow_imports = "skip"
 
 [[tool.mypy.overrides]]
-module = "quantlab.smoke"
+module = "drift.smoke"
 disallow_subclassing_any = false
 
 [[tool.mypy.overrides]]
@@ -63,9 +68,13 @@ module = ["pyarrow", "pyarrow.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "quantlab.data.replay"
+module = "drift.data.replay"
 disallow_subclassing_any = false
 
 [[tool.mypy.overrides]]
-module = "quantlab.backtest.engine"
+module = "drift.backtest.engine"
+disallow_subclassing_any = false
+
+[[tool.mypy.overrides]]
+module = "drift.execution.runtime"
 disallow_subclassing_any = false

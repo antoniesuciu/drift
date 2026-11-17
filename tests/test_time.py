@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-from quantlab.time import BarInterval
+from drift.time import BarInterval
 
 ET = ZoneInfo("America/New_York")
 

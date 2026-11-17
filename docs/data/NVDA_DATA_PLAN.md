@@ -1,6 +1,8 @@
 # NVDA historical data and admission plan
 
-Adopted specification, **2026-10-30**, `NVDA-SIP-DATA-v1`. Implements the requirements direction in [D-026–028](../DECISIONS.md); **all gates below are pending**. This document authorizes no download, account access or implementation. The working runtime still accepts synthetic Databento MES only; [M2b.1 evidence](PIPELINE.md) remains accurate for that scope.
+Adopted specification, **2026-10-30**, `NVDA-SIP-DATA-v1`. Implements the direction in [D-026–028](../DECISIONS.md). **Full admission remains incomplete.** A separately authorized four-session Alpaca pilot, offline validation/native storage and backtest integration now work ([evidence](ALPACA_PILOT.md)); this does not close all gates below. This plan itself grants no account access or acquisition authority. The synthetic MES path remains unchanged ([M2b.1 evidence](PIPELINE.md)).
+
+D-033 authorized bounded monthly **2020–2025 acquisition/storage and mechanical integrity checks**; all 72 requested months are now delivered (585,897 bars; 63 explicit missing minutes) ([archive workflow](NVDA_HISTORY.md)). Later years retain their validation/holdout roles; strategy evaluation remains disabled, and further backtesting is deferred. The earlier pilot records below remain historical evidence rather than the current download limit.
 
 ## Scope and frozen periods
 
@@ -8,7 +10,7 @@ Adopted specification, **2026-10-30**, `NVDA-SIP-DATA-v1`. Implements the requir
 | --- | --- |
 | Initial instrument | NVIDIA ordinary shares, NVDA, USD; effective identity/share class and vendor/broker mappings recorded separately |
 | Historical source | Alpaca stock bars, explicit `feed=sip`, `timeframe=1Min`; free historical access candidate, no paid subscription assumed |
-| Execution destination | IBKR, later and separately verified; historical provider and broker are independent choices |
+| Execution destination | Alpaca paper (D-032); operational IEX trial is separate from historical SIP admission |
 | Study | 2020-01-02 through 2025-12-31, plus prior full cash session 2019-12-31 and declared trailing warmup |
 | Development | 2020-01-02 through 2022-12-30 |
 | Validation | 2023-01-03 through 2023-12-29 |
@@ -21,7 +23,7 @@ The existing split is deliberately retained while changing instrument/provider. 
 
 ### Small development-only pilot
 
-Prepare separate bounded requests for **2022-03-07–03-18** (US DST; prior session March 4), **2022-11-21–12-02** (holiday/early-close handling; prior session November 18), and **2021-07-19–07-23** (4:1 split; prior session July 16). Dates are inclusive cash dates; translate each into explicit UTC request bounds using the dated calendar and retain required prior-close inputs. The 2024 10:1 split is first covered by synthetic/issuer-based fixtures; any later holdout-data quality inspection follows predetermined integrity rules and excludes strategy returns. No real pilot files have been obtained.
+Prepare separate bounded requests for **2022-03-07–03-18** (US DST; prior session March 4), **2022-11-21–12-02** (holiday/early-close handling; prior session November 18), and **2021-07-19–07-23** (4:1 split; prior session July 16). Dates are inclusive cash dates; translate each into explicit UTC request bounds using the dated calendar and retain required prior-close inputs. The 2024 10:1 split is first covered by synthetic/issuer-based fixtures; any later holdout-data quality inspection follows predetermined integrity rules and excludes strategy returns. The user authorized a smaller first sample: July 16/19/20/21, 2021; all four were retrieved as raw SIP minutes, with 390 bars each. At that checkpoint the remaining sessions/windows were pending and validation/holdout prices were unaccessed. D-033 subsequently delivered all requested archive months, including those pilot windows; later years were acquired for storage/mechanical integrity only. Detailed gap/coverage evidence is in [NVDA_HISTORY.md](NVDA_HISTORY.md); no later-year strategy evaluation occurred.
 
 ## Provider interface and reproducibility
 
@@ -68,4 +70,4 @@ NVDA-001–007 and pilot evidence of 009–010 precede real pilot signoff; 008 a
 
 ## Sources and current limitations
 
-Official pages rechecked **2026-10-30**: [bars request/pagination/adjustments](https://docs.alpaca.markets/us/reference/stockbars), [feed/timestamp FAQ](https://docs.alpaca.markets/us/docs/market-data-faq), [plans](https://docs.alpaca.markets/us/docs/about-market-data-api), [public terms](https://files.alpaca.markets/disclosures/library/TermsAndConditions.pdf), [customer agreement §30](https://files.alpaca.markets/disclosures/library/AcctAppMarginAndCustAgmt.pdf). Public jurisdiction/retention uncertainty is detailed in the [audit](../archive/audit/PROJECT_AUDIT.md); no authenticated entitlement or dataset was tested. [NVIDIA 2021 release](https://nvidianews.nvidia.com/news/nvidia-announces-four-for-one-stock-split-pending-stockholder-approval-at-annual-meeting-set-for-june-3) and [2024 split FAQ](https://investor.nvidia.com/files/doc_downloads/2024/05/NVIDIA-2024-Stock-Split-FAQ.pdf) support the action fixtures; actual source mapping/actions still need admission evidence.
+Official pages rechecked **2026-10-30**: [bars request/pagination/adjustments](https://docs.alpaca.markets/us/reference/stockbars), [feed/timestamp FAQ](https://docs.alpaca.markets/us/docs/market-data-faq), [plans](https://docs.alpaca.markets/us/docs/about-market-data-api), [public terms](https://files.alpaca.markets/disclosures/library/TermsAndConditions.pdf), [customer agreement §30](https://files.alpaca.markets/disclosures/library/AcctAppMarginAndCustAgmt.pdf). Public jurisdiction/retention uncertainty is detailed in the [audit](../archive/audit/PROJECT_AUDIT.md); the original four-session pilot verified access for its slice; D-033 now verifies delivered historical NVDA SIP access across all requested 2020–2025 months, with explicit gaps ([evidence](ALPACA_PILOT.md)); live entitlement and broad storage rights remain unverified. [NVIDIA 2021 release](https://nvidianews.nvidia.com/news/nvidia-announces-four-for-one-stock-split-pending-stockholder-approval-at-annual-meeting-set-for-june-3) and [2024 split FAQ](https://investor.nvidia.com/files/doc_downloads/2024/05/NVIDIA-2024-Stock-Split-FAQ.pdf) support the action fixtures; actual source mapping/actions still need admission evidence.

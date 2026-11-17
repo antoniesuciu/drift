@@ -6,18 +6,18 @@ from importlib.metadata import version
 import pytest
 from pytest_socket import SocketBlockedError
 
-import quantlab
-from quantlab.__main__ import main
+import drift
+from drift.__main__ import main
 
 
 def test_installable_package_version() -> None:
-    assert quantlab.__version__ == version("quantlab") == "0.1.0"
+    assert drift.__version__ == version("drift") == "0.1.0"
 
 
 def test_cli_runs_synthetic_engine(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
-    monkeypatch.setattr(sys, "argv", ["quantlab", "smoke"])
+    monkeypatch.setattr(sys, "argv", ["drift", "smoke"])
     main()
     report = json.loads(capsys.readouterr().out)
     assert report["synthetic"] is True
@@ -29,7 +29,7 @@ def test_cli_runs_synthetic_engine(
 def test_cli_rejects_network_and_order_modes(
     command: str, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
-    monkeypatch.setattr(sys, "argv", ["quantlab", command])
+    monkeypatch.setattr(sys, "argv", ["drift", command])
     with pytest.raises(SystemExit) as error:
         main()
     assert error.value.code == 2

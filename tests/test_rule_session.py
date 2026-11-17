@@ -5,8 +5,8 @@ from fractions import Fraction
 import pytest
 from helpers import DAY, WEEK, bar, calendar_of, day_candles
 
-from quantlab.data.model import DataError
-from quantlab.strategies.rule.statistical.session import SessionTape, check_clock
+from drift.data.model import DataError
+from drift.strategies.rule.statistical.session import SessionTape, check_clock
 
 
 def test_vwap_and_dispersion_match_exact_fractions() -> None:

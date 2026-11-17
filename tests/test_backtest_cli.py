@@ -1,4 +1,4 @@
-"""`quantlab backtest`: choose a strategy, configure it, run it offline, inspect, reproduce."""
+"""`drift backtest`: choose a strategy, configure it, run it offline, inspect, reproduce."""
 
 import json
 import sys
@@ -8,9 +8,9 @@ from pathlib import Path
 import pytest
 from helpers import merge
 
-from quantlab.__main__ import MAX_CONFIG_BYTES, main
-from quantlab.backtest import engine
-from quantlab.backtest.config import STRATEGIES, BacktestConfig, default_config
+from drift.__main__ import MAX_CONFIG_BYTES, main
+from drift.backtest import engine
+from drift.backtest.config import STRATEGIES, BacktestConfig, default_config
 
 BROKEN_RECONCILIATION = {
     "engine_balance": "1",
@@ -22,13 +22,13 @@ BROKEN_RECONCILIATION = {
 
 
 def run_cli(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], *args: str) -> str:
-    monkeypatch.setattr(sys, "argv", ["quantlab", "backtest", *args])
+    monkeypatch.setattr(sys, "argv", ["drift", "backtest", *args])
     main()
     return capsys.readouterr().out
 
 
 def fail(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str], *args: str) -> str:
-    monkeypatch.setattr(sys, "argv", ["quantlab", *args])
+    monkeypatch.setattr(sys, "argv", ["drift", *args])
     with pytest.raises(SystemExit) as error:
         main()
     assert error.value.code == 2
@@ -41,7 +41,7 @@ def write_config(tmp_path: Path, strategy: str, **patch: object) -> Path:
     return path
 
 
-@pytest.mark.parametrize("strategy", ["itsm", "candlestick"])
+@pytest.mark.parametrize("strategy", ["itsm", "trend"])
 def test_builtin_strategy_runs_and_reports_json_and_text(
     strategy: str, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -56,7 +56,7 @@ def test_builtin_strategy_runs_and_reports_json_and_text(
 def test_results_reproduce_across_invocations_and_files(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
-    config = write_config(tmp_path, "candlestick")
+    config = write_config(tmp_path, "trend")
     args = ("--config", str(config), "--json")
     first = json.loads(run_cli(monkeypatch, capsys, *args, "--output", str(tmp_path / "one")))
     second = json.loads(run_cli(monkeypatch, capsys, *args, "--output", str(tmp_path / "two")))
@@ -105,19 +105,17 @@ def test_usage_and_configuration_errors_exit_cleanly(
     assert "local file operation failed" in missing
     bad = tmp_path / "bad.json"
     bad.write_text(json.dumps(merge(default_config("itsm"), {"risk": {"max_notional": "0"}})))
-    assert "quantlab: every risk limit" in fail(
-        monkeypatch, capsys, "backtest", "--config", str(bad)
-    )
+    assert "drift: every risk limit" in fail(monkeypatch, capsys, "backtest", "--config", str(bad))
     bad.write_text("{not json")
-    assert fail(monkeypatch, capsys, "backtest", "--config", str(bad)).startswith("quantlab:")
+    assert fail(monkeypatch, capsys, "backtest", "--config", str(bad)).startswith("drift:")
     live = merge(default_config("itsm"), {})
     live["synthetic"] = False
     bad.write_text(json.dumps(live))
     assert "synthetic" in fail(monkeypatch, capsys, "backtest", "--config", str(bad))
     bad.write_text(json.dumps(merge(default_config("itsm"), {"sizing": {"amount": "1E+30"}})))
-    assert fail(monkeypatch, capsys, "backtest", "--config", str(bad)).startswith("quantlab:")
+    assert fail(monkeypatch, capsys, "backtest", "--config", str(bad)).startswith("drift:")
     bad.write_text("[" * 200_000)
-    assert fail(monkeypatch, capsys, "backtest", "--config", str(bad)).startswith("quantlab:")
+    assert fail(monkeypatch, capsys, "backtest", "--config", str(bad)).startswith("drift:")
     bad.write_text(" " * (MAX_CONFIG_BYTES + 1))
     assert "too large" in fail(monkeypatch, capsys, "backtest", "--config", str(bad))
 
@@ -145,7 +143,7 @@ def test_reconciliation_mismatch_fails_the_run_after_reporting(
         lambda config: replace(real(config), reconciliation=BROKEN_RECONCILIATION),
     )
     config = write_config(tmp_path, "itsm")
-    monkeypatch.setattr(sys, "argv", ["quantlab", "backtest", "--config", str(config)])
+    monkeypatch.setattr(sys, "argv", ["drift", "backtest", "--config", str(config)])
     with pytest.raises(SystemExit) as error:
         main()
     assert error.value.code == 2

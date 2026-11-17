@@ -3,11 +3,11 @@
 from decimal import Decimal
 from typing import Any
 
-from quantlab.backtest.config import BacktestConfig, default_config
-from quantlab.backtest.data import InstrumentSpec, MarketData
-from quantlab.data.model import SECOND, local_ns
-from quantlab.strategies.calendar import MINUTE_NS, Calendar, SessionSpec
-from quantlab.strategies.market import Candle
+from drift.backtest.config import BacktestConfig, default_config
+from drift.backtest.data import InstrumentSpec, MarketData
+from drift.data.model import SECOND, local_ns
+from drift.strategies.calendar import MINUTE_NS, Calendar, SessionSpec
+from drift.strategies.market import Candle
 
 DAY = "2022-03-08"
 
@@ -98,7 +98,7 @@ EQUITY = InstrumentSpec("SYNTH", "XNAS", "equity", "USD", Decimal("0.01"), 1, 1)
 
 def walk(seed: int = 3, sessions: int = 3, step_ticks: int = 8, gap_ticks: int = 40) -> MarketData:
     """Seeded synthetic random-walk sessions for differential tests."""
-    from quantlab.backtest.data import SyntheticSpec, generate
+    from drift.backtest.data import SyntheticSpec, generate
 
     spec = SyntheticSpec(
         seed=seed,

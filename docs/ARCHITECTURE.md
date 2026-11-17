@@ -1,10 +1,10 @@
 # Platform architecture
 
-A local modular Python application: data, agents, coordination, portfolio, risk and execution behind small interfaces. [Requirements](../REQUIREMENTS.md) own acceptance criteria, [decisions](DECISIONS.md) own technology status, [glossary](../GLOSSARY.md) owns terminology. Scope: NVDA shares, Alpaca historical SIP, IBKR as eventual execution broker; the data-ingestion pipeline still accepts only synthetic MES, while strategies and the backtest runner use configured synthetic instruments.
+A local modular Python application: data, agents, coordination, portfolio, risk and execution behind small interfaces. [Requirements](../REQUIREMENTS.md) own acceptance criteria, [decisions](DECISIONS.md) own technology status, [glossary](../GLOSSARY.md) owns terminology. Scope: NVDA shares, Alpaca historical SIP, Alpaca as active paper execution broker (D-032); the retained MES path is synthetic, and the separate Alpaca path has a four-session raw SIP pilot with native storage and ITSM backtest integration ([evidence](data/ALPACA_PILOT.md)).
 
 ## Shape and boundaries
 
-A local modular Python application is sufficient. Use library interfaces and one event loop/process first; no message broker, microservices, LLM orchestration framework or operational database is selected now. Create `src/quantlab/` modules only when an implementation milestone needs them.
+A local modular Python application is sufficient. Use library interfaces and one event loop/process first; no message broker, microservices or LLM orchestration framework is needed. The Alpaca paper REST adapter and bounded session runner share a stdlib SQLite intent/fill journal ([limits](PAPER_EXECUTION.md)). Account/current IEX reads are verified; actual paper fills remain unverified. The earlier IBKR native bridge remains inactive regression evidence. Create `src/drift/` modules only when an implementation milestone needs them.
 
 ```mermaid
 flowchart TD
@@ -13,9 +13,6 @@ flowchart TD
     Text[Point-in-time text - M8] --> LLM[LLM advisory agents]
     Data --> Rules[Rule-based agents]
     Data --> ML[ML agents and filters]
-    Data --> Patterns[Reusable candlestick detection - M3b]
-    Patterns --> Rules
-    Patterns --> ML
     Rules --> Proposals[Versioned proposals]
     ML --> Proposals
     LLM --> Proposals
@@ -24,7 +21,7 @@ flowchart TD
     Ledger[Shared portfolio and reconciled state] --> Risk
     Risk --> Execution[Authorized order intents and execution preflight]
     Execution --> Simulation[NautilusTrader historical simulator]
-    Execution --> Paper[IBKR paper adapter - M6 authorization]
+    Execution --> Paper[Alpaca paper REST - fixed paper host]
     Simulation --> Ledger
     Paper --> Ledger
 ```
@@ -42,6 +39,8 @@ These are logical responsibilities, not separate services. NautilusTrader suppli
 | Execution | Approved-intent deduplication, account/mode validation, order lifecycle and reconciliation | Accepting raw proposals as orders |
 | Analytics | Read-only Parquet/DuckDB research, comparisons and reporting | Sole durable order/position recovery state |
 
+The [backtesting framework](BACKTESTING.md) composes these boundaries for simulation: `research/` depends on small seams (a market data source, an executor, a strategy registry) and owns orchestration, stored results and virtual portfolios. Strategies know nothing of it, and it has no path to a broker.
+
 ## Extension interfaces
 
 Treat provider, instrument, strategy and execution as independent configuration axes. Small modules hide provider parsing, corporate actions, calendar/availability validation and broker lifecycle behind interfaces shared by their callers/tests. Use explicit dependencies rather than constructing vendor clients inside a strategy. Add an adapter or instrument configuration when an actual variation needs it; implement no plugin registry, distributed bus or universal market framework now.
@@ -50,10 +49,10 @@ Treat provider, instrument, strategy and execution as independent configuration 
 | --- | --- | --- |
 | Historical provider/feed | Fetch/parser adapter, query/rights metadata, timestamp semantics and fixture coverage | Validated observations, native catalog, causal snapshots and strategy consumers |
 | Instrument | Effective identity/mappings, currency, increments, multiplier, sessions and product-specific actions/capabilities | Normalization invariants, configured strategy logic, portfolio/risk interfaces |
-| Strategy | Registered policy and its parameters/state, detector/feature use and tests | Versioned proposals, final sizing/risk, execution lifecycle |
+| Strategy | Registered policy (`backtest/registry.py`) and its parameters/state, detector/feature use and tests | Versioned proposals, final sizing/risk, execution lifecycle |
 | Execution broker | Contract/order translation, connectivity and reconciliation adapter | Approved intents, account/risk preflight, fill/fee events and central ledger |
 
-Data symbols are not broker contract IDs. Historical feed and live execution venue need explicit mapping and compatibility evidence; selecting IBKR does not require IBKR history. Initial real configuration admits NVDA only; a second synthetic instrument/source proves extensibility without enabling another market. New product semantics require explicit capability/schema versioning and regression tests rather than weakening validation. [REQ-ARCH-002](../REQUIREMENTS.md) owns the measurable checks; [NVDA plan](data/NVDA_DATA_PLAN.md#modular-extension-contract) owns data details.
+Data symbols are not broker contract IDs. Historical feed and live execution venue need explicit mapping and compatibility evidence; selecting Alpaca paper does not permit silently mixing historical SIP with operational IEX. Initial real configuration admits NVDA only; a second synthetic instrument/source proves extensibility without enabling another market. New product semantics require explicit capability/schema versioning and regression tests rather than weakening validation. [REQ-ARCH-002](../REQUIREMENTS.md) owns the measurable checks; [NVDA plan](data/NVDA_DATA_PLAN.md#modular-extension-contract) owns data details.
 
 ## Minimal integration contracts
 
@@ -71,7 +70,7 @@ An agent is a domain component, not a synonym for LLM autonomy or a separate pro
 
 | Family | Inputs and decision mechanism | Candidate examples | Evaluation |
 |---|---|---|---|
-| Rule-based | Available market observations and fixed deterministic rules/statistics | M3a NVDA ITSM first, M3b Candlestick Pattern Agents; statistical rules (ORB, VWAP/Bollinger mean reversion, reversal, trend) are specified in [STRATEGIES.md](STRATEGIES.md); relative strength, stat-arb and volatility breakout are future | Replay identity, causal timing, net-cost OOS performance and robustness |
+| Rule-based | Available market observations and fixed deterministic rules/statistics | M3a NVDA ITSM first; the other statistical rules (ORB, VWAP/Bollinger mean reversion, reversal, trend) are specified in [STRATEGIES.md](STRATEGIES.md); relative strength, stat-arb and volatility breakout are future | Replay identity, causal timing, net-cost OOS performance and robustness |
 | ML | Causal features and a trained, versioned inference artifact | Logistic regression, random forest, LightGBM/XGBoost; independent predictions or meta-label filters | Fold/label integrity, calibration, drift and net comparison to simple controls |
 | LLM | Licensed as-of news, earnings, filings, macro/events and evidence retrieval | Research assistant, event-risk assessment, sentiment/earnings interpretation | Evidence accuracy, temporal validity, injection tests, no-LLM baseline and full costs |
 
@@ -79,7 +78,7 @@ LSTM/Transformers and reinforcement learning are experimental options, not requi
 
 ### Proposal contract
 
-Schema version 1, implemented in `src/quantlab/strategies/proposal.py` (its `family` admits RULE, ML or LLM; only RULE agents exist):
+Schema version 1, implemented in `src/drift/strategies/proposal.py` (its `family` admits RULE, ML or LLM; only RULE agents exist):
 
 | Field | Meaning / validity rule |
 |---|---|
@@ -97,7 +96,7 @@ Schema version 1, implemented in `src/quantlab/strategies/proposal.py` (its `fam
 
 At processing clock `t`, require `data_asof_utc <= generated_at_utc <= t < valid_until_utc`, all referenced input availability times <= generation, and a known instrument/configuration/schema. Historical acquisition time is distinct from modeled historical availability. Reject unsupported schema, malformed/future data, bad lineage and already-consumed IDs. Record reason codes for rejections and abstentions. A duplicate cannot create an additional intent/order.
 
-NO_TRADE is an explicit abstention, not an implicit cancellation. FLAT passes portfolio/risk checks and can only affect the appropriate attributed allocation. M3 evaluates one agent/instrument at a time: NVDA ITSM first, then independently configured candlestick variants. More complex concurrent netting/attribution is introduced and tested in M7. Risk-reducing requests remain subject to order validity and broker reconciliation.
+NO_TRADE is an explicit abstention, not an implicit cancellation. FLAT passes portfolio/risk checks and can only affect the appropriate attributed allocation. M3 evaluates one agent/instrument at a time: NVDA ITSM first, then independently configured statistical rules. More complex concurrent netting/attribution is introduced and tested in M7. Risk-reducing requests remain subject to order validity and broker reconciliation.
 
 ### Hybrid composition and conflicts
 
@@ -116,7 +115,7 @@ Archive permissible source snapshots with publication/availability/revision time
 - Internal timestamps are timezone-aware UTC; US cash-window definitions use `America/New_York` and a versioned calendar. CME trading sessions are not identical to US cash sessions. Preserve event time, bar start/end, availability, acquisition time and vendor timezone semantics.
 - Historical acquisition often occurs years after an event. Backtests use defensible simulated historical availability (bar completion plus declared delivery latency), while separately retaining actual acquisition time. Current downloads do not prove point-in-time revision history. Uncertain availability is recorded and sensitivity-tested, never silently asserted causal.
 - Use a stable instrument identity with separate provider/broker mappings and effective price/quantity/currency/session metadata. For NVDA, preserve raw execution prices/shares and corporate actions; construct split-neutral signal returns explicitly. Expiry/roll validation belongs to future admitted futures and the retained MES fixtures, not to every equity. Continuous/adjusted research series cannot supply executable fills without a declared transformation back to raw units.
-- M2 introduces ignored `data/raw/`, `data/curated/` and optional `data/catalog/quantlab.duckdb`; manifests/configuration without licensed data may be versioned. Parquet snapshots are immutable/versioned; corrections create new versions. Dataset rights govern archiving and redistribution.
+- M2 introduces ignored `data/raw/`, `data/curated/` and optional `data/catalog/drift.duckdb`; manifests/configuration without licensed data may be versioned. Parquet snapshots are immutable/versioned; corrections create new versions. Dataset rights govern archiving and redistribution.
 - Model artifacts, scalers, prompts and inference outputs have version/hash provenance and data cutoffs. Keep large artifacts outside Git. Text must distinguish publication, ingestion and revision times; a current LLM may have memorized future information relative to a historical test, which must be disclosed and evaluated.
 
 ## Modes and reliability

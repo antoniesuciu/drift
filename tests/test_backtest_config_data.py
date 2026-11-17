@@ -6,10 +6,10 @@ from decimal import Decimal
 import pytest
 from helpers import make_config, merge
 
-from quantlab.backtest.config import STRATEGIES, BacktestConfig, default_config
-from quantlab.backtest.data import InstrumentSpec, SyntheticSpec, generate
-from quantlab.backtest.report import Trade, metrics
-from quantlab.data.model import SECOND, DataError, canonical, digest
+from drift.backtest.config import STRATEGIES, BacktestConfig, default_config
+from drift.backtest.data import InstrumentSpec, SyntheticSpec, generate
+from drift.backtest.report import Trade, metrics
+from drift.data.model import SECOND, DataError, canonical, digest
 
 
 @pytest.mark.parametrize("strategy", STRATEGIES)
@@ -19,10 +19,6 @@ def test_default_configurations_parse_and_resolve_every_default(strategy: str) -
     assert payload["strategy"]["name"] == strategy
     assert payload["strategy"]["exit"]["flatten_lead_seconds"] == 120
     json.dumps(payload)  # JSON-serializable, no Decimals leaked
-    if strategy == "candlestick":
-        assert payload["strategy"]["params"]["detector"]["star_penetration"] == "0.50"
-        assert payload["strategy"]["exit"]["horizon_seconds"] == 1800  # derived default
-        assert payload["strategy"]["params"]["filters"]["trend"] is None  # filters off
 
 
 @pytest.mark.parametrize(
@@ -70,29 +66,6 @@ def test_costs_sizing_and_risk_cannot_be_omitted() -> None:
             BacktestConfig.parse(raw)
     raw = default_config("itsm")
     del raw["risk"]["max_session_loss"]
-    with pytest.raises(DataError):
-        BacktestConfig.parse(raw)
-
-
-def test_candlestick_params_are_parsed_from_json_exactly() -> None:
-    raw = default_config("candlestick")
-    raw["strategy"]["params"] |= {
-        "patterns": ["hammer", "doji"],
-        "timeframes": [5, 15],
-        "detector": {"inclusive": False, "star_penetration": "0.4"},
-        "filters": {"volume": {"lookback": 5, "min_multiple": "1.5"}, "trend": {"lookback": 4}},
-    }
-    raw["strategy"]["exit"] = {
-        "horizon_seconds": 900,
-        "stop": {"kind": "ticks", "value": "30"},
-        "target": {"kind": "percent", "value": "0.5"},
-    }
-    config = BacktestConfig.parse(raw)
-    params = config.strategy.params
-    assert params.timeframes == (5, 15) and params.detector.inclusive is False  # type: ignore[union-attr]
-    assert params.filters.volume.min_multiple == Decimal("1.5")  # type: ignore[union-attr]
-    assert config.strategy.exit.stop.value == 30  # type: ignore[union-attr]
-    raw["strategy"]["params"]["patterns"] = ["moon"]
     with pytest.raises(DataError):
         BacktestConfig.parse(raw)
 

@@ -182,9 +182,9 @@ The often-repeated **6.67%** belongs to the single-signal timing rule; the June 
 
 | Area | Finding | Decision |
 | --- | --- | --- |
-| [Native DBN loader](../../../src/quantlab/data/databento.py), [catalog/provenance](../../../src/quantlab/data/store.py) | Actual native definitions/bars decoding; raw IDs/units checked before rounding; hashes, one-to-one provenance, inventory, locks/staging and native round-trip tested | **Keep.** Real vendor definitions/revisions and dated calendars remain unexercised. |
-| [Timing](../../../src/quantlab/time.py), [snapshots](../../../src/quantlab/data/core.py), [replay](../../../src/quantlab/data/replay.py) | Open→close shifted exactly once; dispatch uses modeled availability. Snapshot excludes the future outcome and clamps its cutoff; later missing outcomes do not rewrite earlier inputs. Actor submits no orders. | **Keep.** Modeled 1/60-second delays are not measured feed latency or fill validation. |
-| [Model](../../../src/quantlab/data/model.py), normalization/storage | Hardcoded quarterly MES/USD/$5/0.25 tick, integer volume, CME sessions, Databento and synthetic labels | **Change narrowly when authorized.** New assets need true instrument/quantity/calendar metadata and source-specific timestamp mapping; never relabel stock/crypto as MES. |
+| [Native DBN loader](../../../src/drift/data/databento.py), [catalog/provenance](../../../src/drift/data/store.py) | Actual native definitions/bars decoding; raw IDs/units checked before rounding; hashes, one-to-one provenance, inventory, locks/staging and native round-trip tested | **Keep.** Real vendor definitions/revisions and dated calendars remain unexercised. |
+| [Timing](../../../src/drift/time.py), [snapshots](../../../src/drift/data/core.py), [replay](../../../src/drift/data/replay.py) | Open→close shifted exactly once; dispatch uses modeled availability. Snapshot excludes the future outcome and clamps its cutoff; later missing outcomes do not rewrite earlier inputs. Actor submits no orders. | **Keep.** Modeled 1/60-second delays are not measured feed latency or fill validation. |
+| [Model](../../../src/drift/data/model.py), normalization/storage | Hardcoded quarterly MES/USD/$5/0.25 tick, integer volume, CME sessions, Databento and synthetic labels | **Change narrowly when authorized.** New assets need true instrument/quantity/calendar metadata and source-specific timestamp mapping; never relabel stock/crypto as MES. |
 | [Calendar tests](../../../tests/test_data_calendar.py) | Spring/fall DST, overnight trade date, cash vs CME closures, early close, roll and expiry cases | **Keep.** Synthetic calendars are not certified 2020–2025 history; fixed Monday roll is project policy, not a universal historical CME convention. |
 | Resource bounds | 32MiB compressed/decompressed per file; 100k records/file, 100 chunks/request, 250k decoded bars/dataset before dedup; several materialized lists | **Keep limits.** Six-year archives require bounded partitions, cross-partition previous-session context and global coverage/manifest checks; raising a cap is not a scalability test. |
 | Strategies/risk/orders | Conceptual proposals/risk exist in docs; current runtime contains no strategy, fee/fill validation, portfolio/risk execution path or broker activation | **Build only at the authorized rule milestone.** Preserve three families and shared risk; defer ML/LLM, concurrency and live infrastructure. |
@@ -222,11 +222,11 @@ Reviewed all [three preserved original reports](../research/original/SHA256SUMS.
 Executed locally on the existing locked environment, without installation or network-enabled tests:
 
 ```sh
-quantlab_audit_tests=$(mktemp -d /tmp/quantlab-audit-pytest-XXXXXX)
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/pytest -q -p no:cacheprovider --basetemp="$quantlab_audit_tests"
+drift_audit_tests=$(mktemp -d /tmp/drift-audit-pytest-XXXXXX)
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/pytest -q -p no:cacheprovider --basetemp="$drift_audit_tests"
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/ruff check --no-cache .
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/ruff format --check --no-cache .
-PYTHONDONTWRITEBYTECODE=1 .venv/bin/mypy --cache-dir /tmp/quantlab-audit-mypy src/quantlab
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/mypy --cache-dir /tmp/drift-audit-mypy src/drift
 ```
 
 Results: **120 passed in 6.37s**, **36 upstream Pandas4Warning** messages; lint, formatting and types pass. Original-report checksums pass. These prove the current offline scope, not financial performance, real-feed coverage, brokerage compatibility or server CI execution.

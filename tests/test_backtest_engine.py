@@ -10,11 +10,11 @@ from typing import Any
 import pytest
 from helpers import make_config, merge, scripted_market
 
-from quantlab.backtest.config import STRATEGIES, BacktestConfig, default_config
-from quantlab.backtest.data import MarketData, generate
-from quantlab.backtest.engine import run_backtest, run_on
-from quantlab.backtest.report import BacktestResult
-from quantlab.data.model import SECOND, DataError, local_ns
+from drift.backtest.config import STRATEGIES, BacktestConfig
+from drift.backtest.data import MarketData, generate
+from drift.backtest.engine import run_backtest, run_on
+from drift.backtest.report import BacktestResult
+from drift.data.model import SECOND, DataError, local_ns
 
 D1, D2, D3 = "2022-03-07", "2022-03-08", "2022-03-09"
 UP = {"10:00": "101.00", "15:00": "100.50", "15:30": "101.00"}
@@ -157,24 +157,22 @@ def test_position_left_open_at_the_end_is_reported_not_invented_away() -> None:
     assert r.reconciliation["ok"] and r.reconciliation["ledger_balance"] == "99999.65"
 
 
-PAIR = {
-    "10:00": ("100.10", "100.12", "99.98", "100.00"),
-    "10:01": ("99.99", "100.20", "99.98", "100.15"),
-}
+CROSS = {"10:00": ("100.00", "101.00", "100.00", "101.00")}  # trend LONG, filled 10:01
 
 
-def candle_trade(at: dict[str, Any], **exit_policy: Any) -> BacktestResult:
-    exit_ = {"horizon_seconds": 3600, "flatten_lead_seconds": 120} | exit_policy
+def protected_trade(at: dict[str, Any], **exit_policy: Any) -> BacktestResult:
+    # Long-only trend with the opposite-signal exit off, so only the exit policy can close it.
+    exit_ = {"flatten_lead_seconds": 120, "exit_on_opposite": False} | exit_policy
     patch = {
         "sizing": {"amount": "10"},
         "strategy": {
-            "name": "candlestick",
-            "params": {"patterns": ["bullish_engulfing"], "timeframes": [1]},
+            "name": "trend",
+            "params": {"timeframe": 5, "fast": 2, "slow": 4, "allow_short": False},
             "exit": exit_,
         },
     }
-    config = make_config("candlestick", **patch)
-    return run_on(config, scripted_market(config.instrument, [(D2, "16:00", PAIR | at)]))
+    config = make_config("trend", **patch)
+    return run_on(config, scripted_market(config.instrument, [(D2, "16:00", CROSS | at)]))
 
 
 STOP = {"kind": "ticks", "value": "20"}
@@ -182,9 +180,9 @@ STOP = {"kind": "ticks", "value": "20"}
 
 def test_stop_loss_exits_at_the_next_open_paying_for_the_gap() -> None:
     at = {"10:05": ("100.00", "100.00", "99.80", "99.85"), "10:07": "99.50"}
-    r = candle_trade(at, stop=STOP)
-    (t,) = r.trades
-    assert t.entry_ts == local_ns(D2, "10:02") and t.entry_price == Decimal("100.01")
+    r = protected_trade(at, stop=STOP)
+    t = r.trades[0]  # the later re-cross may enter again
+    assert t.entry_ts == local_ns(D2, "10:01") and t.entry_price == Decimal("100.01")
     # stop level is 99.81; the bar completes 10:05, the exit fills at the 10:06 open (99.50 - tick)
     assert t.exit_reason == "stop_loss" and t.exit_ts == local_ns(D2, "10:06")
     assert t.exit_price == Decimal("99.49") and t.gross_pnl == Decimal("-5.20")
@@ -193,24 +191,24 @@ def test_stop_loss_exits_at_the_next_open_paying_for_the_gap() -> None:
 
 def test_take_profit_exit() -> None:
     at = {"10:05": ("100.00", "100.25", "100.00", "100.20"), "10:07": "100.30"}
-    (t,) = candle_trade(at, stop=STOP, target={"kind": "ticks", "value": "20"}).trades
+    t = protected_trade(at, stop=STOP, target={"kind": "ticks", "value": "20"}).trades[0]
     assert t.exit_reason == "take_profit" and t.exit_price == Decimal("100.29")
     assert t.gross_pnl == Decimal("2.80")
 
 
 def test_a_bar_touching_both_levels_is_a_stop() -> None:
     at = {"10:05": ("100.00", "100.30", "99.80", "100.00"), "10:07": "99.90"}
-    (t,) = candle_trade(at, stop=STOP, target={"kind": "ticks", "value": "20"}).trades
+    t = protected_trade(at, stop=STOP, target={"kind": "ticks", "value": "20"}).trades[0]
     assert t.exit_reason == "stop_loss" and t.flags == ("stop_and_target_same_bar",)
     assert t.exit_price == Decimal("99.89")
 
 
 def test_horizon_and_flatten_exits_without_protection() -> None:
-    (t,) = candle_trade({}, horizon_seconds=600).trades
+    t = protected_trade({}, horizon_seconds=600).trades[0]
     assert t.exit_reason == "horizon" and t.exit_ts == local_ns(
-        D2, "10:13"
-    )  # 10:02 + 10m, strictly after
-    (t,) = candle_trade({}, horizon_seconds=7 * 3600).trades
+        D2, "10:12"
+    )  # 10:01 + 10m, strictly after
+    t = protected_trade({}, horizon_seconds=7 * 3600).trades[0]
     assert t.exit_reason == "session_flatten" and t.exit_ts == local_ns(D2, "15:59")
 
 
@@ -270,7 +268,7 @@ def test_changing_the_future_cannot_change_earlier_decisions_or_trades(strategy:
 
 
 def test_same_inputs_reproduce_identical_results_and_files(tmp_path: Path) -> None:
-    config = small("candlestick")
+    config = small("trend")
     first, second = run_backtest(config), run_backtest(config)
     assert first.results_sha256 == second.results_sha256
     assert first.to_dict() == second.to_dict() and first.trades_csv() == second.trades_csv()
@@ -278,20 +276,11 @@ def test_same_inputs_reproduce_identical_results_and_files(tmp_path: Path) -> No
     second.write(tmp_path / "b")
     for name in ("report.json", "report.md", "trades.csv"):
         assert (tmp_path / "a" / name).read_bytes() == (tmp_path / "b" / name).read_bytes()
-    reseeded = run_backtest(small("candlestick", data={"seed": 99}))
+    reseeded = run_backtest(small("trend", data={"seed": 99}))
     assert reseeded.data_sha256 != first.data_sha256
     assert reseeded.results_sha256 != first.results_sha256
     report = json.loads((tmp_path / "a" / "report.json").read_text())
     assert report["synthetic"] is True and report["results_sha256"] == first.results_sha256
-
-
-def test_candlestick_default_run_exercises_the_full_path() -> None:
-    r = run_backtest(BacktestConfig.parse(default_config("candlestick")))
-    assert r.metrics["trades"] > 20 and r.reconciliation["ok"]
-    assert {"horizon", "opposite_signal"} <= set(r.metrics["exit_reasons"])
-    assert r.engine["orders"] == 2 * r.metrics["trades"] and r.open_at_end is None
-    assert any(x["source"] == "risk" for x in r.rejections)  # the 5-entries/session limit binds
-    assert "session_entry_limit_reached" in {c for x in r.rejections for c in x["reasons"]}
 
 
 def test_market_data_must_match_the_configured_instrument() -> None:
@@ -397,7 +386,7 @@ def test_flat_request_respects_a_disabled_opposite_exit() -> None:
 
 
 def test_engine_rejection_is_visible_on_the_proposal(monkeypatch: pytest.MonkeyPatch) -> None:
-    from quantlab.backtest import engine
+    from drift.backtest import engine
 
     def deny(self: Any, order: Any) -> None:
         self._engine_reject(SimpleNamespace(ts_event=1, reason="denied"))

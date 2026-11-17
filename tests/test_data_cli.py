@@ -4,18 +4,16 @@ from pathlib import Path
 
 import pytest
 
-from quantlab.__main__ import main
-from quantlab.data.model import DataError
-from quantlab.data.store import load_dataset, publication_lock
+from drift.__main__ import main
+from drift.data.model import DataError
+from drift.data.store import load_dataset, publication_lock
 
 
 def test_demo_and_replay_cli_are_offline_and_deterministic(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture
 ) -> None:
     for _ in range(2):
-        monkeypatch.setattr(
-            sys, "argv", ["quantlab", "data-demo", "--output", str(tmp_path / "data")]
-        )
+        monkeypatch.setattr(sys, "argv", ["drift", "data-demo", "--output", str(tmp_path / "data")])
         main()
         report = json.loads(capsys.readouterr().out)
         assert report["orders"] == report["positions"] == 0
@@ -24,9 +22,7 @@ def test_demo_and_replay_cli_are_offline_and_deterministic(
             first = report
         else:
             assert report == first
-    monkeypatch.setattr(
-        sys, "argv", ["quantlab", "data-replay", "--dataset", first["dataset_path"]]
-    )
+    monkeypatch.setattr(sys, "argv", ["drift", "data-replay", "--dataset", first["dataset_path"]])
     main()
     assert (
         json.loads(capsys.readouterr().out)["observations_sha256"] == first["observations_sha256"]
@@ -35,7 +31,7 @@ def test_demo_and_replay_cli_are_offline_and_deterministic(
         sys,
         "argv",
         [
-            "quantlab",
+            "drift",
             "data-ingest",
             "--request",
             str(tmp_path / "data" / "synthetic-input" / "request.json"),
@@ -59,7 +55,7 @@ def test_demo_and_replay_cli_are_offline_and_deterministic(
     ],
 )
 def test_cli_rejects_missing_or_wrong_arguments(args, monkeypatch, capsys) -> None:
-    monkeypatch.setattr(sys, "argv", ["quantlab", *args])
+    monkeypatch.setattr(sys, "argv", ["drift", *args])
     with pytest.raises(SystemExit) as exc:
         main()
     assert exc.value.code == 2

@@ -11,7 +11,7 @@ Validated 2026-10-29. Scope: the M1 acceptance in the [roadmap](ROADMAP.md), REQ
 | Local platform | Ubuntu 24.04.5 LTS, Linux x86_64 |
 | Interpreter | CPython 3.12.3; supported package range `>=3.12,<3.13` |
 | Resolver/installer | uv 0.13.6, required by project configuration |
-| Package/build | `quantlab` 0.1.0, src layout, Hatchling 1.33.0 |
+| Package/build | `drift` 0.1.0, src layout, Hatchling 1.33.0 |
 | Engine | Stable PyPI NautilusTrader 1.231.0, CPython 3.12 manylinux_2_35_x86_64 wheel |
 | Optional integration import dependencies | `nautilus-trader[ib]`, nautilus-ibapi 10.45.1, protobuf 5.29.6; no Docker extra |
 | Quality | pytest 9.2.0, pytest-socket 0.8.1, Ruff 0.17.3, mypy 1.20.2 |

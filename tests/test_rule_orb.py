@@ -7,11 +7,11 @@ from typing import Any
 import pytest
 from helpers import WEEK, calendar_of, day_candles, feed_all
 
-from quantlab.data.model import SECOND, DataError, local_ns
-from quantlab.strategies.calendar import Calendar
-from quantlab.strategies.market import Candle
-from quantlab.strategies.proposal import Intent, Proposal
-from quantlab.strategies.rule.statistical.orb import OrbParams, OrbRule
+from drift.data.model import SECOND, DataError, local_ns
+from drift.strategies.calendar import Calendar
+from drift.strategies.market import Candle
+from drift.strategies.proposal import Intent, Proposal
+from drift.strategies.rule.statistical.orb import OrbParams, OrbRule
 
 D = WEEK[1]
 RANGE = {"09:40": ("100.00", "101.00", "99.00", "100.00")}  # opening range 99.00-101.00

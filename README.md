@@ -1,17 +1,35 @@
-# Quant Trading Lab
+# Drift
 
-Reproducible quantitative trading research in Python on NautilusTrader: deterministic rule strategies, a backtest runner and an offline market-data pipeline, with shared risk controls between every strategy and any order. The package is `quantlab`.
+Reproducible intraday research on NVDA shares in Python on [NautilusTrader](https://nautilustrader.io). Drift is built around deterministic statistical rule strategies. It has a concurrent backtesting framework with persistent virtual portfolios, an offline market-data pipeline and a bounded Alpaca paper-trading runner. Every strategy goes through the same sizing, risk and execution layer.
 
-**Scope:** NVDA shares, Alpaca historical SIP data, IBKR as the eventual execution broker. Crypto is deferred; ML and LLM agents are future families; relative strength waits for benchmark data.
+> **This is a research project, not a trading system or financial advice.** No strategy here has shown an edge after costs. Synthetic results only test the software, and the in-sample results describe a single sample.
 
-**Status** ([roadmap](docs/ROADMAP.md) has the gates):
-- **Done:** offline foundation; synthetic MES data pipeline with a native Parquet catalog and replay; seven rule strategies (ITSM, opening range breakout, VWAP and Bollinger mean reversion, short-term reversal, trend following, candlestick patterns); a synthetic-data backtest runner.
-- **Pending:** real NVDA data admission (NVDA-001–010), any historical research result, broker connectivity, paper trading. No real market data has entered the project.
-- Synthetic results validate software behavior only. Nothing here is evidence of profitability.
+## Strategies
+
+Six rules live under `src/drift/strategies/rule/statistical/`, one module each. All of them read completed one-minute candles and emit versioned proposals; none of them can place an order itself.
+
+| Strategy | Idea |
+|---|---|
+| `itsm` | Intraday time-series momentum: when the overnight-to-10:00 and 15:00–15:30 returns agree, trade the final half hour ([EXP-001](experiments/exp001_itsm/README.md)) |
+| `orb` | Opening range breakout, with optional relative-volume, VWAP and range filters |
+| `vwap_reversion` | Fades a stretch from session VWAP measured in standard deviations |
+| `bollinger_reversion` | Fades a fresh close outside the Bollinger bands |
+| `reversal` | Short-term reversal: fades the move of each completed 5–60 minute bucket |
+| `trend` | Moving-average crossover trend following |
+
+[STRATEGIES.md](docs/STRATEGIES.md) gives each rule's signal, entry, exit and parameters. The defaults are documented research choices, not tuned values.
+
+## How it works
+
+- **Causal by construction.** A decision uses only candles that have completed and were available at the decision time. It fills at the open of the first bar that starts strictly after the decision plus order latency, adverse by the half-spread and slippage ([D-030](docs/DECISIONS.md)). Stops and targets are checked on completed bars, and a bar that touches both counts as a stop.
+- **Explicit costs.** Commissions, minimums, sell-side regulatory fees, spread and slippage are all configured. Sizing, risk limits and costs have no defaults.
+- **Reproducible.** Each report records the resolved configuration plus data and result hashes, and the same inputs reproduce the same hash.
+- **Frozen research split.** Development is 2020–2022, validation is 2023 (explicit opt-in only) and holdout is 2024–2025, which backtests refuse to touch ([D-034](docs/DECISIONS.md)).
+- **Virtual portfolios.** A portfolio can advance window by window, and a segmented run equals one uninterrupted run, trade for trade.
 
 ## Install and check
 
-Ubuntu 24.04 x86_64, CPython 3.12, [uv 0.13.6](https://docs.astral.sh/uv/getting-started/installation/) (`pipx install uv==0.13.6`). No GPU, Docker or broker application is needed. The first sync needs network or a populated uv cache; everything after runs offline, and pytest blocks sockets.
+You need Linux x86_64, CPython 3.12 and [uv](https://docs.astral.sh/uv/) 0.13.6. No GPU, Docker or broker application is required, and tests run offline with sockets blocked.
 
 ```sh
 uv sync --locked --extra ib
@@ -19,57 +37,60 @@ uv run --locked --offline --extra ib ruff format --check .
 uv run --locked --offline --extra ib ruff check .
 uv run --locked --offline --extra ib mypy
 uv run --locked --offline --extra ib pytest
-uv lock --check --offline && uv pip check
 ```
 
-[GitHub Actions](.github/workflows/ci.yml) runs the same checks on pushes to `main` and pull requests. Keep `uv.lock` committed and use `--locked`.
+[GitHub Actions](.github/workflows/ci.yml) runs the same checks.
 
 ## Run
 
 ```sh
-quantlab backtest --strategy orb                    # itsm | candlestick | orb | vwap_reversion |
-                                                    # bollinger_reversion | reversal | trend
-quantlab backtest --strategy itsm --dump-config > cfg.json
-quantlab backtest --config cfg.json --output out/   # report.json, report.md, trades.csv
-quantlab smoke                                      # engine check on three synthetic bars
-quantlab data-demo --output data/offline-demo       # ingest and replay synthetic MES data
+drift smoke                                      # engine check on three synthetic bars
+drift backtest --strategy orb                    # synthetic demo for any strategy
+drift backtest --strategy itsm --dump-config > cfg.json
+drift backtest --config cfg.json --output out/   # report.json, report.md, trades.csv
+drift research run --year 2020                   # every strategy, concurrently (needs the local archive)
+drift research compare --sort sharpe
+drift portfolio create steady --strategy itsm
+drift portfolio advance steady --year 2020
 ```
 
-A configuration fixes the instrument, capital, seeded synthetic data, execution costs, sizing, risk limits and strategy parameters. Costs, sizing and risk have **no defaults**; every report records the resolved configuration plus data and result hashes, and the same inputs reproduce the same hash. Execution goes through NautilusTrader: a decision fills at the open of the first bar that starts strictly after the decision plus order latency, adverse by the configured half-spread and slippage ([D-030](docs/DECISIONS.md)).
+Historical runs need a local archive of NVDA one-minute SIP bars. The repository contains no market data. [NVDA_HISTORY.md](docs/data/NVDA_HISTORY.md) covers how the archive is collected and checked, and [BACKTESTING.md](docs/BACKTESTING.md) covers selection, costs, stored results and portfolios. You need your own Alpaca credentials to fetch data. The reader asks for explicit authorization and an explicit credential file, and it never falls back between the SIP and IEX feeds.
+
+## Paper trading
+
+`drift paper-*` drives a bounded ITSM session against Alpaca's **paper** endpoint only. It uses a fixed host, conservative one-share limits and a journaled SQLite safety gate that fails closed on stale data, uncertain order state or reconciliation failure. Every connection and order run needs an explicit flag. Live trading is not implemented. See [PAPER_EXECUTION.md](docs/PAPER_EXECUTION.md).
 
 ## Layout
 
 ```text
-src/quantlab/
-  data/        offline MES pipeline: DBN decoding, validation, native Parquet catalog, replay
-  strategies/  shared market/proposal/calendar types
-    rule/statistical/   itsm, orb, vwap_reversion, bollinger_reversion, reversal, trend
-    rule/candlestick/   patterns, filters, policy
-    ml/  llm/           deferred families (docstring only)
-  backtest/    config, synthetic data, sizing/risk/exit policy, Nautilus engine, reports
-  smoke.py  time.py  __main__.py
-tests/         offline, synthetic, no credentials
-docs/          specifications and decisions; docs/archive/ holds superseded research
-experiments/   preregistered protocols (EXP-001)
+src/drift/
+  strategies/  proposal, market and calendar types; rule/statistical/ holds the six rules
+  backtest/    strategy registry, config, sizing/risk/exit policy, Nautilus engine, reports
+  research/    concurrent runner, Parquet/DuckDB result store, virtual portfolios
+  data/        Alpaca equity reader and validation, monthly archive, synthetic pipeline
+  execution/   Alpaca paper runner and safety gate (IBKR modules are inactive)
+tests/         offline and synthetic, with no credentials
+docs/          specifications, decisions and roadmap; docs/archive/ holds superseded research
+experiments/   preregistered protocols
 ```
 
 ## Documents
 
 | Document | Contents |
 |---|---|
-| [REQUIREMENTS.md](REQUIREMENTS.md) | Requirement IDs and measurable acceptance criteria |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | Milestones M0–M10, status and exit gates |
-| [docs/DECISIONS.md](docs/DECISIONS.md) | Decision log (D-001…) |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Boundaries, data flow, agent families and the proposal contract |
-| [docs/STRATEGIES.md](docs/STRATEGIES.md) | Every rule strategy: signal, entry, exit, parameters |
-| [docs/data/NVDA_DATA_PLAN.md](docs/data/NVDA_DATA_PLAN.md) | NVDA/Alpaca admission plan and gates |
-| [docs/data/PIPELINE.md](docs/data/PIPELINE.md) | The implemented synthetic pipeline: formats, storage, limits |
-| [docs/COSTS_AND_PROVIDERS.md](docs/COSTS_AND_PROVIDERS.md) | Providers, brokers and cost model |
-| [docs/M1_FOUNDATION.md](docs/M1_FOUNDATION.md) | Verified runtime, dependency decision and API boundaries |
-| [experiments/exp001_itsm](experiments/exp001_itsm/README.md) | EXP-001 protocol |
-| [GLOSSARY.md](GLOSSARY.md) · [AGENTS.md](AGENTS.md) · [docs/PROJECT_MEMORY.md](docs/PROJECT_MEMORY.md) | Vocabulary, agent workflow, Obsidian memory |
-| [docs/archive](docs/archive/README.md) | M0 audit, MES-era data research, Gemini reports (checksummed) |
+| [STRATEGIES.md](docs/STRATEGIES.md) | Every rule: signal, entry, exit, parameters |
+| [BACKTESTING.md](docs/BACKTESTING.md) | Research runner, costs, result store, portfolios, known limits |
+| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Boundaries, data flow and the proposal contract |
+| [ROADMAP.md](docs/ROADMAP.md) · [REQUIREMENTS.md](REQUIREMENTS.md) | Milestones, gates and acceptance criteria |
+| [DECISIONS.md](docs/DECISIONS.md) | Decision log with rationale |
+| [COSTS_AND_PROVIDERS.md](docs/COSTS_AND_PROVIDERS.md) | Providers, brokers and the cost model |
+| [GLOSSARY.md](GLOSSARY.md) · [AGENTS.md](AGENTS.md) | Vocabulary and the workflow for coding agents |
+
+## Status
+
+- **Done:** the six statistical rules, the NautilusTrader backtest engine and the research framework, all tested on synthetic data. The 2020–2025 NVDA SIP minute archive is collected and integrity-checked: 585,897 bars over 1,508 sessions.
+- **Pending:** formal data admission, a preregistered historical evaluation of ITSM (M3a), out-of-sample validation and supervised paper fills. No paper order has been submitted yet.
 
 ## Safety
 
-Agents emit proposals; only shared portfolio and risk controls authorize order intents. Data, model artifacts, credentials and generated results stay out of Git; small synthetic fixtures are tracked. Paid services, broker connections, paper orders and live trading each need explicit authorization; a milestone is never one.
+Strategies only propose. The shared portfolio and risk controls decide whether anything becomes an order. Market data, credentials, account identifiers and generated results are kept out of Git.

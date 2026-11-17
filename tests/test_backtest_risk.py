@@ -4,8 +4,8 @@ from decimal import Decimal
 
 import pytest
 
-from quantlab.backtest.risk import ExitPolicy, Protection, RiskLimits, Sizing
-from quantlab.data.model import SECOND, DataError
+from drift.backtest.risk import ExitPolicy, Protection, RiskLimits, Sizing
+from drift.data.model import SECOND, DataError
 
 D = Decimal
 

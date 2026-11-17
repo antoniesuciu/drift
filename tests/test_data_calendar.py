@@ -6,9 +6,9 @@ from pathlib import Path
 
 import pytest
 
-from quantlab.data.core import coverage, normalize, snapshot
-from quantlab.data.databento import decode
-from quantlab.data.model import (
+from drift.data.core import coverage, normalize, snapshot
+from drift.data.databento import decode
+from drift.data.model import (
     MINUTE,
     SECOND,
     Config,
@@ -18,9 +18,9 @@ from quantlab.data.model import (
     instant,
     local_ns,
 )
-from quantlab.data.replay import replay_dataset
-from quantlab.data.store import ingest, load_dataset
-from quantlab.data.synthetic import write_dbn, write_demo
+from drift.data.replay import replay_dataset
+from drift.data.store import ingest, load_dataset
+from drift.data.synthetic import write_dbn, write_demo
 
 
 def march_fixture(tmp_path: Path) -> Path:

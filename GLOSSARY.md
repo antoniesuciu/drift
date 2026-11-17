@@ -1,4 +1,4 @@
-# Quant Trading Lab
+# Drift
 
 Vocabulary for the platform's research and trading domain.
 
@@ -15,6 +15,15 @@ _Avoid_: Order, approved trade
 **Strategy**: A decision policy under investigation or evaluation, potentially represented by one or several agents.
 
 **Experiment**: A preregistered, reproducible test of a strategy or model hypothesis, including unsuccessful trials.
+
+**Virtual portfolio**: A persistent simulated account binding one strategy to its own capital, configuration history and chain of segments. Unrelated to any broker account.
+_Avoid_: Paper account
+
+**Segment**: One committed backtest run in a virtual portfolio's chain, trading a window that starts exactly where the previous one stopped.
+
+**Replay**: Feeding a fresh agent the portfolio's candle history, with no quotes and no decisions, to rebuild its state before a segment trades.
+
+**Run**: One backtest of one strategy over one window, identified by a hash of its inputs. A **batch** is one attempt at a set of runs, and is logged even when they fail.
 
 **Availability time**: The earliest time an observation could have been used by the decision process, accounting for completion, publication and delivery. It can differ from the event timestamp and acquisition date.
 
@@ -37,5 +46,5 @@ _Avoid_: Order, approved trade
 **Session VWAP**: The volume-weighted average of typical price, `(high + low + close) / 3`, from the session open through the latest available candle. VWAP and Bollinger mean reversion fade a fresh move of the close beyond a multiple of the matching dispersion.
 _Avoid_: Using a full-session VWAP for a decision made earlier in the session
 
-**Statistical rule agent**: A rule-based agent that turns completed price-series readings (breakout, mean reversion, reversal, trend, momentum) into proposals, as distinct from candlestick pattern agents. Relative-strength agents need benchmark data and are future work.
+**Statistical rule agent**: A rule-based agent that turns completed price-series readings (breakout, mean reversion, reversal, trend, momentum) into proposals. Relative-strength agents need benchmark data and are future work.
 

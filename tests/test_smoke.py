@@ -3,7 +3,7 @@ from importlib import import_module
 
 import pytest
 
-from quantlab.smoke import SmokeConfig, run_smoke
+from drift.smoke import SmokeConfig, run_smoke
 
 
 def test_real_engine_replay_is_deterministic_and_order_free() -> None:

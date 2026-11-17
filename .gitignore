@@ -60,6 +60,7 @@ credentials.yml
 *.sqlite3
 *.sqlite-*
 *.sqlite3-*
+*.sqlite.lock
 
 # Generated model artifacts, experiment results and execution logs
 /models/

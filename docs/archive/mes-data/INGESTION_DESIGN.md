@@ -8,7 +8,7 @@ Design only, 2026-10-29. No ingestion code, data files, credentials or infrastru
 
 ## 1. Scope and stages
 
-Build one local, bounded-memory pipeline, using the existing `quantlab` package and pinned NautilusTrader **1.231.0**. Default implementation target is the conditionally recommended **Databento DBN** source. Implement an alternative FirstRate CSV reader only if procurement selects it; document the same normalization boundary rather than building all providers or a plugin framework. IBKR has no acquisition role for the specified old archive and no broker wrapper is needed in M2b.
+Build one local, bounded-memory pipeline, using the existing `drift` package and pinned NautilusTrader **1.231.0**. Default implementation target is the conditionally recommended **Databento DBN** source. Implement an alternative FirstRate CSV reader only if procurement selects it; document the same normalization boundary rather than building all providers or a plugin framework. IBKR has no acquisition role for the specified old archive and no broker wrapper is needed in M2b.
 
 1. **Offline foundation first:** versioned request/config schema, fixture/local-file reader, metadata resolution, normalization, integrity checks, catalog persistence and deterministic reports. These steps can be tested with labeled synthetic fixtures without account access or spend.
 2. **Separately gated acquisition:** accept approved local vendor artifacts, or add an explicit bounded historical-only download operation after quote/rights/budget approval. Data downloads are never automatic on package import, CLI help, test startup or backtest run. No streaming/execution clients or live account settings.
@@ -33,7 +33,7 @@ flowchart LR
     Audit --> Publish[Atomic immutable dataset publication]
 ```
 
-Keep small modules/functions under `src/quantlab/data/` when M2b is authorized. One source-reader boundary accepts an approved file/request, source contract metadata and chunk bounds, and yields bounded homogeneous instrument/bar batches plus provenance. A normalizer returns native framework instruments/bars and sidecar records. Validators return accepted/quarantined records and machine-readable reasons. These are responsibilities, not a requirement for abstract base classes, services or speculative agent interfaces.
+Keep small modules/functions under `src/drift/data/` when M2b is authorized. One source-reader boundary accepts an approved file/request, source contract metadata and chunk bounds, and yields bounded homogeneous instrument/bar batches plus provenance. A normalizer returns native framework instruments/bars and sidecar records. Validators return accepted/quarantined records and machine-readable reasons. These are responsibilities, not a requirement for abstract base classes, services or speculative agent interfaces.
 
 Future stock/crypto/FX readers can meet the same observation/provenance boundary with asset-specific identity, calendar, currency and adjustment rules. Do not fill a stock's expiry with a fake futures value or assume crypto has NYSE sessions. Only MES minute trades are supported by the initial implementation; reject unsupported assets/schema/intervals explicitly. No database server, scheduler, event bus or cloud storage.
 
@@ -72,7 +72,7 @@ data/curated/mes_itsm_v1/<dataset_version>/
   coverage.parquet         # Expected/retrieved/gap classifications
   quality.json
   manifest.json
-data/catalog/quantlab.duckdb  # Optional rebuildable analytical views
+data/catalog/drift.duckdb  # Optional rebuildable analytical views
 ```
 
 | Sidecar/manifest group | Required fields and invariants |

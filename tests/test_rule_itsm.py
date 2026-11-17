@@ -6,11 +6,11 @@ from decimal import Decimal
 import pytest
 from helpers import day_candles
 
-from quantlab.data.model import SECOND, DataError, local_ns
-from quantlab.strategies.calendar import Calendar, SessionSpec
-from quantlab.strategies.market import Candle
-from quantlab.strategies.proposal import Intent, Proposal
-from quantlab.strategies.rule.statistical.itsm import ItsmParams, ItsmRule
+from drift.data.model import SECOND, DataError, local_ns
+from drift.strategies.calendar import Calendar, SessionSpec
+from drift.strategies.market import Candle
+from drift.strategies.proposal import Intent, Proposal
+from drift.strategies.rule.statistical.itsm import ItsmParams, ItsmRule
 
 D1, D2 = "2022-03-07", "2022-03-08"
 UP = {"10:00": "101.00", "15:00": "100.50", "15:30": "101.00"}

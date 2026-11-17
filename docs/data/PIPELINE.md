@@ -1,6 +1,8 @@
 # M2b.1 — offline historical pipeline
 
-**Reference for the implemented synthetic MES pipeline (`src/quantlab/data`).** Real-data admission follows NVDA-001–010 in the [NVDA plan](NVDA_DATA_PLAN.md); the MES gates below are historical, kept as regression evidence.
+**Reference for the implemented synthetic MES pipeline (`src/drift/data`).** Real-data admission follows NVDA-001–010 in the [NVDA plan](NVDA_DATA_PLAN.md); the MES gates below are historical, kept as regression evidence.
+
+The independent Alpaca equity path added on 2026-10-30 is documented in [ALPACA_PILOT.md](ALPACA_PILOT.md). The restrictions, formats and historical counts below describe the retained MES path, not the Alpaca reader or the newer backtest/execution modules.
 
 Implemented 2026-10-29 against [MES-ITSM-DATA-v1](../archive/mes-data/HISTORICAL_DATA_SPEC.md) and the [ingestion design](../archive/mes-data/INGESTION_DESIGN.md). **M2b.1 is complete locally; M2b overall and M2b.2 real-data admission remain incomplete.** No acquisition, vendor account/API access, broker connection, order, strategy or model is implemented. Configuration currently requires `mode=offline`, `synthetic=true` and a `synthetic:` rights reference; acquisition and real-vendor admission fail closed rather than pretending to validate a quote/license.
 
@@ -10,7 +12,7 @@ Use the existing locked environment; PyArrow 26.0.0 and tzdata 2026.6 are now di
 
 ```sh
 uv sync --locked --extra ib
-uv run --locked --offline --extra ib quantlab data-demo --output data/offline-demo
+uv run --locked --offline --extra ib drift data-demo --output data/offline-demo
 ```
 
 The command generates **synthetic** DBN bytes and a complete request JSON under `data/offline-demo/synthetic-input/`, ingests them, verifies Parquet round-trip and replays the published catalog. It reports **2,160 bars, 2,160 engine iterations, zero orders and zero positions**, a dataset ID and an observation digest. Rerunning the same command reuses verified immutable files and reproduces the same report under the same code/configuration/software. A changed implementation/lock, raw content, calendar or latency policy produces a new dataset identity.
@@ -18,11 +20,11 @@ The command generates **synthetic** DBN bytes and a complete request JSON under 
 To ingest a separately constructed synthetic request or replay an existing verified dataset:
 
 ```sh
-uv run --locked --offline --extra ib quantlab data-ingest --request data/offline-demo/synthetic-input/request.json --output data/offline-demo
-uv run --locked --offline --extra ib quantlab data-replay --dataset data/offline-demo/curated/mes_itsm_v1/DATASET_ID
+uv run --locked --offline --extra ib drift data-ingest --request data/offline-demo/synthetic-input/request.json --output data/offline-demo
+uv run --locked --offline --extra ib drift data-replay --dataset data/offline-demo/curated/mes_itsm_v1/DATASET_ID
 ```
 
-Replace `DATASET_ID` with the actual printed hash; it is not a fixed dataset name. No credential is accepted or needed. The original `quantlab smoke` behavior remains available and its implementation is unchanged. The new CLI exposes no download, paper or live mode.
+Replace `DATASET_ID` with the actual printed hash; it is not a fixed dataset name. No credential is accepted or needed. The original `drift smoke` behavior remains available and its implementation is unchanged. The new CLI exposes no download, paper or live mode.
 
 ## Implemented responsibilities
 
@@ -37,7 +39,7 @@ Replace `DATASET_ID` with the actual printed hash; it is not a fixed dataset nam
 
 ## Input format and integrity boundary
 
-The generated `request.json` is the complete executable schema example; [model.py](../../src/quantlab/data/model.py) owns the exact fields. Unknown fields are rejected, including credentials, alternate schemas/assets/currencies and acquisition settings. Required top-level groups are:
+The generated `request.json` is the complete executable schema example; [model.py](../../src/drift/data/model.py) owns the exact fields. Unknown fields are rejected, including credentials, alternate schemas/assets/currencies and acquisition settings. Required top-level groups are:
 
 - `version/spec/mode/synthetic/provider/dataset/schema`: v1, MES-ITSM-DATA-v1, offline, true, Databento, GLBX.MDP3 and ohlcv-1m.
 - `start/end`, `study_start/study_end`: half-open aware request bounds and inclusive cash dates, with an explicitly supplied preceding cash session. Requests cannot silently widen a chunk. One published request describes a contiguous calendar episode; the two M2a pilot windows can be separate requests/datasets.
@@ -112,4 +114,4 @@ Tests live in [test_data_pipeline.py](../../tests/test_data_pipeline.py), [test_
 
 ## Real-data admission
 
-Not started. The pipeline accepts only `mode=offline`, `synthetic=true` inputs and fails closed otherwise. Admission of real NVDA data follows the [NVDA plan](NVDA_DATA_PLAN.md) gates; the superseded MES handoff steps were removed with the dropped MES procurement plan (see Git history). IBKR remains the later broker; this pipeline neither needs nor connects to it.
+The MES path still accepts only `mode=offline`, `synthetic=true` inputs. The separate [Alpaca pilot](ALPACA_PILOT.md) now stores a small real NVDA slice; full admission remains subject to the [NVDA plan](NVDA_DATA_PLAN.md). The superseded MES handoff steps were removed with the dropped MES procurement plan (see Git history). Neither data path connects to IBKR.

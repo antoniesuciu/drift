@@ -6,15 +6,15 @@ from fractions import Fraction
 import pytest
 from helpers import DAY, bar, calendar_of, feed_all, walk
 
-from quantlab.data.model import NY, DataError, instant
-from quantlab.strategies.market import Candle
-from quantlab.strategies.proposal import Intent
-from quantlab.strategies.rule.statistical.bollinger_reversion import (
+from drift.data.model import NY, DataError, instant
+from drift.strategies.market import Candle
+from drift.strategies.proposal import Intent
+from drift.strategies.rule.statistical.bollinger_reversion import (
     BollingerParams,
     BollingerReversionRule,
 )
-from quantlab.strategies.rule.statistical.fade import FadeParams
-from quantlab.strategies.rule.statistical.vwap_reversion import VwapParams, VwapReversionRule
+from drift.strategies.rule.statistical.fade import FadeParams
+from drift.strategies.rule.statistical.vwap_reversion import VwapParams, VwapReversionRule
 
 WIDE = {"window_start": "09:31", "window_end": "14:00"}
 

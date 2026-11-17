@@ -8,9 +8,9 @@ from pathlib import Path
 import pyarrow as pa
 import pytest
 
-from quantlab.data.core import coverage, normalize, snapshot
-from quantlab.data.databento import decode, inspect_dbn
-from quantlab.data.model import (
+from drift.data.core import coverage, normalize, snapshot
+from drift.data.databento import decode, inspect_dbn
+from drift.data.model import (
     MINUTE,
     SECOND,
     Config,
@@ -20,9 +20,9 @@ from quantlab.data.model import (
     same_contract_return,
     timestamp,
 )
-from quantlab.data.replay import replay_dataset
-from quantlab.data.store import ingest, load_dataset
-from quantlab.data.synthetic import write_dbn, write_demo
+from drift.data.replay import replay_dataset
+from drift.data.store import ingest, load_dataset
+from drift.data.synthetic import write_dbn, write_demo
 
 
 @pytest.fixture
@@ -253,7 +253,7 @@ def test_raw_archive_and_inventory_tampering_are_detected(
 def test_crash_before_publish_leaves_no_published_dataset(
     request_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    import quantlab.data.store as storage
+    import drift.data.store as storage
 
     original = storage._write_table
 

@@ -6,10 +6,10 @@ from fractions import Fraction
 import pytest
 from helpers import DAY, calendar_of, day_candles, feed_all, walk
 
-from quantlab.data.model import SECOND, DataError, local_ns
-from quantlab.strategies.proposal import Intent
-from quantlab.strategies.rule.statistical.reversal import ReversalParams, ReversalRule
-from quantlab.strategies.rule.statistical.trend import TrendParams, TrendRule
+from drift.data.model import SECOND, DataError, local_ns
+from drift.strategies.proposal import Intent
+from drift.strategies.rule.statistical.reversal import ReversalParams, ReversalRule
+from drift.strategies.rule.statistical.trend import TrendParams, TrendRule
 
 DOWN15 = {"09:45": ("100.00", "100.00", "99.00", "99.00")}  # first 15m: 100.00 -> 99.00 (-1%)
 UP15 = {"09:45": ("100.00", "101.00", "100.00", "101.00")}  # +1%
